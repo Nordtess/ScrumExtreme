@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ScrumExtreme.Application/ScrumExtreme.Application.csproj" />
+    <Project Path="src/ScrumExtreme.Domain/ScrumExtreme.Domain.csproj" />
+    <Project Path="src/ScrumExtreme.Infrastructure/ScrumExtreme.Infrastructure.csproj" />
+    <Project Path="src/ScrumExtreme.Web/ScrumExtreme.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ScrumExtreme.Tests/ScrumExtreme.Tests.csproj" />
+  </Folder>
+</Solution>
