@@ -3,6 +3,7 @@ html {
   color: white;
   position: relative;
   min-height: 100%;
+  text-align: center;
 }
 
 body {
