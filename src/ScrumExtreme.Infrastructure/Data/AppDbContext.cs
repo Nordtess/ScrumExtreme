@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ScrumExtreme.Domain.Entities;
 
 namespace ScrumExtreme.Infrastructure.Data;
 
@@ -8,8 +9,7 @@ public class AppDbContext : DbContext
     {
     }
 
-    // Add DbSet properties here as you create domain entities, e.g.:
-    // public DbSet<YourEntity> YourEntities { get; set; }
+    public DbSet<UserStory> UserStories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
