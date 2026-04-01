@@ -38,5 +38,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Test database connection on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ScrumExtreme.Infrastructure.Data.AppDbContext>();
+    if (db.Database.CanConnect())
+        Console.WriteLine("✅ Database connection successful!");
+    else
+        Console.WriteLine("❌ Database connection FAILED.");
+}
 
 app.Run();
