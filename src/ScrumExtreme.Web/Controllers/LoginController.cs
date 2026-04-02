@@ -4,7 +4,12 @@ namespace ScrumExtreme.Web.Controllers;
 
 public class LoginController : Controller
 {
-    public IActionResult Login()
+    public IActionResult Index()
+    {
+        return View("Login");
+    }
+
+    public IActionResult CreateAccount()
     {
         return View();
     }

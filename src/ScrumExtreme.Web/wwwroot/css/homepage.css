@@ -2,10 +2,198 @@
   width: 100%;
   max-width: 600px;
   height: auto;
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 20%,
+      black 75%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 20%,
+      black 75%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
 }
 
-.selection img {
+.body-text {
+  max-width: 720px;
   width: 100%;
-  max-width: 450px;
+}
+
+.body-text p {
+  text-align: left;
+  line-height: 1.8;
+  color: #ddd;
+}
+
+/* ── Carousel ── */
+.carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.carousel-track-wrapper {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.carousel-card {
+  min-width: 55%;
+  margin: 0 2.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.35;
+  transform: scale(0.85);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.carousel-card.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.carousel-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-card img {
+  width: 100%;
+  max-width: 400px;
   height: auto;
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 18%,
+      black 75%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 12%,
+      black 88%,
+      transparent 100%
+    );
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 18%,
+      black 75%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 12%,
+      black 88%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+}
+
+.carousel-card p {
+  max-width: 400px;
+  margin-top: 1rem;
+  color: #ccc;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: none;
+  border: 1px solid #555;
+  color: white;
+  font-size: 2.5rem;
+  line-height: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.carousel-btn:hover {
+  border-color: white;
+}
+
+.prev-btn {
+  left: 10%;
+}
+
+.next-btn {
+  right: 10%;
+}
+
+.body-text > h2 {
+  font-family: "Playwrite IE", cursive;
+}
+
+/* Scroll-triggered animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+  margin-bottom: 120px;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
