@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', function () {
             cards.forEach(function (c, i) {
                 c.classList.toggle('active', i === currentIndex);
             });
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === cards.length - 1;
         }
 
         prevBtn.addEventListener('click', function () {
-            if (currentIndex > 0) { currentIndex--; updateCarousel(); }
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateCarousel();
         });
         nextBtn.addEventListener('click', function () {
-            if (currentIndex < cards.length - 1) { currentIndex++; updateCarousel(); }
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCarousel();
         });
         window.addEventListener('resize', updateCarousel);
         updateCarousel();
