@@ -4,6 +4,17 @@
   height: auto;
 }
 
+.body-text {
+  max-width: 720px;
+  width: 100%;
+}
+
+.body-text p {
+  text-align: left;
+  line-height: 1.8;
+  color: #ddd;
+}
+
 /* ── Carousel ── */
 .carousel {
   position: relative;
