@@ -1,35 +1,29 @@
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using ScrumExtreme.Domain.Interfaces;
-using ScrumExtreme.Infrastructure.Data;
 
 namespace ScrumExtreme.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    protected readonly AppDbContext _context;
-    private readonly DbSet<T> _dbSet;
+    private readonly IMongoCollection<T> _collection;
 
-    public Repository(AppDbContext context)
+    public Repository(IMongoDatabase database)
     {
-        _context = context;
-        _dbSet = context.Set<T>();
+        _collection = database.GetCollection<T>(typeof(T).Name);
     }
 
-    public async Task<T?> GetByIdAsync(int id) =>
-        await _dbSet.FindAsync(id);
+    public async Task<T?> GetByIdAsync(string id) =>
+        await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
 
     public async Task<IEnumerable<T>> GetAllAsync() =>
-        await _dbSet.ToListAsync();
+        await _collection.Find(_ => true).ToListAsync();
 
     public async Task AddAsync(T entity) =>
-        await _dbSet.AddAsync(entity);
+        await _collection.InsertOneAsync(entity);
 
-    public void Update(T entity) =>
-        _dbSet.Update(entity);
+    public async Task UpdateAsync(string id, T entity) =>
+        await _collection.ReplaceOneAsync(Builders<T>.Filter.Eq("_id", id), entity);
 
-    public void Delete(T entity) =>
-        _dbSet.Remove(entity);
-
-    public async Task SaveChangesAsync() =>
-        await _context.SaveChangesAsync();
+    public async Task DeleteAsync(string id) =>
+        await _collection.DeleteOneAsync(Builders<T>.Filter.Eq("_id", id));
 }
