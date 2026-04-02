@@ -4,8 +4,113 @@
   height: auto;
 }
 
-.selection img {
+/* ── Carousel ── */
+.carousel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
-  max-width: 450px;
+  margin-top: 2rem;
+}
+
+.carousel-track-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.carousel-card {
+  min-width: 70%;
+  margin: 0 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.35;
+  transform: scale(0.88);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.carousel-card.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.carousel-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-card img {
+  width: 100%;
+  max-width: 400px;
   height: auto;
+  mask-image: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    black 50%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    black 50%,
+    transparent 100%
+  );
+}
+
+.carousel-card p {
+  max-width: 400px;
+  margin-top: 1rem;
+  color: #ccc;
+}
+
+.carousel-btn {
+  background: none;
+  border: 1px solid #555;
+  color: white;
+  font-size: 3rem;
+  line-height: 1;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.carousel-btn:hover {
+  border-color: white;
+}
+
+.carousel-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.body-text > h2 {
+  font-family: "Playwrite IE", cursive;
+}
+
+/* Scroll-triggered animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+  margin-bottom: 120px;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
