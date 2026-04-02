@@ -2,21 +2,27 @@
     ViewData["Title"] = "Logga in";
 }
 
-<h1>Logga in</h1>
+<div class="login-wrapper">
+    <div class="login-card">
+        <h2 class="login-title">Logga in</h2>
 
-<div class="form-container">
-    <div class="for-header">
-        <h3>Logga in</h3>
+        <form method="post" asp-controller="Login" asp-action="Index">
+            <div class="login-field">
+                <label for="username">Användarnamn</label>
+                <input type="text" id="username" name="username" placeholder="Ditt användarnamn" required
+                       autocomplete="username">
+            </div>
+            <div class="login-field">
+                <label for="password">Lösenord</label>
+                <input type="password" id="password" name="password" placeholder="Ditt lösenord" required
+                       autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-btn">Logga in</button>
+        </form>
+
+        <p class="login-footer">
+            Har du inget konto?
+            <a asp-controller="Login" asp-action="CreateAccount">Skapa ett nytt!</a>
+        </p>
     </div>
-    <div class="input-container">
-        <input type="text" placeholder="usernamne" required>
-        <input type="password" placeholder="password" required>
-    </div>
-    <div class="botton">
-        <button class="submit" type="submit">LOGGA IN</button>
-    </div>
-
-
-
-
 </div>

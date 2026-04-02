@@ -95,3 +95,112 @@ body {
     font-size: 16px;
   }
 }
+
+/* ── Login / CreateAccount ── */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 8vh;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+.login-card {
+  border: 1px solid white;
+  border-radius: 12px;
+  padding: 3rem 3rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.login-title {
+  text-align: center;
+  font-weight: 300;
+  font-size: 1.6rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-field + .login-field {
+  margin-top: 1.2rem;
+}
+
+.login-field label {
+  font-size: 0.8rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.login-field input {
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: white;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.login-field input:focus {
+  border-color: white;
+}
+
+.login-field input::placeholder {
+  color: #555;
+}
+
+.login-btn {
+  margin-top: 1rem;
+  width: 60%;
+  align-self: center;
+  padding: 0.75rem;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.login-btn:hover {
+  background: #e0e0e0;
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.login-footer a {
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid #555;
+  transition: border-color 0.2s ease;
+}
+
+.login-footer a:hover {
+  border-bottom-color: white;
+}
