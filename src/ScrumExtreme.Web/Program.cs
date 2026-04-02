@@ -1,51 +1,54 @@
-using Microsoft.EntityFrameworkCore;
-using ScrumExtreme.Infrastructure.Data;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using ScrumExtreme.Domain.Interfaces;
+using ScrumExtreme.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register EF Core with MySQL (Pomelo)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Register MongoDB
+var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
+    ?? throw new InvalidOperationException("MongoDB connection string not found.");
+var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"]
+    ?? throw new InvalidOperationException("MongoDB database name not found.");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
+builder.Services.AddScoped(sp =>
+    sp.GetRequiredService<IMongoClient>().GetDatabase(mongoDatabaseName));
 
-// Register repositories here, e.g.:
-// builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+// Register generic repository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Test database connection on startup
-using (var scope = app.Services.CreateScope())
+// Ping MongoDB on startup to confirm connection
+try
 {
-    var db = scope.ServiceProvider.GetRequiredService<ScrumExtreme.Infrastructure.Data.AppDbContext>();
-    if (db.Database.CanConnect())
-        Console.WriteLine("✅ Database connection successful!");
-    else
-        Console.WriteLine("❌ Database connection FAILED.");
+    var client = app.Services.GetRequiredService<IMongoClient>();
+    await client.GetDatabase(mongoDatabaseName).RunCommandAsync<BsonDocument>(new BsonDocument("ping", 1));
+    Console.WriteLine("✅ MongoDB connection successful!");
 }
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ MongoDB connection FAILED: {ex.Message}");
+}
+
+app.Run();
 
 app.Run();
