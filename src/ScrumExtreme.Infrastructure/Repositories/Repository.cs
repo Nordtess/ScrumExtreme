@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using ScrumExtreme.Domain.Attributes;
 using ScrumExtreme.Domain.Interfaces;
 
 namespace ScrumExtreme.Infrastructure.Repositories;
@@ -9,7 +10,12 @@ public class Repository<T> : IRepository<T> where T : class
 
     public Repository(IMongoDatabase database)
     {
-        _collection = database.GetCollection<T>(typeof(T).Name);
+        var collectionAttr = typeof(T)
+            .GetCustomAttributes(typeof(CollectionNameAttribute), false)
+            .FirstOrDefault() as CollectionNameAttribute;
+
+        var collectionName = collectionAttr?.Name ?? typeof(T).Name;
+        _collection = database.GetCollection<T>(collectionName);
     }
 
     public async Task<T?> GetByIdAsync(string id) =>

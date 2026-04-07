@@ -1,5 +1,7 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
+using ScrumExtreme.Application.Interfaces;
+using ScrumExtreme.Application.Services;
 using ScrumExtreme.Domain.Interfaces;
 using ScrumExtreme.Infrastructure.Repositories;
 
@@ -19,6 +21,9 @@ builder.Services.AddScoped(sp =>
 
 // Register generic repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// Register application services
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 var app = builder.Build();
 
