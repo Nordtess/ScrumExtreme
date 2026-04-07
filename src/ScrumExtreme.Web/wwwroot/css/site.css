@@ -216,7 +216,7 @@ body {
 }
 
 .admin-card {
-  border: 1px solid #2a2a2a;
+  border: 1px solid white;
   border-radius: 16px;
   padding: 2rem 2.5rem;
   width: 100%;
@@ -246,7 +246,7 @@ body {
 /* Customer list panel */
 .admin-customer-list {
   min-height: 120px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid white;
   border-radius: 10px;
   padding: 0.75rem 1rem;
   display: flex;
@@ -308,7 +308,7 @@ body {
 
 .admin-field input {
   background: transparent;
-  border: 1px solid #333;
+  border: 1px solid white;
   border-radius: 8px;
   color: white;
   padding: 0.65rem 1rem;
@@ -319,11 +319,19 @@ body {
 }
 
 .admin-field input:focus {
-  border-color: #666;
+  border-color: white;
+}
+
+.admin-field input.valid {
+  border-color: #30d158;
+}
+
+.admin-field input.invalid {
+  border-color: #ff453a;
 }
 
 .admin-field input::placeholder {
-  color: #3a3a3a;
+  color: #555;
 }
 
 .admin-error {
@@ -347,11 +355,27 @@ body {
   font-weight: 500;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .admin-btn-primary:hover {
   background: #e0e0e0;
+}
+
+.admin-btn-primary.btn-hover-valid {
+  background: transparent;
+  color: #30d158;
+  border: 1px solid #30d158;
+  box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);
+}
+
+.admin-btn-primary.btn-hover-invalid {
+  background: transparent;
+  color: #ff453a;
+  border: 1px solid #ff453a;
 }
 
 .admin-btn-outline {
@@ -374,6 +398,22 @@ body {
   border-color: white;
 }
 
+/* Admin submit area */
+.admin-submit-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.admin-submit-error {
+  color: #ff453a;
+  font-size: 0.82rem;
+  text-align: center;
+  min-height: 1.2rem;
+}
+
 /* Success toast */
 .admin-toast {
   width: 100%;
@@ -386,4 +426,50 @@ body {
   font-size: 0.9rem;
   text-align: center;
   margin: 0;
+}
+
+/* Country picker dropdown */
+.country-picker {
+  position: relative;
+}
+
+.country-picker input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.country-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #111;
+  border: 1px solid white;
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  z-index: 200;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.country-dropdown--hidden {
+  display: none;
+}
+
+.country-option {
+  padding: 0.55rem 1rem;
+  font-size: 0.88rem;
+  color: white;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.country-option:hover,
+.country-option--active {
+  background: #222;
 }

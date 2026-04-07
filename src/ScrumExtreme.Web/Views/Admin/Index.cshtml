@@ -50,48 +50,56 @@
     <div class="admin-card">
         <h2 class="admin-card-title">Lägg till ny kund</h2>
 
-        <form asp-action="SkapaKund" method="post" class="admin-form">
+        <form asp-action="SkapaKund" method="post" class="admin-form" id="createCustomerForm">
             <div class="admin-field">
                 <label asp-for="FirstName">Förnamn</label>
-                <input asp-for="FirstName" placeholder="Förnamn" />
-                <span asp-validation-for="FirstName" class="admin-error"></span>
+                <input asp-for="FirstName" placeholder="Förnamn" autocomplete="given-name" />
+                <span id="error-FirstName" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="LastName">Efternamn</label>
-                <input asp-for="LastName" placeholder="Efternamn" />
-                <span asp-validation-for="LastName" class="admin-error"></span>
+                <input asp-for="LastName" placeholder="Efternamn" autocomplete="family-name" />
+                <span id="error-LastName" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="Address">Adress</label>
-                <input asp-for="Address" placeholder="Adress" />
-                <span asp-validation-for="Address" class="admin-error"></span>
+                <input asp-for="Address" placeholder="T.ex. Strandvägen 13" autocomplete="street-address" />
+                <span id="error-Address" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="City">Stad</label>
-                <input asp-for="City" placeholder="Stad" />
-                <span asp-validation-for="City" class="admin-error"></span>
+                <input asp-for="City" placeholder="Stad" autocomplete="address-level2" />
+                <span id="error-City" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="PostalCode">Postnummer</label>
-                <input asp-for="PostalCode" placeholder="T.ex. 70362" />
-                <span asp-validation-for="PostalCode" class="admin-error"></span>
+                <input asp-for="PostalCode" placeholder="T.ex. 70362" autocomplete="postal-code" />
+                <span id="error-PostalCode" class="admin-error"></span>
             </div>
             <div class="admin-field">
-                <label asp-for="Country">Land</label>
-                <input asp-for="Country" placeholder="T.ex. Sverige" />
-                <span asp-validation-for="Country" class="admin-error"></span>
+                <label for="countrySearch">Land</label>
+                <div class="country-picker">
+                    <input type="text" id="countrySearch" placeholder="Sök land, t.ex. Sverige…" autocomplete="off" />
+                    <ul id="countryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
+                </div>
+                <input type="hidden" id="countryHidden" name="Country" />
+                <span id="error-Country" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="PhoneNumber">Telefonnummer</label>
-                <input asp-for="PhoneNumber" placeholder="T.ex. +46 70 123 45 67" />
-                <span asp-validation-for="PhoneNumber" class="admin-error"></span>
+                <input asp-for="PhoneNumber" placeholder="T.ex. 0701234567 eller +46701234567" autocomplete="tel" />
+                <span id="error-PhoneNumber" class="admin-error"></span>
             </div>
-            <button type="submit" class="admin-btn-primary">Skapa</button>
+            <div class="admin-submit-area">
+                <button type="submit" class="admin-btn-primary" id="submitBtn">Skapa</button>
+                <span id="submitError" class="admin-submit-error"></span>
+            </div>
         </form>
     </div>
 
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.11.16/bundle/libphonenumber-min.js"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
 }
