@@ -1,6 +1,97 @@
+@model ScrumExtreme.Web.Models.CreateCustomerViewModel
 @{
     ViewData["Title"] = "Admin Test";
+    var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.Customer>;
 }
 
-<h1>Admin Test</h1>
-<p>Welcome to the Admin Test page.</p>
+<div class="admin-wrapper">
+
+    @if (TempData["Success"] != null)
+    {
+        <p class="admin-toast">@TempData["Success"]</p>
+    }
+
+    <!-- Alla kunder -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-card-title">Alla kunder</h2>
+            <form asp-action="HamtaAllaKunder" method="post">
+                <button type="submit" class="admin-btn-outline">Hämta alla kunder</button>
+            </form>
+        </div>
+
+        <div class="admin-customer-list">
+            @if (customers == null)
+            {
+                <span class="admin-list-placeholder">Tryck på "Hämta alla kunder" för att visa listan.</span>
+            }
+            else
+            {
+                var list = customers.ToList();
+                if (list.Count == 0)
+                {
+                    <span class="admin-list-placeholder">Inga kunder hittades.</span>
+                }
+                else
+                {
+                    foreach (var c in list)
+                    {
+                        <div class="admin-customer-row">
+                            <span class="admin-customer-name">@c.FirstName @c.LastName</span>
+                            <span class="admin-customer-country">@c.Country</span>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Lägg till ny kund -->
+    <div class="admin-card">
+        <h2 class="admin-card-title">Lägg till ny kund</h2>
+
+        <form asp-action="SkapaKund" method="post" class="admin-form">
+            <div class="admin-field">
+                <label asp-for="FirstName">Förnamn</label>
+                <input asp-for="FirstName" placeholder="Förnamn" />
+                <span asp-validation-for="FirstName" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="LastName">Efternamn</label>
+                <input asp-for="LastName" placeholder="Efternamn" />
+                <span asp-validation-for="LastName" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="Address">Adress</label>
+                <input asp-for="Address" placeholder="Adress" />
+                <span asp-validation-for="Address" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="City">Stad</label>
+                <input asp-for="City" placeholder="Stad" />
+                <span asp-validation-for="City" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="PostalCode">Postnummer</label>
+                <input asp-for="PostalCode" placeholder="T.ex. 70362" />
+                <span asp-validation-for="PostalCode" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="Country">Land</label>
+                <input asp-for="Country" placeholder="T.ex. Sverige" />
+                <span asp-validation-for="Country" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
+                <label asp-for="PhoneNumber">Telefonnummer</label>
+                <input asp-for="PhoneNumber" placeholder="T.ex. +46 70 123 45 67" />
+                <span asp-validation-for="PhoneNumber" class="admin-error"></span>
+            </div>
+            <button type="submit" class="admin-btn-primary">Skapa</button>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -204,3 +204,186 @@ body {
 .login-footer a:hover {
   border-bottom-color: white;
 }
+
+/* ── Admin ── */
+.admin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem 4rem;
+  width: 100%;
+}
+
+.admin-card {
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 560px;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-card-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin: 0;
+}
+
+/* Customer list panel */
+.admin-customer-list {
+  min-height: 120px;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-list-placeholder {
+  color: #444;
+  font-size: 0.9rem;
+  font-style: italic;
+  align-self: center;
+  margin: auto;
+}
+
+.admin-customer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #1f1f1f;
+  font-size: 0.95rem;
+}
+
+.admin-customer-row:last-child {
+  border-bottom: none;
+}
+
+.admin-customer-name {
+  color: white;
+  font-weight: 400;
+}
+
+.admin-customer-country {
+  color: #777;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+/* Form */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-field label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #aaa;
+}
+
+.admin-field input {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.admin-field input:focus {
+  border-color: #666;
+}
+
+.admin-field input::placeholder {
+  color: #3a3a3a;
+}
+
+.admin-error {
+  color: #ff453a;
+  font-size: 0.78rem;
+  min-height: 1rem;
+}
+
+/* Buttons */
+.admin-btn-primary {
+  margin-top: 0.5rem;
+  align-self: center;
+  width: 50%;
+  padding: 0.72rem;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-btn-primary:hover {
+  background: #e0e0e0;
+}
+
+.admin-btn-outline {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-btn-outline:hover {
+  border-color: white;
+}
+
+/* Success toast */
+.admin-toast {
+  width: 100%;
+  max-width: 560px;
+  background: #1a2e1a;
+  border: 1px solid #2d5a2d;
+  border-radius: 10px;
+  color: #4caf50;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
