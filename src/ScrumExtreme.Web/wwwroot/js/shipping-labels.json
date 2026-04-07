@@ -1,138 +1,172 @@
 {
   "en": {
-    "name":        "Name",
-    "address":     "Address",
-    "city":        "City",
-    "postalCode":  "Postal Code",
-    "country":     "Country",
-    "phone":       "Phone"
+    "type": "Shipping Label",
+    "recipient": "RECIPIENT",
+    "name": "Name",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "phone": "Phone"
   },
   "sv": {
-    "name":        "Namn",
-    "address":     "Adress",
-    "city":        "Stad",
-    "postalCode":  "Postnummer",
-    "country":     "Land",
-    "phone":       "Telefon"
+    "type": "Fraktsedel",
+    "recipient": "MOTTAGARE",
+    "name": "Namn",
+    "address": "Adress",
+    "city": "Stad",
+    "postalCode": "Postnummer",
+    "country": "Land",
+    "phone": "Telefon"
   },
   "no": {
-    "name":        "Navn",
-    "address":     "Adresse",
-    "city":        "By",
-    "postalCode":  "Postnummer",
-    "country":     "Land",
-    "phone":       "Telefon"
+    "type": "Fraktbrev",
+    "recipient": "MOTTAKER",
+    "name": "Navn",
+    "address": "Adresse",
+    "city": "By",
+    "postalCode": "Postnummer",
+    "country": "Land",
+    "phone": "Telefon"
   },
   "da": {
-    "name":        "Navn",
-    "address":     "Adresse",
-    "city":        "By",
-    "postalCode":  "Postnummer",
-    "country":     "Land",
-    "phone":       "Telefon"
+    "type": "Fragtbrev",
+    "recipient": "MODTAGER",
+    "name": "Navn",
+    "address": "Adresse",
+    "city": "By",
+    "postalCode": "Postnummer",
+    "country": "Land",
+    "phone": "Telefon"
   },
   "fi": {
-    "name":        "Nimi",
-    "address":     "Osoite",
-    "city":        "Kaupunki",
-    "postalCode":  "Postinumero",
-    "country":     "Maa",
-    "phone":       "Puhelin"
+    "type": "Rahtikirja",
+    "recipient": "VASTAANOTTAJA",
+    "name": "Nimi",
+    "address": "Osoite",
+    "city": "Kaupunki",
+    "postalCode": "Postinumero",
+    "country": "Maa",
+    "phone": "Puhelin"
   },
   "de": {
-    "name":        "Name",
-    "address":     "Adresse",
-    "city":        "Stadt",
-    "postalCode":  "Postleitzahl",
-    "country":     "Land",
-    "phone":       "Telefon"
+    "type": "Frachtbrief",
+    "recipient": "EMPFÄNGER",
+    "name": "Name",
+    "address": "Adresse",
+    "city": "Stadt",
+    "postalCode": "Postleitzahl",
+    "country": "Land",
+    "phone": "Telefon"
   },
   "fr": {
-    "name":        "Nom",
-    "address":     "Adresse",
-    "city":        "Ville",
-    "postalCode":  "Code postal",
-    "country":     "Pays",
-    "phone":       "Téléphone"
+    "type": "Bordereau d'expédition",
+    "recipient": "DESTINATAIRE",
+    "name": "Nom",
+    "address": "Adresse",
+    "city": "Ville",
+    "postalCode": "Code postal",
+    "country": "Pays",
+    "phone": "Téléphone"
   },
   "es": {
-    "name":        "Nombre",
-    "address":     "Dirección",
-    "city":        "Ciudad",
-    "postalCode":  "Código postal",
-    "country":     "País",
-    "phone":       "Teléfono"
+    "type": "Albarán de envío",
+    "recipient": "DESTINATARIO",
+    "name": "Nombre",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "postalCode": "Código postal",
+    "country": "País",
+    "phone": "Teléfono"
   },
   "pt": {
-    "name":        "Nome",
-    "address":     "Endereço",
-    "city":        "Cidade",
-    "postalCode":  "Código postal",
-    "country":     "País",
-    "phone":       "Telefone"
+    "type": "Conhecimento de embarque",
+    "recipient": "DESTINATÁRIO",
+    "name": "Nome",
+    "address": "Endereço",
+    "city": "Cidade",
+    "postalCode": "Código postal",
+    "country": "País",
+    "phone": "Telefone"
   },
   "it": {
-    "name":        "Nome",
-    "address":     "Indirizzo",
-    "city":        "Città",
-    "postalCode":  "Codice postale",
-    "country":     "Paese",
-    "phone":       "Telefono"
+    "type": "Bolla di spedizione",
+    "recipient": "DESTINATARIO",
+    "name": "Nome",
+    "address": "Indirizzo",
+    "city": "Città",
+    "postalCode": "Codice postale",
+    "country": "Paese",
+    "phone": "Telefono"
   },
   "nl": {
-    "name":        "Naam",
-    "address":     "Adres",
-    "city":        "Stad",
-    "postalCode":  "Postcode",
-    "country":     "Land",
-    "phone":       "Telefoon"
+    "type": "Vrachtbrief",
+    "recipient": "ONTVANGER",
+    "name": "Naam",
+    "address": "Adres",
+    "city": "Stad",
+    "postalCode": "Postcode",
+    "country": "Land",
+    "phone": "Telefoon"
   },
   "pl": {
-    "name":        "Imię i nazwisko",
-    "address":     "Adres",
-    "city":        "Miasto",
-    "postalCode":  "Kod pocztowy",
-    "country":     "Kraj",
-    "phone":       "Telefon"
+    "type": "List przewozowy",
+    "recipient": "ODBIORCA",
+    "name": "Imię i nazwisko",
+    "address": "Adres",
+    "city": "Miasto",
+    "postalCode": "Kod pocztowy",
+    "country": "Kraj",
+    "phone": "Telefon"
   },
   "ru": {
-    "name":        "Имя",
-    "address":     "Адрес",
-    "city":        "Город",
-    "postalCode":  "Почтовый индекс",
-    "country":     "Страна",
-    "phone":       "Телефон"
+    "type": "Накладная",
+    "recipient": "ПОЛУЧАТЕЛЬ",
+    "name": "Имя",
+    "address": "Адрес",
+    "city": "Город",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна",
+    "phone": "Телефон"
   },
   "ar": {
-    "name":        "الاسم",
-    "address":     "العنوان",
-    "city":        "المدينة",
-    "postalCode":  "الرمز البريدي",
-    "country":     "البلد",
-    "phone":       "الهاتف"
+    "type": "بوليصة شحن",
+    "recipient": "المستلم",
+    "name": "الاسم",
+    "address": "العنوان",
+    "city": "المدينة",
+    "postalCode": "الرمز البريدي",
+    "country": "البلد",
+    "phone": "الهاتف"
   },
   "zh": {
-    "name":        "姓名",
-    "address":     "地址",
-    "city":        "城市",
-    "postalCode":  "邮政编码",
-    "country":     "国家",
-    "phone":       "电话"
+    "type": "运单",
+    "recipient": "收件人",
+    "name": "姓名",
+    "address": "地址",
+    "city": "城市",
+    "postalCode": "邮政编码",
+    "country": "国家",
+    "phone": "电话"
   },
   "ja": {
-    "name":        "氏名",
-    "address":     "住所",
-    "city":        "市区町村",
-    "postalCode":  "郵便番号",
-    "country":     "国",
-    "phone":       "電話番号"
+    "type": "送り状",
+    "recipient": "受取人",
+    "name": "氏名",
+    "address": "住所",
+    "city": "市区町村",
+    "postalCode": "郵便番号",
+    "country": "国",
+    "phone": "電話番号"
   },
   "ko": {
-    "name":        "이름",
-    "address":     "주소",
-    "city":        "도시",
-    "postalCode":  "우편번호",
-    "country":     "국가",
-    "phone":       "전화번호"
+    "type": "운송장",
+    "recipient": "수신인",
+    "name": "이름",
+    "address": "주소",
+    "city": "도시",
+    "postalCode": "우편번호",
+    "country": "국가",
+    "phone": "전화번호"
   }
 }

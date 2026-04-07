@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Fraktsedel Test";
+}
+
+<div class="sl-page">
+
+    <!-- Language picker -->
+    <div class="sl-picker-wrap">
+        <label class="sl-picker-label" for="slCountrySearch">Välj land för att testa etikettspråk</label>
+        <div class="country-picker">
+            <input type="text" id="slCountrySearch" placeholder="Sök land, t.ex. Sverige…" autocomplete="off" />
+            <ul id="slCountryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
+        </div>
+        <p class="sl-lang-hint">Etiketter visas nu på: <strong id="slLangDisplay">Svenska</strong></p>
+    </div>
+
+    <!-- Shipping label card -->
+    <div class="sl-card">
+        <div class="sl-card-header">
+            <span class="sl-card-logo">Hattmakaren AB</span>
+            <span class="sl-card-type" id="lbl-type">Fraktsedel</span>
+        </div>
+
+        <div class="sl-divider"></div>
+
+        <div class="sl-section-title" id="lbl-recipient-title">MOTTAGARE</div>
+
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-name">Namn</span>
+            <span class="sl-value">Malik King</span>
+        </div>
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-address">Adress</span>
+            <span class="sl-value">Piratestreet 24</span>
+        </div>
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-postalCode">Postnummer</span>
+            <span class="sl-value">71231</span>
+        </div>
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-city">Stad</span>
+            <span class="sl-value">Mogadishu</span>
+        </div>
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-country">Land</span>
+            <span class="sl-value">Somalia</span>
+        </div>
+        <div class="sl-row">
+            <span class="sl-label" id="lbl-phone">Telefon</span>
+            <span class="sl-value">+46 712 312 100</span>
+        </div>
+
+        <div class="sl-divider"></div>
+
+        <div class="sl-barcode-spacer"></div>
+
+        <div class="sl-divider"></div>
+
+        <div class="sl-barcode">||||| |||| ||||| |||| |||||</div>
+        <div class="sl-barcode-num">SE-71231-MK-2026</div>
+    </div>
+
+    <!-- Print button -->
+    <button class="sl-print-btn" id="printBtn">Skriv ut fraktsedel</button>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
+}

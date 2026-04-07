@@ -53,4 +53,10 @@ public class AdminController : Controller
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public IActionResult ShippingLabel()
+    {
+        return View();
+    }
 }
