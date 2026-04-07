@@ -23,7 +23,8 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Register application services
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 
@@ -53,7 +54,5 @@ catch (Exception ex)
 {
     Console.WriteLine($"❌ MongoDB connection FAILED: {ex.Message}");
 }
-
-app.Run();
 
 app.Run();

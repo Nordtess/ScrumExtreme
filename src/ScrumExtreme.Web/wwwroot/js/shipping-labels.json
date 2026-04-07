@@ -1,0 +1,138 @@
+{
+  "en": {
+    "name":        "Name",
+    "address":     "Address",
+    "city":        "City",
+    "postalCode":  "Postal Code",
+    "country":     "Country",
+    "phone":       "Phone"
+  },
+  "sv": {
+    "name":        "Namn",
+    "address":     "Adress",
+    "city":        "Stad",
+    "postalCode":  "Postnummer",
+    "country":     "Land",
+    "phone":       "Telefon"
+  },
+  "no": {
+    "name":        "Navn",
+    "address":     "Adresse",
+    "city":        "By",
+    "postalCode":  "Postnummer",
+    "country":     "Land",
+    "phone":       "Telefon"
+  },
+  "da": {
+    "name":        "Navn",
+    "address":     "Adresse",
+    "city":        "By",
+    "postalCode":  "Postnummer",
+    "country":     "Land",
+    "phone":       "Telefon"
+  },
+  "fi": {
+    "name":        "Nimi",
+    "address":     "Osoite",
+    "city":        "Kaupunki",
+    "postalCode":  "Postinumero",
+    "country":     "Maa",
+    "phone":       "Puhelin"
+  },
+  "de": {
+    "name":        "Name",
+    "address":     "Adresse",
+    "city":        "Stadt",
+    "postalCode":  "Postleitzahl",
+    "country":     "Land",
+    "phone":       "Telefon"
+  },
+  "fr": {
+    "name":        "Nom",
+    "address":     "Adresse",
+    "city":        "Ville",
+    "postalCode":  "Code postal",
+    "country":     "Pays",
+    "phone":       "Téléphone"
+  },
+  "es": {
+    "name":        "Nombre",
+    "address":     "Dirección",
+    "city":        "Ciudad",
+    "postalCode":  "Código postal",
+    "country":     "País",
+    "phone":       "Teléfono"
+  },
+  "pt": {
+    "name":        "Nome",
+    "address":     "Endereço",
+    "city":        "Cidade",
+    "postalCode":  "Código postal",
+    "country":     "País",
+    "phone":       "Telefone"
+  },
+  "it": {
+    "name":        "Nome",
+    "address":     "Indirizzo",
+    "city":        "Città",
+    "postalCode":  "Codice postale",
+    "country":     "Paese",
+    "phone":       "Telefono"
+  },
+  "nl": {
+    "name":        "Naam",
+    "address":     "Adres",
+    "city":        "Stad",
+    "postalCode":  "Postcode",
+    "country":     "Land",
+    "phone":       "Telefoon"
+  },
+  "pl": {
+    "name":        "Imię i nazwisko",
+    "address":     "Adres",
+    "city":        "Miasto",
+    "postalCode":  "Kod pocztowy",
+    "country":     "Kraj",
+    "phone":       "Telefon"
+  },
+  "ru": {
+    "name":        "Имя",
+    "address":     "Адрес",
+    "city":        "Город",
+    "postalCode":  "Почтовый индекс",
+    "country":     "Страна",
+    "phone":       "Телефон"
+  },
+  "ar": {
+    "name":        "الاسم",
+    "address":     "العنوان",
+    "city":        "المدينة",
+    "postalCode":  "الرمز البريدي",
+    "country":     "البلد",
+    "phone":       "الهاتف"
+  },
+  "zh": {
+    "name":        "姓名",
+    "address":     "地址",
+    "city":        "城市",
+    "postalCode":  "邮政编码",
+    "country":     "国家",
+    "phone":       "电话"
+  },
+  "ja": {
+    "name":        "氏名",
+    "address":     "住所",
+    "city":        "市区町村",
+    "postalCode":  "郵便番号",
+    "country":     "国",
+    "phone":       "電話番号"
+  },
+  "ko": {
+    "name":        "이름",
+    "address":     "주소",
+    "city":        "도시",
+    "postalCode":  "우편번호",
+    "country":     "국가",
+    "phone":       "전화번호"
+  }
+}
