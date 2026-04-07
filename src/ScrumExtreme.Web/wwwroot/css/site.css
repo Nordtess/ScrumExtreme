@@ -519,6 +519,46 @@ body {
   width: 100%;
 }
 
+/* Apple-style overrides for the shipping label country picker */
+.sl-picker-wrap .country-picker input[type="text"] {
+  background: #ffffff;
+  border: 1px solid #c7c7cc;
+  border-radius: 10px;
+  color: #1d1d1f;
+  font-size: 0.9rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  padding: 10px 14px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.sl-picker-wrap .country-picker input[type="text"]::placeholder {
+  color: #86868b;
+}
+
+.sl-picker-wrap .country-picker input[type="text"]:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
+}
+
+.sl-picker-wrap .country-dropdown {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
+}
+
+.sl-picker-wrap .country-option {
+  color: #1d1d1f;
+}
+
+.sl-picker-wrap .country-option:hover,
+.sl-picker-wrap .country-option--active {
+  background: #f0f0f5;
+}
+
 /* Label card — white paper document */
 .sl-card {
   background: #fff;
@@ -639,13 +679,6 @@ body {
 
 /* ── Print media ───────────────────────────────────────────── */
 @media print {
-  body > * {
-    display: none !important;
-  }
-  .sl-card {
-    display: flex !important;
-    box-shadow: none;
-  }
   .site-header,
   .site-footer,
   .sl-picker-wrap,
@@ -653,10 +686,30 @@ body {
   .sl-print-btn {
     display: none !important;
   }
-  .sl-page {
-    background: #fff;
-    padding: 0;
+
+  body,
+  .site-main {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
+
+  .sl-page {
+    background: #fff !important;
+    padding: 1cm !important;
+    gap: 0 !important;
+    min-height: unset !important;
+  }
+
+  .sl-card {
+    display: flex !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
   .sl-barcode {
     color: #000;
   }

@@ -6,12 +6,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Swedish names for each language code (shown in the hint text)
     const langDisplayNames = {
-        sv: 'Svenska',   no: 'Norska',        da: 'Danska',
-        fi: 'Finska',    de: 'Tyska',         fr: 'Franska',
-        es: 'Spanska',   pt: 'Portugisiska',  it: 'Italienska',
-        nl: 'Nederl\u00e4ndska', pl: 'Polska', ru: 'Ryska',
-        ar: 'Arabiska',  zh: 'Kinesiska',     ja: 'Japanska',
-        ko: 'Koreanska', en: 'Engelska'
+        sv: 'Svenska',      no: 'Norska',         da: 'Danska',
+        fi: 'Finska',       de: 'Tyska',          fr: 'Franska',
+        es: 'Spanska',      pt: 'Portugisiska',   it: 'Italienska',
+        nl: 'Nederl\u00e4ndska', pl: 'Polska',   ru: 'Ryska',
+        ar: 'Arabiska',     zh: 'Kinesiska',      ja: 'Japanska',
+        ko: 'Koreanska',    en: 'Engelska',
+        th: 'Thailändska',  tr: 'Turkiska',       cs: 'Tjeckiska',
+        sk: 'Slovakiska',   hu: 'Ungerska',       ro: 'Rumänska',
+        bg: 'Bulgariska',   el: 'Grekiska',       uk: 'Ukrainska',
+        hi: 'Hindi',        bn: 'Bengali',        ur: 'Urdu',
+        fa: 'Persiska',     he: 'Hebreiska',      vi: 'Vietnamesiska',
+        id: 'Indonesiska',  ms: 'Malajiska',      tl: 'Tagalog',
+        sr: 'Serbiska',     hr: 'Kroatiska',      sl: 'Slovenska',
+        lt: 'Litauiska',    lv: 'Lettiska',       et: 'Estniska',
+        ca: 'Katalanska',   eu: 'Baskiska',       gl: 'Galiciska',
+        is: 'Isländska',    ga: 'Iriska',         mt: 'Maltesiska',
+        sq: 'Albanska',     mk: 'Makedonska',     bs: 'Bosniska',
+        af: 'Afrikaans',    sw: 'Swahili'
     };
 
     // Fetch both JSON files in parallel
@@ -30,15 +42,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Label swap ───────────────────────────────────────────────────────
     function applyLabels(lang) {
         const set = labels[lang] || labels['en'];
+        const en  = labels['en'];
 
-        document.getElementById('lbl-type').textContent           = set.type;
-        document.getElementById('lbl-recipient-title').textContent = set.recipient;
-        document.getElementById('lbl-name').textContent           = set.name;
-        document.getElementById('lbl-address').textContent        = set.address;
-        document.getElementById('lbl-postalCode').textContent     = set.postalCode;
-        document.getElementById('lbl-city').textContent           = set.city;
-        document.getElementById('lbl-country').textContent        = set.country;
-        document.getElementById('lbl-phone').textContent          = set.phone;
+        // Swedish and English get single-language labels.
+        // All other languages get "English / Local" bilingual labels.
+        function lbl(enVal, localVal) {
+            if (lang === 'sv' || lang === 'en') return localVal;
+            return enVal + ' / ' + localVal;
+        }
+
+        document.getElementById('lbl-type').textContent            = lbl(en.type,       set.type);
+        document.getElementById('lbl-recipient-title').textContent = lbl(en.recipient,  set.recipient);
+        document.getElementById('lbl-name').textContent            = lbl(en.name,       set.name);
+        document.getElementById('lbl-address').textContent         = lbl(en.address,    set.address);
+        document.getElementById('lbl-postalCode').textContent      = lbl(en.postalCode, set.postalCode);
+        document.getElementById('lbl-city').textContent            = lbl(en.city,       set.city);
+        document.getElementById('lbl-country').textContent         = lbl(en.country,    set.country);
+        document.getElementById('lbl-phone').textContent           = lbl(en.phone,      set.phone);
 
         const display = document.getElementById('slLangDisplay');
         if (display) display.textContent = langDisplayNames[lang] || lang;

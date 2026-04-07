@@ -168,5 +168,355 @@
     "postalCode": "우편번호",
     "country": "국가",
     "phone": "전화번호"
+  },
+  "th": {
+    "type": "ใบปะหน้าพัสดุ",
+    "recipient": "ผู้รับ",
+    "name": "ชื่อ",
+    "address": "ที่อยู่",
+    "city": "เมือง",
+    "postalCode": "รหัสไปรษณีย์",
+    "country": "ประเทศ",
+    "phone": "โทรศัพท์"
+  },
+  "tr": {
+    "type": "Gönderi Etiketi",
+    "recipient": "ALICI",
+    "name": "Ad Soyad",
+    "address": "Adres",
+    "city": "Şehir",
+    "postalCode": "Posta Kodu",
+    "country": "Ülke",
+    "phone": "Telefon"
+  },
+  "cs": {
+    "type": "Přepravní štítek",
+    "recipient": "PŘÍJEMCE",
+    "name": "Jméno",
+    "address": "Adresa",
+    "city": "Město",
+    "postalCode": "PSČ",
+    "country": "Země",
+    "phone": "Telefon"
+  },
+  "sk": {
+    "type": "Prepravný štítok",
+    "recipient": "PRÍJEMCA",
+    "name": "Meno",
+    "address": "Adresa",
+    "city": "Mesto",
+    "postalCode": "PSČ",
+    "country": "Krajina",
+    "phone": "Telefón"
+  },
+  "hu": {
+    "type": "Szállítási címke",
+    "recipient": "CÍMZETT",
+    "name": "Név",
+    "address": "Cím",
+    "city": "Város",
+    "postalCode": "Irányítószám",
+    "country": "Ország",
+    "phone": "Telefon"
+  },
+  "ro": {
+    "type": "Etichetă de expediere",
+    "recipient": "DESTINATAR",
+    "name": "Nume",
+    "address": "Adresă",
+    "city": "Oraș",
+    "postalCode": "Cod poștal",
+    "country": "Țară",
+    "phone": "Telefon"
+  },
+  "bg": {
+    "type": "Товарителница",
+    "recipient": "ПОЛУЧАТЕЛ",
+    "name": "Име",
+    "address": "Адрес",
+    "city": "Град",
+    "postalCode": "Пощенски код",
+    "country": "Държава",
+    "phone": "Телефон"
+  },
+  "el": {
+    "type": "Ετικέτα αποστολής",
+    "recipient": "ΠΑΡΑΛΗΠΤΗΣ",
+    "name": "Όνομα",
+    "address": "Διεύθυνση",
+    "city": "Πόλη",
+    "postalCode": "Ταχυδρομικός κώδικας",
+    "country": "Χώρα",
+    "phone": "Τηλέφωνο"
+  },
+  "uk": {
+    "type": "Транспортна накладна",
+    "recipient": "ОДЕРЖУВАЧ",
+    "name": "Ім'я",
+    "address": "Адреса",
+    "city": "Місто",
+    "postalCode": "Поштовий індекс",
+    "country": "Країна",
+    "phone": "Телефон"
+  },
+  "hi": {
+    "type": "शिपिंग लेबल",
+    "recipient": "प्राप्तकर्ता",
+    "name": "नाम",
+    "address": "पता",
+    "city": "शहर",
+    "postalCode": "पिन कोड",
+    "country": "देश",
+    "phone": "फ़ोन"
+  },
+  "bn": {
+    "type": "শিপিং লেবেল",
+    "recipient": "প্রাপক",
+    "name": "নাম",
+    "address": "ঠিকানা",
+    "city": "শহর",
+    "postalCode": "পোস্টাল কোড",
+    "country": "দেশ",
+    "phone": "ফোন"
+  },
+  "ur": {
+    "type": "شپنگ لیبل",
+    "recipient": "وصول کنندہ",
+    "name": "نام",
+    "address": "پتہ",
+    "city": "شہر",
+    "postalCode": "پوسٹل کوڈ",
+    "country": "ملک",
+    "phone": "فون"
+  },
+  "fa": {
+    "type": "برچسب ارسال",
+    "recipient": "گیرنده",
+    "name": "نام",
+    "address": "آدرس",
+    "city": "شهر",
+    "postalCode": "کد پستی",
+    "country": "کشور",
+    "phone": "تلفن"
+  },
+  "he": {
+    "type": "תווית משלוח",
+    "recipient": "נמען",
+    "name": "שם",
+    "address": "כתובת",
+    "city": "עיר",
+    "postalCode": "מיקוד",
+    "country": "מדינה",
+    "phone": "טלפון"
+  },
+  "vi": {
+    "type": "Phiếu gửi hàng",
+    "recipient": "NGƯỜI NHẬN",
+    "name": "Tên",
+    "address": "Địa chỉ",
+    "city": "Thành phố",
+    "postalCode": "Mã bưu chính",
+    "country": "Quốc gia",
+    "phone": "Điện thoại"
+  },
+  "id": {
+    "type": "Label Pengiriman",
+    "recipient": "PENERIMA",
+    "name": "Nama",
+    "address": "Alamat",
+    "city": "Kota",
+    "postalCode": "Kode Pos",
+    "country": "Negara",
+    "phone": "Telepon"
+  },
+  "ms": {
+    "type": "Label Penghantaran",
+    "recipient": "PENERIMA",
+    "name": "Nama",
+    "address": "Alamat",
+    "city": "Bandar",
+    "postalCode": "Poskod",
+    "country": "Negara",
+    "phone": "Telefon"
+  },
+  "tl": {
+    "type": "Label ng Padala",
+    "recipient": "TATANGGAP",
+    "name": "Pangalan",
+    "address": "Address",
+    "city": "Lungsod",
+    "postalCode": "Postal Code",
+    "country": "Bansa",
+    "phone": "Telepono"
+  },
+  "sr": {
+    "type": "Отпремна налепница",
+    "recipient": "ПРИМАЛАЦ",
+    "name": "Име",
+    "address": "Адреса",
+    "city": "Град",
+    "postalCode": "Поштански број",
+    "country": "Држава",
+    "phone": "Телефон"
+  },
+  "hr": {
+    "type": "Otpremnica",
+    "recipient": "PRIMATELJ",
+    "name": "Ime",
+    "address": "Adresa",
+    "city": "Grad",
+    "postalCode": "Poštanski broj",
+    "country": "Država",
+    "phone": "Telefon"
+  },
+  "sl": {
+    "type": "Nalepka za pošiljanje",
+    "recipient": "PREJEMNIK",
+    "name": "Ime",
+    "address": "Naslov",
+    "city": "Mesto",
+    "postalCode": "Poštna številka",
+    "country": "Država",
+    "phone": "Telefon"
+  },
+  "lt": {
+    "type": "Siuntos etiketė",
+    "recipient": "GAVĖJAS",
+    "name": "Vardas",
+    "address": "Adresas",
+    "city": "Miestas",
+    "postalCode": "Pašto kodas",
+    "country": "Šalis",
+    "phone": "Telefonas"
+  },
+  "lv": {
+    "type": "Sūtījuma etiķete",
+    "recipient": "SAŅĒMĒJS",
+    "name": "Vārds",
+    "address": "Adrese",
+    "city": "Pilsēta",
+    "postalCode": "Pasta indekss",
+    "country": "Valsts",
+    "phone": "Tālrunis"
+  },
+  "et": {
+    "type": "Saateleht",
+    "recipient": "SAAJA",
+    "name": "Nimi",
+    "address": "Aadress",
+    "city": "Linn",
+    "postalCode": "Postiindeks",
+    "country": "Riik",
+    "phone": "Telefon"
+  },
+  "ca": {
+    "type": "Etiqueta d'enviament",
+    "country": "País",
+    "recipient": "DESTINATARI",
+    "name": "Nom",
+    "address": "Adreça",
+    "city": "Ciutat",
+    "postalCode": "Codi postal",
+    "phone": "Telèfon"
+  },
+  "eu": {
+    "type": "Bidalketa etiketa",
+    "recipient": "HARTZAILEA",
+    "name": "Izena",
+    "address": "Helbidea",
+    "city": "Hiria",
+    "postalCode": "Posta kodea",
+    "country": "Herrialdea",
+    "phone": "Telefonoa"
+  },
+  "gl": {
+    "type": "Etiqueta de envío",
+    "recipient": "DESTINATARIO",
+    "name": "Nome",
+    "address": "Enderezo",
+    "city": "Cidade",
+    "postalCode": "Código postal",
+    "country": "País",
+    "phone": "Teléfono"
+  },
+  "is": {
+    "type": "Sendingarmiði",
+    "recipient": "VIÐTAKANDI",
+    "name": "Nafn",
+    "address": "Heimilisfang",
+    "city": "Borg",
+    "postalCode": "Póstnúmer",
+    "country": "Land",
+    "phone": "Sími"
+  },
+  "ga": {
+    "type": "Lipéad loingseoireachta",
+    "recipient": "FAIGHTEOIR",
+    "name": "Ainm",
+    "address": "Seoladh",
+    "city": "Cathair",
+    "postalCode": "Cód poist",
+    "country": "Tír",
+    "phone": "Fón"
+  },
+  "mt": {
+    "type": "Tikketta tat-tbaħħir",
+    "recipient": "RIĊEVITUR",
+    "name": "Isem",
+    "address": "Indirizz",
+    "city": "Belt",
+    "postalCode": "Kodiċi postali",
+    "country": "Pajjiż",
+    "phone": "Telefon"
+  },
+  "sq": {
+    "type": "Etiketë dërgese",
+    "recipient": "MARRËSI",
+    "name": "Emri",
+    "address": "Adresa",
+    "city": "Qyteti",
+    "postalCode": "Kodi postar",
+    "country": "Shteti",
+    "phone": "Telefoni"
+  },
+  "mk": {
+    "type": "Испратница",
+    "recipient": "ПРИМАЧ",
+    "name": "Име",
+    "address": "Адреса",
+    "city": "Град",
+    "postalCode": "Поштенски код",
+    "country": "Држава",
+    "phone": "Телефон"
+  },
+  "bs": {
+    "type": "Otpremnica",
+    "recipient": "PRIMALAC",
+    "name": "Ime",
+    "address": "Adresa",
+    "city": "Grad",
+    "postalCode": "Poštanski broj",
+    "country": "Država",
+    "phone": "Telefon"
+  },
+  "af": {
+    "type": "Versendingetiket",
+    "recipient": "ONTVANGER",
+    "name": "Naam",
+    "address": "Adres",
+    "city": "Stad",
+    "postalCode": "Poskode",
+    "country": "Land",
+    "phone": "Telefoon"
+  },
+  "sw": {
+    "type": "Lebo ya usafirishaji",
+    "recipient": "MPOKEAJI",
+    "name": "Jina",
+    "address": "Anwani",
+    "city": "Jiji",
+    "postalCode": "Msimbo wa posta",
+    "country": "Nchi",
+    "phone": "Simu"
   }
 }
