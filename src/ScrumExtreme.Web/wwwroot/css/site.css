@@ -473,3 +473,255 @@ body {
 .country-option--active {
   background: #222;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Shipping Label Test Page
+   ═══════════════════════════════════════════════════════════════ */
+
+.sl-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 1rem;
+  min-height: 100vh;
+  background: #0a0a0a;
+}
+
+/* Picker area */
+.sl-picker-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.sl-picker-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.sl-lang-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+}
+
+.sl-lang-hint strong {
+  color: #ccc;
+}
+
+.sl-picker-wrap .country-picker {
+  width: 100%;
+}
+
+/* Apple-style overrides for the shipping label country picker */
+.sl-picker-wrap .country-picker input[type="text"] {
+  background: #ffffff;
+  border: 1px solid #c7c7cc;
+  border-radius: 10px;
+  color: #1d1d1f;
+  font-size: 0.9rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  padding: 10px 14px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.sl-picker-wrap .country-picker input[type="text"]::placeholder {
+  color: #86868b;
+}
+
+.sl-picker-wrap .country-picker input[type="text"]:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
+}
+
+.sl-picker-wrap .country-dropdown {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
+}
+
+.sl-picker-wrap .country-option {
+  color: #1d1d1f;
+}
+
+.sl-picker-wrap .country-option:hover,
+.sl-picker-wrap .country-option--active {
+  background: #f0f0f5;
+}
+
+/* Label card — white paper document */
+.sl-card {
+  background: #fff;
+  color: #111;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+  padding: 2rem 2.2rem;
+  font-family:
+    "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", "Noto Sans Arabic",
+    "Noto Sans Devanagari", "Noto Sans", "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pushes divider + barcode to the bottom with lots of space */
+.sl-barcode-spacer {
+  flex: 1;
+  min-height: 4rem;
+}
+
+.sl-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.8rem;
+}
+
+.sl-card-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #111;
+}
+
+.sl-card-type {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.sl-divider {
+  border: none;
+  border-top: 1.5px solid #ddd;
+  margin: 0.8rem 0;
+}
+
+.sl-section-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+.sl-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+  line-height: 1.4;
+}
+
+.sl-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #555;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.sl-label::after {
+  content: ":";
+}
+
+.sl-value {
+  font-size: 0.9rem;
+  color: #111;
+}
+
+.sl-barcode {
+  text-align: center;
+  font-size: 1.4rem;
+  letter-spacing: 0.25em;
+  color: #222;
+  margin-top: 1.4rem;
+  font-family: monospace;
+}
+
+.sl-barcode-num {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #888;
+  letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+/* Print button */
+.sl-print-btn {
+  background: #1a1a1a;
+  color: #e8e8e8;
+  border: 1.5px solid #333;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.sl-print-btn:hover {
+  background: #2a2a2a;
+  border-color: #4caf50;
+  color: #fff;
+}
+
+/* ── Print media ───────────────────────────────────────────── */
+@media print {
+  .site-header,
+  .site-footer,
+  .sl-picker-wrap,
+  .sl-lang-hint,
+  .sl-print-btn {
+    display: none !important;
+  }
+
+  body,
+  .site-main {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .sl-page {
+    background: #fff !important;
+    padding: 1cm !important;
+    gap: 0 !important;
+    min-height: unset !important;
+  }
+
+  .sl-card {
+    display: flex !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Use Noto Sans (preloaded) for full Unicode coverage in print */
+  .sl-card,
+  .sl-card * {
+    font-family:
+      "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", "Noto Sans Arabic",
+      "Noto Sans Devanagari", "Noto Sans", "Roboto", "PingFang SC",
+      "Microsoft YaHei", "Arial Unicode MS", sans-serif !important;
+  }
+
+  .sl-barcode {
+    color: #000;
+  }
+}

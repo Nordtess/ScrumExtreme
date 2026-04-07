@@ -5,18 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitBtn  = document.getElementById('submitBtn');
     const submitError = document.getElementById('submitError');
 
-    // Phone library loaded via CDN — global is window.libphonenumber
-    const phoneLib = window.libphonenumber || null;
-
     // ── Country picker ───────────────────────────────────────────────────
-    let countries      = [];
-    let selectedCountry = null;   // { name, iso, dial }
-    let currentMatches = [];
-    let highlightedIdx = -1;
+    let countries         = [];
+    let selectedCountry   = null;   // { name, iso, dial, lang }
+    let currentMatches    = [];
+    let highlightedIdx    = -1;
+    let currentDialPrefix = '';     // e.g. "+46" – locked into phone field
 
-    const countrySearch   = document.getElementById('countrySearch');
-    const countryHidden   = document.getElementById('countryHidden');
-    const countryDropdown = document.getElementById('countryDropdown');
+    const countrySearch     = document.getElementById('countrySearch');
+    const countryHidden     = document.getElementById('countryHidden');
+    const countryCodeHidden = document.getElementById('countryCodeHidden');
+    const countryDropdown   = document.getElementById('countryDropdown');
 
     fetch('/js/countries.json')
         .then(function (r) { return r.json(); })
@@ -25,8 +24,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     countrySearch.addEventListener('input', function () {
         const q = this.value.trim().toLowerCase();
-        selectedCountry     = null;
-        countryHidden.value = '';
+        selectedCountry        = null;
+        currentDialPrefix      = '';
+        countryHidden.value    = '';
+        if (countryCodeHidden) countryCodeHidden.value = '';
         if (!q) { closeDropdown(); return; }
 
         const starts   = countries.filter(function (c) { return c.name.toLowerCase().startsWith(q); });
@@ -84,19 +85,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function selectCountry(c) {
         if (!c) return;
-        selectedCountry     = c;
-        countrySearch.value = c.name;
-        countryHidden.value = c.name;
+        selectedCountry       = c;
+        countrySearch.value   = c.name;
+        countryHidden.value   = c.name;
+        if (countryCodeHidden) countryCodeHidden.value = c.iso;
         closeDropdown();
 
-        // Auto-fill phone prefix if phone field is empty or only holds a dial code
+        // Lock phone field to country dial code prefix
         const phone = document.getElementById('PhoneNumber');
         if (phone) {
-            const cur = phone.value.trim();
-            if (!cur || /^\+\d{0,4}$/.test(cur)) {
-                phone.value = c.dial;
-                phone.setSelectionRange(phone.value.length, phone.value.length);
-            }
+            currentDialPrefix  = c.dial;
+            phone.value        = c.dial;
+            phone.focus();
+            phone.setSelectionRange(phone.value.length, phone.value.length);
         }
 
         countrySearch.dataset.touched = '1';
@@ -123,12 +124,24 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
     }
 
+    // ── Normalizers ───────────────────────────────────────────────────────
+    function toTitleCase(s) {
+        return s.trim().toLowerCase().replace(/(?:^|\s)\S/g, function (ch) {
+            return ch.toUpperCase();
+        });
+    }
+
+    function normalizeEmail(s) {
+        return s.trim().toLowerCase();
+    }
+
     // ── Regular field rules ──────────────────────────────────────────────
     const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ\s\-]+$/;
 
     const fieldRules = [
         {
             id: 'FirstName',
+            normalize: toTitleCase,
             validate: function (v) {
                 const t = v.trim();
                 if (!t) return 'Förnamn måste vara ifyllt';
@@ -138,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         {
             id: 'LastName',
+            normalize: toTitleCase,
             validate: function (v) {
                 const t = v.trim();
                 if (!t) return 'Efternamn måste vara ifyllt';
@@ -146,17 +160,30 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         {
+            id: 'Email',
+            normalize: normalizeEmail,
+            validate: function (v) {
+                const t = v.trim();
+                if (!t) return 'E-post måste vara ifyllt';
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t))
+                    return 'Din e-post måste vara skriven som abc@mail.com';
+                return null;
+            }
+        },
+        {
             id: 'Address',
+            normalize: toTitleCase,
             validate: function (v) {
                 const t = v.trim();
                 if (!t) return 'Adress måste vara ifyllt';
-                if (!/[a-zA-ZåäöÅÄÖ]/.test(t)) return 'Ange gatunamn och husnummer, t.ex. Strandvägen 13';
-                if (!/\d/.test(t)) return 'Ange gatunamn och husnummer, t.ex. Strandvägen 13';
+                if (!/^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ][a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ\s]* \d+[a-zA-Z0-9]*$/.test(t))
+                    return 'Ange gatunamn och husnummer med mellanslag, t.ex. Strandgatan 24';
                 return null;
             }
         },
         {
             id: 'City',
+            normalize: toTitleCase,
             validate: function (v) {
                 const t = v.trim();
                 if (!t) return 'Stad måste vara ifyllt';
@@ -193,6 +220,44 @@ document.addEventListener('DOMContentLoaded', function () {
             if (this.dataset.touched) runRuleValidation(rule);
         });
     });
+
+    // ── Phone prefix enforcement ────────────────────────────────────────────
+    const phoneInput = document.getElementById('PhoneNumber');
+    if (phoneInput) {
+        // Block backspace/delete into the locked prefix
+        phoneInput.addEventListener('keydown', function (e) {
+            if (!currentDialPrefix) return;
+            const pos = this.selectionStart;
+            const sel = this.selectionEnd;
+            if (e.key === 'Backspace' && pos <= currentDialPrefix.length && pos === sel) {
+                e.preventDefault();
+            }
+            if (e.key === 'Delete' && pos < currentDialPrefix.length) {
+                e.preventDefault();
+            }
+            // Only allow digits, navigation keys and standard shortcuts after prefix
+            const nav = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Tab','Home','End','Enter'];
+            if (e.ctrlKey || e.metaKey || nav.includes(e.key)) return;
+            if (e.key === 'Backspace' || e.key === 'Delete') return;
+            if (!/^\d$/.test(e.key)) {
+                e.preventDefault();
+                return;
+            }
+            // Enforce max 8 digits
+            const digits = this.value.slice(currentDialPrefix.length).replace(/\D/g, '');
+            if (digits.length >= 8 && pos === sel) e.preventDefault();
+        });
+
+        // Sanitise on paste / autofill / any other input path
+        phoneInput.addEventListener('input', function () {
+            if (!currentDialPrefix) return;
+            let val = this.value;
+            if (!val.startsWith(currentDialPrefix)) val = currentDialPrefix;
+            const digits = val.slice(currentDialPrefix.length).replace(/\D/g, '').slice(0, 8);
+            const fixed  = currentDialPrefix + digits;
+            if (fixed !== this.value) this.value = fixed;
+        });
+    }
 
     // Button hover
     submitBtn.addEventListener('mouseenter', function () {
@@ -239,42 +304,21 @@ document.addEventListener('DOMContentLoaded', function () {
         return !!err;
     }
 
-    // ── Phone (libphonenumber-js + fallback) ─────────────────
+    // ── Phone helpers (prefix-locked, digits only) ──────────────────────
     function normalizePhone(value) {
-        const trimmed = value.trim();
-        if (!trimmed) return trimmed;
-        const iso = selectedCountry ? selectedCountry.iso : 'SE';
-        if (phoneLib) {
-            try {
-                const parsed = phoneLib.parsePhoneNumber(trimmed, iso);
-                if (parsed && parsed.isValid()) return parsed.format('E.164');
-            } catch (e) { /* fall through to fallback */ }
-        }
-        return fallbackNormalize(trimmed);
+        if (!currentDialPrefix) return value.trim();
+        const digits = value.slice(currentDialPrefix.length).replace(/\D/g, '').slice(0, 8);
+        return currentDialPrefix + digits;
     }
 
     function validatePhone(value) {
         const trimmed = value.trim();
-        if (!trimmed) return 'Telefonnummer måste vara ifyllt';
-        const iso = selectedCountry ? selectedCountry.iso : 'SE';
-        if (phoneLib) {
-            try {
-                const parsed = phoneLib.parsePhoneNumber(trimmed, iso);
-                if (parsed && parsed.isValid()) return null;
-            } catch (e) { /* fall through */ }
-            return 'Ogiltigt telefonnummer';
+        if (!currentDialPrefix || !trimmed || trimmed === currentDialPrefix) {
+            return 'Telefonnummer måste vara ifyllt';
         }
-        if (!/^\+\d{7,15}$/.test(trimmed)) return 'Ogiltigt format, t.ex. +46701234567';
+        const digits = trimmed.slice(currentDialPrefix.length);
+        if (digits.length < 3) return 'Ange minst 3 siffror efter landkod';
         return null;
-    }
-
-    function fallbackNormalize(s) {
-        let r = s.replace(/[^\d+]/g, '');
-        if (r.startsWith('+')) return r;
-        r = r.replace(/\D/g, '');
-        if (r.startsWith('0')) return '+46' + r.slice(1);
-        if (r.startsWith('46')) return '+' + r;
-        return '+46' + r;
     }
 
     // ── Helpers ──────────────────────────────────────────────

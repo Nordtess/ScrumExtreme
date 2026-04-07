@@ -1,7 +1,7 @@
 @model ScrumExtreme.Web.Models.CreateCustomerViewModel
 @{
     ViewData["Title"] = "Admin Test";
-    var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.Customer>;
+    var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
 }
 
 <div class="admin-wrapper">
@@ -62,6 +62,11 @@
                 <span id="error-LastName" class="admin-error"></span>
             </div>
             <div class="admin-field">
+                <label asp-for="Email">E-post</label>
+                <input asp-for="Email" placeholder="T.ex. namn@exempel.se" autocomplete="email" type="email" />
+                <span id="error-Email" class="admin-error"></span>
+            </div>
+            <div class="admin-field">
                 <label asp-for="Address">Adress</label>
                 <input asp-for="Address" placeholder="T.ex. Strandvägen 13" autocomplete="street-address" />
                 <span id="error-Address" class="admin-error"></span>
@@ -83,11 +88,12 @@
                     <ul id="countryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
                 </div>
                 <input type="hidden" id="countryHidden" name="Country" />
+                <input type="hidden" id="countryCodeHidden" name="CountryCode" />
                 <span id="error-Country" class="admin-error"></span>
             </div>
             <div class="admin-field">
                 <label asp-for="PhoneNumber">Telefonnummer</label>
-                <input asp-for="PhoneNumber" placeholder="T.ex. 0701234567 eller +46701234567" autocomplete="tel" />
+                <input asp-for="PhoneNumber" placeholder="Välj ett land ovan, sedan siffror" autocomplete="tel" />
                 <span id="error-PhoneNumber" class="admin-error"></span>
             </div>
             <div class="admin-submit-area">
@@ -100,6 +106,5 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.11.16/bundle/libphonenumber-min.js"></script>
     <script src="~/js/admin.js" asp-append-version="true"></script>
 }

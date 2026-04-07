@@ -7,11 +7,11 @@ namespace ScrumExtreme.Web.Controllers;
 
 public class AdminController : Controller
 {
-    private readonly ICustomerService _customerService;
+    private readonly IUserService _userService;
 
-    public AdminController(ICustomerService customerService)
+    public AdminController(IUserService userService)
     {
-        _customerService = customerService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -23,8 +23,8 @@ public class AdminController : Controller
     [HttpPost]
     public async Task<IActionResult> HamtaAllaKunder()
     {
-        var customers = await _customerService.GetAllCustomersAsync();
-        ViewBag.Customers = customers;
+        var users = await _userService.GetAllUsersAsync();
+        ViewBag.Customers = users;
         return View("Index", new CreateCustomerViewModel());
     }
 
@@ -36,19 +36,27 @@ public class AdminController : Controller
             return View("Index", model);
         }
 
-        var customer = new Customer
+        var user = new User
         {
             FirstName = model.FirstName,
             LastName = model.LastName,
+            Email = model.Email,
             Address = model.Address,
             City = model.City,
             PostalCode = model.PostalCode,
+            CountryCode = model.CountryCode,
             Country = model.Country,
             PhoneNumber = model.PhoneNumber
         };
 
-        await _customerService.CreateCustomerAsync(customer);
-        TempData["Success"] = $"Kunden {customer.FirstName} {customer.LastName} skapades!";
+        await _userService.CreateUserAsync(user);
+        TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public IActionResult ShippingLabel()
+    {
+        return View();
     }
 }
