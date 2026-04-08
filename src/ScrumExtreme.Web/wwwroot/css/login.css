@@ -1,0 +1,190 @@
+/* ── Login / Create Account ── */
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding-top: 7vh;
+  width: 100%;
+}
+
+.login-card {
+  background: #111;
+  border: 1px solid #222;
+  border-top: 3px solid #c9a84c;
+  border-radius: 12px;
+  padding: 2.5rem 2.75rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Branding inside card ── */
+.login-brand {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.login-brand-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9a84c;
+  margin: 0 auto 0.6rem;
+}
+
+.login-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e8e0d4;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-align: center;
+}
+
+.login-subtitle {
+  font-size: 0.72rem;
+  color: #605850;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Divider ── */
+.login-divider {
+  height: 1px;
+  background: #1c1c1c;
+  margin: 0;
+}
+
+/* ── Form fields ── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-field label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.login-field input {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  font-size: 0.88rem;
+  font-family: "Roboto", sans-serif;
+  padding: 0.65rem 0.9rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-field input::placeholder {
+  color: #3a3a3a;
+}
+
+.login-field input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+/* ── Submit button ── */
+.login-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 7px;
+  color: #c9a84c;
+  font-size: 0.8rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+  margin-top: 0.3rem;
+}
+
+.login-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: #c9a84c;
+  transform: translateY(-1px);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Footer link ── */
+.login-footer {
+  font-size: 0.75rem;
+  color: #555;
+  text-align: center;
+  margin: 0;
+}
+
+.login-footer a {
+  color: #c9a84c;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.login-footer a:hover {
+  border-color: #c9a84c;
+}
+
+/* ── Button hover states ── */
+.login-btn.btn-hover-valid {
+  background: transparent;
+  color: #30d158;
+  border-color: #30d158;
+  box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);
+  transform: translateY(-1px);
+}
+
+.login-btn.btn-hover-invalid {
+  background: transparent;
+  color: #ff453a;
+  border-color: #ff453a;
+  box-shadow: 0 0 10px rgba(255, 69, 58, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ── Error message ── */
+.login-error {
+  font-size: 0.75rem;
+  color: #d45c5c;
+  background: rgba(212, 92, 92, 0.08);
+  border: 1px solid rgba(212, 92, 92, 0.2);
+  border-radius: 6px;
+  padding: 0.55rem 0.8rem;
+  text-align: center;
+}

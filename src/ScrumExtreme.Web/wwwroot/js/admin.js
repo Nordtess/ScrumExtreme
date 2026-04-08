@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
         currentDialPrefix      = '';
         countryHidden.value    = '';
         if (countryCodeHidden) countryCodeHidden.value = '';
+        // Re-lock phone when country is cleared
+        const phone = document.getElementById('PhoneNumber');
+        if (phone) { phone.disabled = true; phone.value = ''; }
         if (!q) { closeDropdown(); return; }
 
         const starts   = countries.filter(function (c) { return c.name.toLowerCase().startsWith(q); });
@@ -91,10 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (countryCodeHidden) countryCodeHidden.value = c.iso;
         closeDropdown();
 
-        // Lock phone field to country dial code prefix
+        // Unlock and lock phone field to country dial code prefix
         const phone = document.getElementById('PhoneNumber');
         if (phone) {
             currentDialPrefix  = c.dial;
+            phone.disabled     = false;
             phone.value        = c.dial;
             phone.focus();
             phone.setSelectionRange(phone.value.length, phone.value.length);
