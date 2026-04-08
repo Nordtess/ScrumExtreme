@@ -55,7 +55,7 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet("ShippingLabel")]
+    [HttpGet("/ShippingLabel")]
     public IActionResult ShippingLabel()
     {
         return View();

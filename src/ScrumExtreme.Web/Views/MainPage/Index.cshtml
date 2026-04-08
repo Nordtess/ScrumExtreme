@@ -47,7 +47,7 @@
                 <h2 class="mp-panel-title">
                     <span class="mp-panel-dot"></span>Försäljning
                 </h2>
-                <a href="#" class="mp-panel-btn">Visa statistik →</a>
+                <a asp-controller="SalesStatistics" asp-action="Index" class="mp-panel-btn">Visa statistik →</a>
             </div>
             <div class="mp-panel-body">
                 <div class="mp-stat-grid">
@@ -95,7 +95,7 @@
                 <h2 class="mp-panel-title">
                     <span class="mp-panel-dot"></span>Orderöversikt
                 </h2>
-                <a href="#" class="mp-panel-btn">Visa alla ordrar →</a>
+                <a asp-controller="Orders" asp-action="Index" class="mp-panel-btn">Visa alla ordrar →</a>
             </div>
             <div class="mp-panel-body">
                 <table class="mp-orders-table">
@@ -241,7 +241,7 @@
                 <h2 class="mp-panel-title">
                     <span class="mp-panel-dot"></span>Lagerstatus
                 </h2>
-                <a href="#" class="mp-panel-btn">Hantera lager →</a>
+                <a asp-controller="Warehouse" asp-action="Index" class="mp-panel-btn">Hantera lager →</a>
             </div>
             <div class="mp-panel-body">
                 <div class="mp-inv-list">

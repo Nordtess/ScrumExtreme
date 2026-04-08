@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ScrumExtreme.Web.Controllers;
 
-[Route("Huvudsida")]
+[Route("MainPage")]
 public class MainPageController : Controller
 {
     [HttpGet("")]
