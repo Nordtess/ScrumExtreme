@@ -104,6 +104,10 @@
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
                     <span class="admin-panel-dot"></span>Alla kunder
+                    @if (customers != null)
+                    {
+                        <span class="admin-customer-count">@customers.Count()</span>
+                    }
                 </h2>
                 <form asp-action="HamtaAllaKunder" method="post" class="admin-panel-fetch-form">
                     <button type="submit" class="admin-panel-btn">Hämta →</button>
