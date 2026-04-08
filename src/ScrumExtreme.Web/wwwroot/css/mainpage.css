@@ -1,6 +1,5 @@
 /* ── Mainpage Dashboard ── */
 
-/* Let the dashboard fill the full width and override site-main centering */
 .site-main:has(.mp-dashboard) {
   align-items: stretch;
   text-align: left;
@@ -20,10 +19,16 @@
 .mp-page-header {
   border-bottom: 1px solid #222;
   padding-bottom: 1.1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e8e0d4;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.3rem;
 }
 
 .mp-page-title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #e8e0d4;
   letter-spacing: 0.04em;
