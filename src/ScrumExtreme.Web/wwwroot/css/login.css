@@ -3,8 +3,9 @@
 .login-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 60px - 4rem);
+  justify-content: flex-start;
+  flex-direction: column;
+  padding-top: 7vh;
   width: 100%;
 }
 
