@@ -28,10 +28,14 @@
                 <input type="password" id="password" name="password" placeholder="Ditt lösenord" required
                        autocomplete="current-password">
             </div>
-            <button type="submit" class="login-btn">Logga in</button>
+            <button type="submit" class="login-btn" id="loginBtn">Logga in</button>
         </form>
 
         <p class="login-footer">Inget konto? Placera dig i kö hos SysAdmin.</p>
 
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/login.js" asp-append-version="true"></script>
+}
