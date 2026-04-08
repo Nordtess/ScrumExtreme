@@ -116,7 +116,7 @@
   display: grid;
   grid-template-columns: 1fr 2.3fr 1fr;
   gap: 1.15rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ── Panel base ── */
