@@ -2,9 +2,27 @@
     ViewData["Title"] = "Skapa konto";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
 <div class="login-wrapper">
     <div class="login-card">
-        <h2 class="login-title">Skapa konto</h2>
-        <p style="color:#aaa; text-align:center;">Kommer snart.</p>
+
+        <div class="login-brand">
+            <span class="login-brand-dot"></span>
+            <h2 class="login-title">Skapa konto</h2>
+            <p class="login-subtitle">Hattmakaren AB</p>
+        </div>
+
+        <div class="login-divider"></div>
+
+        <p class="login-footer" style="text-align:center; color:#555;">Kommer snart.</p>
+
+        <p class="login-footer">
+            Har du redan ett konto?
+            <a asp-controller="Login" asp-action="Index">Logga in här</a>
+        </p>
+
     </div>
 </div>

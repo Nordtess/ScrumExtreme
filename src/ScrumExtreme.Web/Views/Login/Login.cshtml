@@ -2,11 +2,22 @@
     ViewData["Title"] = "Logga in";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
 <div class="login-wrapper">
     <div class="login-card">
-        <h2 class="login-title">Logga in</h2>
 
-        <form method="post" asp-controller="Login" asp-action="Index">
+        <div class="login-brand">
+            <span class="login-brand-dot"></span>
+            <h2 class="login-title">Logga in</h2>
+            <p class="login-subtitle">Hattmakaren AB</p>
+        </div>
+
+        <div class="login-divider"></div>
+
+        <form method="post" asp-controller="Login" asp-action="Index" class="login-form">
             <div class="login-field">
                 <label for="username">Användarnamn</label>
                 <input type="text" id="username" name="username" placeholder="Ditt användarnamn" required
@@ -20,9 +31,7 @@
             <button type="submit" class="login-btn">Logga in</button>
         </form>
 
-        <p class="login-footer">
-            Har du inget konto?
-            <a asp-controller="Login" asp-action="CreateAccount">Skapa ett nytt!</a>
-        </p>
+        <p class="login-footer">Inget konto? Placera dig i kö hos SysAdmin.</p>
+
     </div>
 </div>
