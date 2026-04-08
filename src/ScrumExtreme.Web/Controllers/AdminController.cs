@@ -5,6 +5,7 @@ using ScrumExtreme.Web.Models;
 
 namespace ScrumExtreme.Web.Controllers;
 
+[Route("AddCustomer")]
 public class AdminController : Controller
 {
     private readonly IUserService _userService;
@@ -14,13 +15,13 @@ public class AdminController : Controller
         _userService = userService;
     }
 
-    [HttpGet]
+    [HttpGet("")]
     public IActionResult Index()
     {
         return View(new CreateCustomerViewModel());
     }
 
-    [HttpPost]
+    [HttpPost("HamtaAllaKunder")]
     public async Task<IActionResult> HamtaAllaKunder()
     {
         var users = await _userService.GetAllUsersAsync();
@@ -28,7 +29,7 @@ public class AdminController : Controller
         return View("Index", new CreateCustomerViewModel());
     }
 
-    [HttpPost]
+    [HttpPost("SkapaKund")]
     public async Task<IActionResult> SkapaKund(CreateCustomerViewModel model)
     {
         if (!ModelState.IsValid)
@@ -54,7 +55,7 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet]
+    [HttpGet("/ShippingLabel")]
     public IActionResult ShippingLabel()
     {
         return View();
