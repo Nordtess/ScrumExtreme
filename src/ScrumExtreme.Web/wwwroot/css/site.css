@@ -215,94 +215,166 @@ body {
   border-bottom-color: white;
 }
 
-/* ── Admin ── */
+/* ── Admin page ── */
+.site-main:has(.admin-wrapper) {
+  align-items: stretch;
+  text-align: left;
+  max-width: 1400px;
+}
+
 .admin-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem 1rem 4rem;
+  gap: 1.75rem;
+  padding-bottom: 2.5rem;
   width: 100%;
 }
 
-.admin-card {
-  border: 1px solid white;
-  border-radius: 16px;
-  padding: 2rem 2.5rem;
-  width: 100%;
-  max-width: 560px;
-  background: #0d0d0d;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.admin-page-header {
+  border-bottom: 1px solid #222;
+  padding-bottom: 1.1rem;
 }
 
-.admin-card-header {
+.admin-page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e8e0d4;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.3rem;
+}
+
+.admin-page-subtitle {
+  font-size: 0.8rem;
+  color: #605850;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1.15rem;
+  align-items: start;
+}
+
+/* ── Panels ── */
+.admin-panel {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.admin-panel:hover {
+  border-color: #2e2e2e;
+}
+
+.admin-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  padding: 1rem 1.3rem;
+  border-bottom: 1px solid #1c1c1c;
+  gap: 0.75rem;
 }
 
-.admin-card-title {
-  font-size: 1.1rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+.admin-panel-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #ccc;
   text-transform: uppercase;
-  color: #aaa;
+  letter-spacing: 0.12em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.admin-panel-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c9a84c;
+  flex-shrink: 0;
+}
+
+.admin-panel-btn {
+  font-size: 0.68rem;
+  color: #c9a84c;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  border-radius: 4px;
+  padding: 0.28rem 0.6rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+  flex-shrink: 0;
+}
+
+.admin-panel-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: #c9a84c;
+}
+
+.admin-panel-body {
+  padding: 1.3rem;
+}
+
+.admin-panel-fetch-form {
   margin: 0;
 }
 
-/* Customer list panel */
-.admin-customer-list {
-  min-height: 120px;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+/* ── Form sections ── */
+.admin-section-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #504840;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0.5rem 0 0.75rem;
 }
 
-.admin-list-placeholder {
-  color: #444;
-  font-size: 0.9rem;
-  font-style: italic;
-  align-self: center;
-  margin: auto;
+.admin-section-label:first-child {
+  margin-top: 0;
 }
 
-.admin-customer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid #1f1f1f;
-  font-size: 0.95rem;
-}
-
-.admin-customer-row:last-child {
-  border-bottom: none;
-}
-
-.admin-customer-name {
-  color: white;
-  font-weight: 400;
-}
-
-.admin-customer-country {
-  color: #777;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-}
-
-/* Form */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
 }
 
+.admin-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.admin-field-row.--single {
+  grid-template-columns: 1fr;
+}
+
+.admin-field-row.--postal-city {
+  grid-template-columns: 2fr 3fr;
+}
+
+.admin-field-row.--country-phone {
+  grid-template-columns: 2fr 3fr;
+}
+
+.admin-field input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Fields ── */
 .admin-field {
   display: flex;
   flex-direction: column;
@@ -310,26 +382,36 @@ body {
 }
 
 .admin-field label {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #aaa;
+  letter-spacing: 0.1em;
+  color: #888;
+  font-weight: 600;
 }
 
 .admin-field input {
-  background: transparent;
-  border: 1px solid white;
-  border-radius: 8px;
-  color: white;
-  padding: 0.65rem 1rem;
-  font-size: 0.95rem;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
   font-family: "Roboto", sans-serif;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-field input::placeholder {
+  color: #333;
 }
 
 .admin-field input:focus {
-  border-color: white;
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
 }
 
 .admin-field input.valid {
@@ -340,30 +422,25 @@ body {
   border-color: #ff453a;
 }
 
-.admin-field input::placeholder {
-  color: #555;
-}
-
 .admin-error {
   color: #ff453a;
-  font-size: 0.78rem;
-  min-height: 1rem;
+  font-size: 0.72rem;
+  min-height: 0.9rem;
 }
 
-/* Buttons */
+/* ── Buttons ── */
 .admin-btn-primary {
-  margin-top: 0.5rem;
-  align-self: center;
-  width: 50%;
-  padding: 0.72rem;
-  background: white;
-  color: black;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: transparent;
+  color: #c9a84c;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 7px;
+  font-size: 0.78rem;
   font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
   transition:
     background 0.2s ease,
@@ -372,7 +449,8 @@ body {
 }
 
 .admin-btn-primary:hover {
-  background: #e0e0e0;
+  background: rgba(201, 168, 76, 0.08);
+  border-color: #c9a84c;
 }
 
 .admin-btn-primary.btn-hover-valid {
@@ -386,59 +464,73 @@ body {
   background: transparent;
   color: #ff453a;
   border: 1px solid #ff453a;
+  box-shadow: 0 0 10px rgba(255, 69, 58, 0.15);
 }
 
-.admin-btn-outline {
-  padding: 0.5rem 1rem;
-  background: transparent;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
+/* ── Customer list ── */
+.admin-customer-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-list-placeholder {
+  color: #3a3030;
   font-size: 0.82rem;
-  font-family: "Roboto", sans-serif;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
-  white-space: nowrap;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
 }
 
-.admin-btn-outline:hover {
-  border-color: white;
+.admin-customer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #161616;
 }
 
-/* Admin submit area */
+.admin-customer-row:last-child {
+  border-bottom: none;
+}
+
+.admin-customer-name {
+  font-size: 0.88rem;
+  color: #d8d0c8;
+}
+
+.admin-customer-country {
+  font-size: 0.75rem;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+
+/* ── Submit area ── */
 .admin-submit-area {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 1.2rem;
 }
 
 .admin-submit-error {
   color: #ff453a;
+  font-size: 0.75rem;
+  text-align: center;
+  min-height: 1rem;
+}
+
+/* ── Toast ── */
+.admin-toast {
+  background: rgba(48, 209, 88, 0.07);
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  border-radius: 8px;
+  color: #30d158;
+  padding: 0.65rem 1.1rem;
   font-size: 0.82rem;
   text-align: center;
-  min-height: 1.2rem;
 }
 
-/* Success toast */
-.admin-toast {
-  width: 100%;
-  max-width: 560px;
-  background: #1a2e1a;
-  border: 1px solid #2d5a2d;
-  border-radius: 10px;
-  color: #4caf50;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.9rem;
-  text-align: center;
-  margin: 0;
-}
-
-/* Country picker dropdown */
+/* ── Country picker ── */
 .country-picker {
   position: relative;
 }
@@ -454,7 +546,7 @@ body {
   left: 0;
   right: 0;
   background: #111;
-  border: 1px solid white;
+  border: 1px solid #2a2a2a;
   border-radius: 8px;
   list-style: none;
   margin: 0;
@@ -471,7 +563,7 @@ body {
 .country-option {
   padding: 0.55rem 1rem;
   font-size: 0.88rem;
-  color: white;
+  color: #ccc;
   cursor: pointer;
   transition: background 0.12s ease;
   display: flex;
@@ -481,7 +573,7 @@ body {
 
 .country-option:hover,
 .country-option--active {
-  background: #222;
+  background: #1a1a1a;
 }
 
 /* ═══════════════════════════════════════════════════════════════
