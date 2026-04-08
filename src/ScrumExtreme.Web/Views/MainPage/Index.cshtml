@@ -98,140 +98,156 @@
                 <a asp-controller="Orders" asp-action="Index" class="mp-panel-btn">Visa alla ordrar →</a>
             </div>
             <div class="mp-panel-body">
-                <table class="mp-orders-table">
-                    <thead>
-                        <tr>
-                            <th>Order</th>
-                            <th>Kund</th>
-                            <th>Modell</th>
-                            <th>Status</th>
-                            <th>Steg</th>
-                            <th>Deadline</th>
-                            <th>Medarbetare</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="mp-order-num">#1042</span></td>
-                            <td><span class="mp-order-customer">Eleonora Björk</span></td>
-                            <td><span class="mp-order-model">Fedora Classic</span></td>
-                            <td><span class="mp-badge --inprog">Pågår</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --active"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline --soon">12 apr</span></td>
-                            <td><span class="mp-worker">Lars H.</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="mp-order-num">#1041</span></td>
-                            <td><span class="mp-order-customer">Marcus Strand</span></td>
-                            <td><span class="mp-order-model">Top Hat Deluxe</span></td>
-                            <td><span class="mp-badge --waiting">Väntar material</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --active"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline">14 apr</span></td>
-                            <td><span class="mp-worker-empty">—</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="mp-order-num">#1040</span></td>
-                            <td><span class="mp-order-customer">Ingrid Lövgren</span></td>
-                            <td><span class="mp-order-model">Cappello Romano</span></td>
-                            <td><span class="mp-badge --ready">Redo för leverans</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --active"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline --soon">9 apr</span></td>
-                            <td><span class="mp-worker">Maja K.</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="mp-order-num">#1039</span></td>
-                            <td><span class="mp-order-customer">Thomas Wijk</span></td>
-                            <td><span class="mp-order-model">Homburg Wide</span></td>
-                            <td><span class="mp-badge --produc">I produktion</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --active"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline">11 apr</span></td>
-                            <td><span class="mp-worker">Erik S.</span></td>
-                        </tr>
-                        <tr class="--overdue">
-                            <td><span class="mp-order-num">#1038</span></td>
-                            <td><span class="mp-order-customer">Sofia Lindqvist</span></td>
-                            <td><span class="mp-order-model">Borsalino Elite</span></td>
-                            <td><span class="mp-badge --delayed">Försenad</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --late"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline --past">7 apr</span></td>
-                            <td><span class="mp-worker">Lars H.</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="mp-order-num">#1037</span></td>
-                            <td><span class="mp-order-customer">Carl Heden</span></td>
-                            <td><span class="mp-order-model">Pork Pie Custom</span></td>
-                            <td><span class="mp-badge --delivered">Levererad</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline">5 apr</span></td>
-                            <td><span class="mp-worker">Maja K.</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="mp-order-num">#1036</span></td>
-                            <td><span class="mp-order-customer">Anna Petersson</span></td>
-                            <td><span class="mp-order-model">Fedora Classic</span></td>
-                            <td><span class="mp-badge --inprog">Pågår</span></td>
-                            <td>
-                                <div class="mp-pipeline">
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --done"></span>
-                                    <span class="mp-pip --active"></span>
-                                    <span class="mp-pip"></span>
-                                    <span class="mp-pip"></span>
-                                </div>
-                            </td>
-                            <td><span class="mp-deadline">15 apr</span></td>
-                            <td><span class="mp-worker">Erik S.</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <div class="mp-orders-toolbar">
+                    <select id="orderSort" class="mp-orders-sort">
+                        <option value="newest">Senast skapad</option>
+                        <option value="oldest">Tidigast skapad</option>
+                        <option value="status">Status (prioritet)</option>
+                    </select>
+                    <label class="mp-filter-check">
+                        <input type="checkbox" id="filterUnassigned" />
+                        Ej tilldelade
+                    </label>
+                </div>
+
+                <div class="mp-orders-scroll">
+                    <table class="mp-orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Kund</th>
+                                <th>Modell</th>
+                                <th>Status</th>
+                                <th>Steg</th>
+                                <th>Deadline</th>
+                                <th>Medarbetare</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersBody">
+                            <tr data-num="1042" data-status="inprog" data-worker="assigned">
+                                <td><span class="mp-order-num">#1042</span></td>
+                                <td><span class="mp-order-customer">Eleonora Björk</span></td>
+                                <td><span class="mp-order-model">Fedora Classic</span></td>
+                                <td><span class="mp-badge --inprog">Pågår</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --active"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline --soon">12 apr</span></td>
+                                <td><span class="mp-worker">Lars H.</span></td>
+                            </tr>
+                            <tr data-num="1041" data-status="waiting" data-worker="unassigned">
+                                <td><span class="mp-order-num">#1041</span></td>
+                                <td><span class="mp-order-customer">Marcus Strand</span></td>
+                                <td><span class="mp-order-model">Top Hat Deluxe</span></td>
+                                <td><span class="mp-badge --waiting">Väntar material</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --active"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline">14 apr</span></td>
+                                <td><span class="mp-worker-empty">—</span></td>
+                            </tr>
+                            <tr data-num="1040" data-status="ready" data-worker="assigned">
+                                <td><span class="mp-order-num">#1040</span></td>
+                                <td><span class="mp-order-customer">Ingrid Lövgren</span></td>
+                                <td><span class="mp-order-model">Cappello Romano</span></td>
+                                <td><span class="mp-badge --ready">Redo för leverans</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --active"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline --soon">9 apr</span></td>
+                                <td><span class="mp-worker">Maja K.</span></td>
+                            </tr>
+                            <tr data-num="1039" data-status="produc" data-worker="assigned">
+                                <td><span class="mp-order-num">#1039</span></td>
+                                <td><span class="mp-order-customer">Thomas Wijk</span></td>
+                                <td><span class="mp-order-model">Homburg Wide</span></td>
+                                <td><span class="mp-badge --produc">I produktion</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --active"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline">11 apr</span></td>
+                                <td><span class="mp-worker">Erik S.</span></td>
+                            </tr>
+                            <tr class="--overdue" data-num="1038" data-status="delayed" data-worker="assigned">
+                                <td><span class="mp-order-num">#1038</span></td>
+                                <td><span class="mp-order-customer">Sofia Lindqvist</span></td>
+                                <td><span class="mp-order-model">Borsalino Elite</span></td>
+                                <td><span class="mp-badge --delayed">Försenad</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --late"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline --past">7 apr</span></td>
+                                <td><span class="mp-worker">Lars H.</span></td>
+                            </tr>
+                            <tr data-num="1037" data-status="delivered" data-worker="assigned">
+                                <td><span class="mp-order-num">#1037</span></td>
+                                <td><span class="mp-order-customer">Carl Heden</span></td>
+                                <td><span class="mp-order-model">Pork Pie Custom</span></td>
+                                <td><span class="mp-badge --delivered">Levererad</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline">5 apr</span></td>
+                                <td><span class="mp-worker">Maja K.</span></td>
+                            </tr>
+                            <tr data-num="1036" data-status="inprog" data-worker="assigned">
+                                <td><span class="mp-order-num">#1036</span></td>
+                                <td><span class="mp-order-customer">Anna Petersson</span></td>
+                                <td><span class="mp-order-model">Fedora Classic</span></td>
+                                <td><span class="mp-badge --inprog">Pågår</span></td>
+                                <td>
+                                    <div class="mp-pipeline">
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --done"></span>
+                                        <span class="mp-pip --active"></span>
+                                        <span class="mp-pip"></span>
+                                        <span class="mp-pip"></span>
+                                    </div>
+                                </td>
+                                <td><span class="mp-deadline">15 apr</span></td>
+                                <td><span class="mp-worker">Erik S.</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
 
@@ -291,3 +307,41 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var sort = document.getElementById('orderSort');
+            var chk = document.getElementById('filterUnassigned');
+            var body = document.getElementById('ordersBody');
+            if (!sort || !body) return;
+
+            var STATUS_PRI = { delayed: 1, waiting: 2, inprog: 3, produc: 4, ready: 5, delivered: 6 };
+
+            function refresh() {
+                var rows = Array.from(body.querySelectorAll('tr'));
+                var onlyUnassigned = chk && chk.checked;
+
+                rows.forEach(function (r) {
+                    r.style.display = (onlyUnassigned && r.dataset.worker !== 'unassigned') ? 'none' : '';
+                });
+
+                var visible = rows.filter(function (r) { return r.style.display !== 'none'; });
+                var hidden = rows.filter(function (r) { return r.style.display === 'none'; });
+
+                visible.sort(function (a, b) {
+                    var mode = sort.value;
+                    if (mode === 'newest') return +b.dataset.num - +a.dataset.num;
+                    if (mode === 'oldest') return +a.dataset.num - +b.dataset.num;
+                    if (mode === 'status') return (STATUS_PRI[a.dataset.status] || 9) - (STATUS_PRI[b.dataset.status] || 9);
+                    return 0;
+                });
+
+                visible.concat(hidden).forEach(function (r) { body.appendChild(r); });
+            }
+
+            sort.addEventListener('change', refresh);
+            if (chk) chk.addEventListener('change', refresh);
+        })();
+    </script>
+}
