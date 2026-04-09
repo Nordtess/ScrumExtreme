@@ -1,7 +1,46 @@
-﻿namespace ScrumExtreme.Web.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using ScrumExtreme.Application.Interfaces;
+using ScrumExtreme.Domain.Entities;
+using ScrumExtreme.Web.Models;
+
+namespace ScrumExtreme.Web.Controllers
 {
-    public class CreateHatsController
+    public class CreateHatsController : Controller
     {
+        private readonly IHatService _hatService;
+
+
+
+
+
+        [HttpGet]
+
+        public IActionResult Index()
+        {
+            return View(new CreateHatsViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHats(CreateHatsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Index", model);
+            }
+
+            var hat = new Hats
+            {
+                Name = model.Name,
+                Size = model.Size,
+                Price = model.Price,
+                MaterialList = model.MaterialList,
+                
+            };
+
+            await _hatService.CreateHatsAsync(hat);
+            TempData["Success"] ="Ny hatt skapades!";
+            return RedirectToAction(nameof(Index));
+        }
+    }
 
     }
-}

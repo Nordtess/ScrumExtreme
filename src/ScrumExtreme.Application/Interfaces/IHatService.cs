@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ScrumExtreme.Application.Interfaces
 {
-    internal interface IHatService
+    public interface IHatService
     {
         Task<IEnumerable<Hats>> GetAllHatsAsync();
-        Task CreateUserAsync(Hats hats);
+        Task CreateHatsAsync(Hats hats);
         Task<Hats?> GetByIdAsync(string id);
     }
 }
