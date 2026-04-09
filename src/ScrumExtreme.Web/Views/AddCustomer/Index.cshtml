@@ -4,6 +4,10 @@
     var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
 <div class="admin-wrapper">
 
     @if (TempData["Success"] != null)

@@ -6,11 +6,11 @@ using ScrumExtreme.Web.Models;
 namespace ScrumExtreme.Web.Controllers;
 
 [Route("AddCustomer")]
-public class AdminController : Controller
+public class AddCustomerController : Controller
 {
     private readonly IUserService _userService;
 
-    public AdminController(IUserService userService)
+    public AddCustomerController(IUserService userService)
     {
         _userService = userService;
     }
@@ -53,11 +53,5 @@ public class AdminController : Controller
         await _userService.CreateUserAsync(user);
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
         return RedirectToAction(nameof(Index));
-    }
-
-    [HttpGet("/ShippingLabel")]
-    public IActionResult ShippingLabel()
-    {
-        return View();
     }
 }
