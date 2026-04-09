@@ -9,11 +9,11 @@ namespace ScrumExtreme.Application.Services
 {
     public class HatService
     {
-        public class UserService : IHatService
+        public class HatsService : IHatService
         {
             private readonly IRepository<Hats> _repository;
 
-            public UserService(IRepository<Hats> repository)
+            public HatsService(IRepository<Hats> repository)
             {
                 _repository = repository;
             }
@@ -21,7 +21,7 @@ namespace ScrumExtreme.Application.Services
             public async Task<IEnumerable<Hats>> GetAllHatsAsync() =>
                 await _repository.GetAllAsync();
 
-            public async Task CreateUserAsync(Hats hats) =>
+            public async Task CreateHatsAsync(Hats hats) =>
                 await _repository.AddAsync(hats);
 
             public async Task<Hats?> GetByIdAsync(string id) =>
