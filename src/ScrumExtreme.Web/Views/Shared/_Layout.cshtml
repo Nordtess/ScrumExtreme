@@ -16,7 +16,6 @@
     href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+SC&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Sans+Arabic&family=Noto+Sans+Devanagari&display=block"
     rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
@@ -27,8 +26,8 @@
                 <li><a asp-area="" asp-controller="Home" asp-action="Index">Onödig framsida</a></li>
                 <li><a asp-area="" asp-controller="MainPage" asp-action="Index">Huvudsida Test</a></li>
                 <li><a asp-area="" asp-controller="Login" asp-action="Index">Logga in</a></li>
-                <li><a asp-area="" asp-controller="Admin" asp-action="Index">LäggTillKund Test</a></li>
-                <li><a asp-area="" asp-controller="Admin" asp-action="ShippingLabel">Fraktsedel Test</a></li>
+                <li><a asp-area="" asp-controller="AddCustomer" asp-action="Index">LäggTillKund Test</a></li>
+                <li><a asp-area="" asp-controller="ShippingLabel" asp-action="Index">Fraktsedel Test</a></li>
             </ul>
         </nav>
     </header>
