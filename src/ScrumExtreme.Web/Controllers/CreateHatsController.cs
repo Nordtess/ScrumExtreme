@@ -9,7 +9,10 @@ namespace ScrumExtreme.Web.Controllers
     {
         private readonly IHatService _hatService;
 
-
+        public CreateHatsController(IHatService hatService)
+        {
+            _hatService = hatService;
+        }
 
 
 
