@@ -10,7 +10,7 @@ namespace ScrumExtreme.Web.Models
         [Required(ErrorMessage = "Storlek är obligatoriskt.")]
         public string Size { get; set; } = string.Empty;
 
-        [EmailAddress(ErrorMessage = "Pris är obligatoriskt.")]
+        [Required(ErrorMessage = "Pris är obligatoriskt.")]
         public double Price { get; set; } 
 
         [Required(ErrorMessage = "Materiallista är obligatoriskt.")]
