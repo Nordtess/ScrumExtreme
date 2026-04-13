@@ -16,5 +16,6 @@ public class User : BaseEntity
     [BsonElement("country")] public string Country { get; set; } = string.Empty;
     [BsonElement("phonenumber")] public string PhoneNumber { get; set; } = string.Empty;
     [BsonElement("isAdmin")] public bool IsAdmin { get; set; } = false;
+    [BsonElement("isEmployee")] public bool IsEmployee { get; set; } = false;
     [BsonElement("createdAt")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
