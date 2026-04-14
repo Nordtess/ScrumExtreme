@@ -1,8 +1,8 @@
-@model ScrumExtreme.Web.Models.CreateOrderViewModel
+﻿@model ScrumExtreme.Web.Models.CreateOrderViewModel
 @using ScrumExtreme.Domain.Entities
 
 @{
-    ViewData["Title"] = "Orderhantering";
+    ViewData["Title"] = "Skapa Order";
     var customers = ViewBag.Customers as IEnumerable<User>;
     var products = ViewBag.Products as IEnumerable<Product>;
     var projectName = ViewBag.ProjectName as string ?? "ScrumExtreme";
@@ -24,8 +24,8 @@
     }
 
     <div class="admin-page-header">
-        <h1 class="admin-page-title">Orderhantering</h1>
-        <p class="admin-page-subtitle">Skapa och hantera ordrar i systemet</p>
+        <h1 class="admin-page-title">Skapa Order</h1>
+        <p class="admin-page-subtitle">Skapa en ny order i systemet</p>
     </div>
 
     <div class="admin-layout">
@@ -44,7 +44,7 @@
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="CustomerId">Kund</label>
-                            <select asp-for="CustomerId">
+                            <select asp-for="CustomerId" class="admin-input">
                                 <option value="">Välj kund</option>
                                 @if (customers != null)
                                 {
@@ -61,7 +61,7 @@
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="ProductId">Produkt</label>
-                            <select asp-for="ProductId">
+                            <select asp-for="ProductId" class="admin-input">
                                 <option value="">Välj produkt</option>
                                 @if (products != null)
                                 {

@@ -1,0 +1,26 @@
+﻿.admin-field select {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    padding: 0.95rem 1rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+}
+
+    .admin-field select:focus {
+        border-color: rgba(244, 208, 111, 0.6);
+        box-shadow: 0 0 0 3px rgba(244, 208, 111, 0.12);
+    }
+
+    .admin-field select option {
+        background: #111;
+        color: #fff;
+    }
+
+.admin-panel-body .admin-list-placeholder {
+    display: block;
+    line-height: 1.6;
+}

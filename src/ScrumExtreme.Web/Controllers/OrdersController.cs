@@ -10,17 +10,24 @@ public class OrdersController : Controller
 {
     private readonly IOrderService _orderService;
     private readonly IUserService _userService;
+    private readonly IProductService _productService;
 
-    public OrdersController(IOrderService orderService, IUserService userService)
+    public OrdersController(
+        IOrderService orderService,
+        IUserService userService,
+        IProductService productService)
     {
         _orderService = orderService;
         _userService = userService;
+        _productService = productService;
     }
 
     [HttpGet("")]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var orders = await _orderService.GetAllOrdersAsync();
+        ViewBag.ProjectName = "ScrumExtreme";
+        return View(orders);
     }
 
     [HttpGet("Create")]
@@ -29,6 +36,10 @@ public class OrdersController : Controller
         var users = await _userService.GetAllUsersAsync();
         ViewBag.Customers = users.Where(u => !u.IsAdmin);
 
+        var products = await _productService.GetAllProductsAsync();
+        ViewBag.Products = products;
+
+        ViewBag.ProjectName = "ScrumExtreme";
         return View();
     }
 
@@ -37,10 +48,28 @@ public class OrdersController : Controller
     {
         if (!ModelState.IsValid)
         {
-            
             var users = await _userService.GetAllUsersAsync();
             ViewBag.Customers = users.Where(u => !u.IsAdmin);
 
+            var products = await _productService.GetAllProductsAsync();
+            ViewBag.Products = products;
+
+            ViewBag.ProjectName = "ScrumExtreme";
+            return View(model);
+        }
+
+        var product = await _productService.GetByIdAsync(model.ProductId);
+        if (product == null)
+        {
+            ModelState.AddModelError(nameof(model.ProductId), "Produkten kunde inte hittas.");
+
+            var users = await _userService.GetAllUsersAsync();
+            ViewBag.Customers = users.Where(u => !u.IsAdmin);
+
+            var products = await _productService.GetAllProductsAsync();
+            ViewBag.Products = products;
+
+            ViewBag.ProjectName = "ScrumExtreme";
             return View(model);
         }
 
@@ -48,8 +77,18 @@ public class OrdersController : Controller
         {
             UserId = model.CustomerId,
             OrderDate = DateTime.UtcNow,
-            Status = OrderStatus.Pending
-        };
+            Status = OrderStatus.Pending,
+            Items = new List<OrderItem>
+    {
+        new OrderItem
+        {
+            ProductId = product.Id,
+            Name = product.Name,
+            Quantity = 1,
+            UnitPrice = product.Price
+        }
+    }
+};
 
         await _orderService.CreateOrderAsync(order);
 
