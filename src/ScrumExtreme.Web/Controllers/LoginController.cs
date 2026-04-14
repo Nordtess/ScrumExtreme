@@ -6,7 +6,6 @@ namespace ScrumExtreme.Web.Controllers;
 public class LoginController : Controller
 {
     [HttpGet("")]
-    [HttpGet("/")]
     public IActionResult Index()
     {
         return View("Login");

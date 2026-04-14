@@ -16,6 +16,7 @@ public class AddCustomerController : Controller
     }
 
     [HttpGet("")]
+    [HttpGet("/")]
     public IActionResult Index()
     {
         return View(new CreateCustomerViewModel());
