@@ -1,0 +1,96 @@
+@model ScrumExtreme.Web.Models.CreateHatsViewModel
+@{
+    ViewData["Title"] = "Hatthantering";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/createhats.css" asp-append-version="true" />
+}
+
+<div class="hat-wrapper">
+
+    @if (TempData["Success"] != null)
+    {
+        <p class="hat-toast">@TempData["Success"]</p>
+    }
+
+    <div class="hat-page-header">
+        <h1 class="hat-page-title">Hatthantering</h1>
+        <p class="hat-page-subtitle">Lägg till och hantera hattar i systemet</p>
+    </div>
+
+    <div class="hat-layout">
+
+        <!-- Left: Add hat form -->
+        <div class="hat-panel">
+            <div class="hat-panel-header">
+                <h2 class="hat-panel-title">
+                    <span class="hat-panel-dot"></span>Lägg till ny hatt
+                </h2>
+            </div>
+            <div class="hat-panel-body">
+                <form asp-action="CreateHats" method="post" class="hat-form" id="createHatForm">
+
+                    <div class="hat-field-row --single">
+                        <div class="hat-field">
+                            <label asp-for="Name">Namn</label>
+                            <input asp-for="Name" id="Name" placeholder="T.ex. Fedora" autocomplete="off" />
+                            <span id="error-Name" class="hat-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="hat-field-row --single">
+                        <div class="hat-field">
+                            <label asp-for="Size">Storlek</label>
+                            <input asp-for="Size" id="Size" placeholder="T.ex. S, M, L, XL" autocomplete="off" />
+                            <span id="error-Size" class="hat-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="hat-field-row --single">
+                        <div class="hat-field">
+                            <label asp-for="Price">Pris (SEK)</label>
+                            <input asp-for="Price" id="Price" placeholder="T.ex. 299.99" type="number" step="0.01"
+                                   min="0" />
+                            <span id="error-Price" class="hat-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="hat-field-row --single">
+                        <div class="hat-field">
+                            <label asp-for="MaterialList">Materiallista</label>
+                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull"
+                                   autocomplete="off" />
+                            <span id="error-MaterialList" class="hat-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="hat-submit-area">
+                        <button type="submit" class="hat-btn-primary" id="hatSubmitBtn">Skapa hatt</button>
+                        <span id="hatSubmitError" class="hat-submit-error"></span>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Hat list (placeholder for other student's implementation) -->
+        <div class="hat-panel">
+            <div class="hat-panel-header">
+                <h2 class="hat-panel-title">
+                    <span class="hat-panel-dot"></span>Alla hattar
+                </h2>
+            </div>
+            <div class="hat-panel-body">
+                <div class="hat-list">
+                    <span class="hat-list-placeholder">Hattlistan implementeras här.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/createhats.js" asp-append-version="true"></script>
+}

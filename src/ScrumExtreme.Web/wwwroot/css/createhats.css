@@ -1,0 +1,302 @@
+/* ── Hat admin page ── */
+.site-main:has(.hat-wrapper) {
+  align-items: stretch;
+  text-align: left;
+  max-width: 1400px;
+}
+
+.hat-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-bottom: 2.5rem;
+  width: 100%;
+}
+
+.hat-page-header {
+  border-bottom: 1px solid #222;
+  border-left: 3px solid #c9a84c;
+  padding-bottom: 1.1rem;
+  padding-left: 0.9rem;
+}
+
+.hat-page-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #e8e0d4;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.22rem;
+}
+
+.hat-page-subtitle {
+  font-size: 0.82rem;
+  color: #7a7068;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.hat-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1.15rem;
+  align-items: stretch;
+}
+
+/* ── Panels ── */
+.hat-panel {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.hat-panel:hover {
+  border-color: #2e2e2e;
+}
+
+.hat-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.3rem;
+  border-bottom: 1px solid #1c1c1c;
+  gap: 0.75rem;
+}
+
+.hat-panel-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.hat-panel-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c9a84c;
+  flex-shrink: 0;
+}
+
+.hat-panel-body {
+  padding: 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Form ── */
+.hat-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.hat-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.hat-field-row.--single {
+  grid-template-columns: 1fr;
+}
+
+/* ── Fields ── */
+.hat-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.hat-field label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  font-weight: 600;
+}
+
+.hat-field input {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hat-field input::placeholder {
+  color: #333;
+}
+
+.hat-field input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+.hat-field input.valid {
+  border-color: #30d158;
+}
+
+.hat-field input.invalid {
+  border-color: #ff453a;
+}
+
+/* Hide number input arrows */
+.hat-field input[type="number"]::-webkit-inner-spin-button,
+.hat-field input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hat-field input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.hat-error {
+  color: #ff453a;
+  font-size: 0.72rem;
+  min-height: 0.9rem;
+}
+
+/* ── Submit area ── */
+.hat-submit-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.hat-btn-primary {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: transparent;
+  color: #c9a84c;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.hat-btn-primary:hover {
+  background: rgba(201, 168, 76, 0.08);
+  border-color: #c9a84c;
+}
+
+.hat-btn-primary.btn-hover-valid {
+  background: transparent;
+  color: #30d158;
+  border: 1px solid #30d158;
+  box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);
+}
+
+.hat-btn-primary.btn-hover-invalid {
+  background: transparent;
+  color: #ff453a;
+  border: 1px solid #ff453a;
+  box-shadow: 0 0 10px rgba(255, 69, 58, 0.15);
+}
+
+.hat-submit-error {
+  color: #ff453a;
+  font-size: 0.75rem;
+  text-align: center;
+  min-height: 1rem;
+}
+
+/* ── Hat list (right panel) ── */
+.hat-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
+
+.hat-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.hat-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hat-list::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.hat-list::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+.hat-list-placeholder {
+  color: #3a3030;
+  font-size: 0.82rem;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.hat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #161616;
+}
+
+.hat-row:last-child {
+  border-bottom: none;
+}
+
+.hat-row-name {
+  font-size: 0.88rem;
+  color: #d8d0c8;
+}
+
+.hat-row-price {
+  font-size: 0.75rem;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+
+/* ── Toast ── */
+.hat-toast {
+  background: rgba(48, 209, 88, 0.07);
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  border-radius: 8px;
+  color: #30d158;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.82rem;
+  text-align: center;
+}
