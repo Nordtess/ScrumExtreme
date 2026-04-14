@@ -1,11 +1,139 @@
+@model ScrumExtreme.Web.Models.CreateOrderViewModel
+@using ScrumExtreme.Domain.Entities
+@using Microsoft.AspNetCore.Mvc.Rendering
+
 @{
-    ViewData["Title"] = "Ordrar";
+    ViewData["Title"] = "Orderhantering";
+    var orders = ViewBag.Orders as IEnumerable<Order>;
+    var users = ViewBag.Users as IEnumerable<SelectListItem>;
 }
 
-<h2>Ordrar</h2>
-
-<a asp-controller="Admin" asp-action="Index" class="mp-panel-btn">Lägg till kund →</a>
-
 @section Styles {
-    <link rel="stylesheet" href="~/css/mainpage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <p class="admin-toast">@TempData["SuccessMessage"]</p>
+    }
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Orderhantering</h1>
+        <p class="admin-page-subtitle">Lägg till och hantera ordrar i systemet</p>
+    </div>
+
+    <div class="admin-layout">
+
+        <!-- Left: Add order form -->
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Lägg till ny order
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+                <form asp-action="Index" method="post" class="admin-form" id="createOrderForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
+                            <label asp-for="UserId">Kund</label>
+                            <select asp-for="UserId" asp-items="users">
+                                <option value="">Välj kund</option>
+                            </select>
+                            <span asp-validation-for="UserId" class="admin-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row">
+                        <div class="admin-field">
+                            <label asp-for="ProductId">Produkt-ID</label>
+                            <input asp-for="ProductId" placeholder="T.ex. PROD-001" />
+                            <span asp-validation-for="ProductId" class="admin-error"></span>
+                        </div>
+                        <div class="admin-field">
+                            <label asp-for="ProductName">Produktnamn</label>
+                            <input asp-for="ProductName" placeholder="T.ex. T-shirt" />
+                            <span asp-validation-for="ProductName" class="admin-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row">
+                        <div class="admin-field">
+                            <label asp-for="Quantity">Antal</label>
+                            <input asp-for="Quantity" type="number" min="1" placeholder="T.ex. 2" />
+                            <span asp-validation-for="Quantity" class="admin-error"></span>
+                        </div>
+                        <div class="admin-field">
+                            <label asp-for="UnitPrice">Styckpris</label>
+                            <input asp-for="UnitPrice" type="number" step="0.01" min="0.01" placeholder="T.ex. 199.00" />
+                            <span asp-validation-for="UnitPrice" class="admin-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="admin-submit-area">
+                        <button type="submit" class="admin-btn-primary" id="submitBtn">Spara order</button>
+                        <span id="submitError" class="admin-submit-error"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Order list -->
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Alla ordrar
+                    @if (orders != null)
+                    {
+                        <span class="admin-customer-count">@orders.Count()</span>
+                    }
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+                <div class="admin-customer-list">
+                    @if (orders == null)
+                    {
+                        <span class="admin-list-placeholder">Ordrar visas här när de har sparats.</span>
+                    }
+                    else
+                    {
+                        var list = orders.OrderByDescending(o => o.OrderDate).ToList();
+
+                        if (list.Count == 0)
+                        {
+                            <span class="admin-list-placeholder">Inga ordrar hittades.</span>
+                        }
+                        else
+                        {
+                            foreach (var order in list)
+                            {
+                                <div class="admin-customer-row admin-order-row">
+                                    <div class="admin-order-left">
+                                        <span class="admin-customer-name">@order.OrderNumber</span>
+                                        <span class="admin-order-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                                    </div>
+
+                                    <div class="admin-order-right">
+                                        <span class="admin-customer-country">@order.Status</span>
+                                        <span class="admin-order-total">@order.TotalAmount kr</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

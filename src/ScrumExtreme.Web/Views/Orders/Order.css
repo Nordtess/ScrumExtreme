@@ -1,0 +1,50 @@
+﻿.admin-order-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-order-left,
+.admin-order-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.admin-order-right {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.admin-order-date {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.admin-order-total {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #f4d06f;
+}
+
+.admin-field select {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    padding: 0.95rem 1rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .admin-field select:focus {
+        border-color: rgba(244, 208, 111, 0.6);
+        box-shadow: 0 0 0 3px rgba(244, 208, 111, 0.12);
+    }
+
+    .admin-field select option {
+        background: #111;
+        color: #fff;
+    }
