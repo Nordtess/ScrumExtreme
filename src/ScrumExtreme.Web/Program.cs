@@ -25,6 +25,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 // Register application services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IHatService, HatsService>();
 
 var app = builder.Build();
 

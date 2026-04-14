@@ -37,13 +37,20 @@ namespace ScrumExtreme.Web.Controllers
                 Size = model.Size,
                 Price = model.Price,
                 MaterialList = model.MaterialList,
-                
+
             };
 
             await _hatService.CreateHatsAsync(hat);
-            TempData["Success"] ="Ny hatt skapades!";
+            TempData["Success"] = "Ny hatt skapades!";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("GetAllHats")]
+        public async Task<IActionResult> GetAllHats()
+        {
+            var hats = await _hatService.GetAllHatsAsync();
+            return View(hats);
         }
     }
 
-    }
+}
