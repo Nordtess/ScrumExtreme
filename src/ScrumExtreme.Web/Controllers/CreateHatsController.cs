@@ -33,11 +33,10 @@ namespace ScrumExtreme.Web.Controllers
 
             var hat = new Hats
             {
-                Name = model.Name,
-                Size = model.Size,
+                Name = ToTitleCase(model.Name),
+                Size = model.Size.Trim().ToUpper(),
                 Price = model.Price,
-                MaterialList = model.MaterialList,
-
+                MaterialList = ToTitleCase(model.MaterialList),
             };
 
             await _hatService.CreateHatsAsync(hat);
@@ -50,6 +49,13 @@ namespace ScrumExtreme.Web.Controllers
         {
             var hats = await _hatService.GetAllHatsAsync();
             return View(hats);
+        }
+
+        private static string ToTitleCase(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return input;
+            return string.Join(' ', input.Trim().Split(' ')
+                .Select(w => w.Length == 0 ? w : char.ToUpper(w[0]) + w[1..].ToLower()));
         }
     }
 
