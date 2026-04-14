@@ -4,86 +4,120 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/createhats.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
 }
 
-<div class="hat-wrapper">
+<div class="admin-wrapper">
 
     @if (TempData["Success"] != null)
     {
-        <p class="hat-toast">@TempData["Success"]</p>
+        <p class="admin-toast">@TempData["Success"]</p>
     }
 
-    <div class="hat-page-header">
-        <h1 class="hat-page-title">Hatthantering</h1>
-        <p class="hat-page-subtitle">Lägg till och hantera hattar i systemet</p>
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Hatthantering</h1>
+        <p class="admin-page-subtitle">Lägg till och hantera hattar i systemet</p>
     </div>
 
-    <div class="hat-layout">
+    <div class="admin-layout">
 
         <!-- Left: Add hat form -->
-        <div class="hat-panel">
-            <div class="hat-panel-header">
-                <h2 class="hat-panel-title">
-                    <span class="hat-panel-dot"></span>Lägg till ny hatt
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Lägg till ny hatt
                 </h2>
             </div>
-            <div class="hat-panel-body">
-                <form asp-action="CreateHats" method="post" class="hat-form" id="createHatForm">
+            <div class="admin-panel-body">
+                <form asp-action="CreateHats" method="post" class="admin-form">
 
-                    <div class="hat-field-row --single">
-                        <div class="hat-field">
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
                             <label asp-for="Name">Namn</label>
-                            <input asp-for="Name" id="Name" placeholder="T.ex. Fedora" autocomplete="off" />
-                            <span id="error-Name" class="hat-error"></span>
+                            <input asp-for="Name" placeholder="T.ex. Fedora" />
                         </div>
                     </div>
 
-                    <div class="hat-field-row --single">
-                        <div class="hat-field">
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
                             <label asp-for="Size">Storlek</label>
-                            <input asp-for="Size" id="Size" placeholder="T.ex. S, M, L, XL" autocomplete="off" />
-                            <span id="error-Size" class="hat-error"></span>
+                            <input asp-for="Size" placeholder="T.ex. S, M, L, XL" />
                         </div>
                     </div>
 
-                    <div class="hat-field-row --single">
-                        <div class="hat-field">
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
                             <label asp-for="Price">Pris (SEK)</label>
-                            <input asp-for="Price" id="Price" placeholder="T.ex. 299.99" type="number" step="0.01"
-                                   min="0" />
-                            <span id="error-Price" class="hat-error"></span>
+                            <input asp-for="Price" type="number" step="0.01" min="0" />
                         </div>
                     </div>
 
-                    <div class="hat-field-row --single">
-                        <div class="hat-field">
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
                             <label asp-for="MaterialList">Materiallista</label>
-                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull"
-                                   autocomplete="off" />
-                            <span id="error-MaterialList" class="hat-error"></span>
+                            <input asp-for="MaterialList" placeholder="T.ex. Ull, Bomull" />
                         </div>
                     </div>
 
-                    <div class="hat-submit-area">
-                        <button type="submit" class="hat-btn-primary" id="hatSubmitBtn">Skapa hatt</button>
-                        <span id="hatSubmitError" class="hat-submit-error"></span>
+                    <div class="admin-submit-area">
+                        <button type="submit" class="admin-btn-primary">
+                            Skapa hatt
+                        </button>
                     </div>
 
                 </form>
             </div>
         </div>
 
-        <!-- Right: Hat list (placeholder for other student's implementation) -->
-        <div class="hat-panel">
-            <div class="hat-panel-header">
-                <h2 class="hat-panel-title">
-                    <span class="hat-panel-dot"></span>Alla hattar
+        <!-- Right: Hat list -->
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Alla hattar
                 </h2>
+
+                <form asp-action="ShowHats" method="post" class="admin-panel-fetch-form">
+                    <button type="submit" class="admin-panel-btn">
+                        Hämta →
+                    </button>
+                </form>
             </div>
-            <div class="hat-panel-body">
-                <div class="hat-list">
-                    <span class="hat-list-placeholder">Hattlistan implementeras här.</span>
+
+            <div class="admin-panel-body">
+                <div class="admin-customer-list">
+                    @{
+                        var hats = ViewBag.Hats as IEnumerable<ScrumExtreme.Domain.Entities.Hats>;
+                    }
+
+                    @if (hats == null)
+                    {
+                        <span class="admin-list-placeholder">
+                            Tryck på "Hämta" för att visa listan.
+                        </span>
+                    }
+                    else
+                    {
+                        var list = hats.ToList();
+
+                        if (list.Count == 0)
+                        {
+                            <span class="admin-list-placeholder">
+                                Inga hattar hittades.
+                            </span>
+                        }
+                        else
+                        {
+                            foreach (var hat in list)
+                            {
+                                <div class="admin-customer-row">
+                                    <span>@hat.Name</span>
+                                    <span>@hat.Size</span>
+                                    <span>@hat.Price kr</span>
+                                </div>
+                            }
+                        }
+                    }
+
                 </div>
             </div>
         </div>
@@ -92,5 +126,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/createhats.js" asp-append-version="true"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
 }

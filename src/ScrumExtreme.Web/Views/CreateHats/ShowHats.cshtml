@@ -1,0 +1,9 @@
+﻿@model List<ScrumExtreme.Domain.Entities.Hats>
+
+<h2>Alla hattar</h2>
+
+@foreach (var hat in Model)
+{
+    <p>@hat.Name - @hat.Price kr</p>
+}
+
