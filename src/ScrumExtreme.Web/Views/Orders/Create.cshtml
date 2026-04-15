@@ -65,7 +65,9 @@
                                     @foreach (var hat in hats)
                                     {
                                         <option value="@hat.Id" data-name="@hat.Name"
-                                                data-price="@hat.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                                data-price="@hat.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                data-sizes="@System.Text.Json.JsonSerializer.Serialize(hat.Sizes)"
+                                                data-stock="@System.Text.Json.JsonSerializer.Serialize(hat.Stock)">
                                             @hat.Name – @hat.Price kr
                                         </option>
                                     }
@@ -75,6 +77,22 @@
                                     <option disabled>Inga hattar tillgängliga</option>
                                 }
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row --single" id="sizeRow" style="display:none;">
+                        <div class="admin-field">
+                            <label for="sizeSelect">Tillgängliga storlekar</label>
+                            <select id="sizeSelect">
+                                <option value="">-- Välj storlek --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row --single" id="quantityRow" style="display:none;">
+                        <div class="admin-field">
+                            <label for="quantityInput">Antal</label>
+                            <input type="number" id="quantityInput" min="1" value="1" />
                         </div>
                     </div>
 
@@ -127,135 +145,205 @@
 
         @section Scripts {
             <script>
-                            const customerSelect = document.getElementById('customerSelect');
-                            const hatSelect = document.getElementById('hatSelect');
-                            const addHatBtn = document.getElementById('addHatBtn');
-                            const addHatError = document.getElementById('addHatError');
-                            const customerInfoBlock = document.getElementById('customerInfoBlock');
-                            const hatListBlock = document.getElementById('hatListBlock');
-                            const hatList = document.getElementById('hatList');
-                            const totalAmountEl = document.getElementById('totalAmount');
-                            const createOrderBtn = document.getElementById('createOrderBtn');
-                            const createOrderError = document.getElementById('createOrderError');
+                const customerSelect = document.getElementById('customerSelect');
+                const hatSelect = document.getElementById('hatSelect');
+                const sizeSelect = document.getElementById('sizeSelect');
+                const sizeRow = document.getElementById('sizeRow');
+                const quantityInput = document.getElementById('quantityInput');
+                const quantityRow = document.getElementById('quantityRow');
+                const addHatBtn = document.getElementById('addHatBtn');
+                const addHatError = document.getElementById('addHatError');
+                const customerInfoBlock = document.getElementById('customerInfoBlock');
+                const hatListBlock = document.getElementById('hatListBlock');
+                const hatList = document.getElementById('hatList');
+                const totalAmountEl = document.getElementById('totalAmount');
+                const createOrderBtn = document.getElementById('createOrderBtn');
+                const createOrderError = document.getElementById('createOrderError');
 
-                            let cart = []; // { hatId, name, unitPrice }
+                let cart = []; // { hatId, name, unitPrice, size, quantity, maxStock }
 
-                            // --- Customer select ---
-                            customerSelect.addEventListener('change', async () => {
-                                const id = customerSelect.value;
-                                if (!id) {
-                                    customerInfoBlock.innerHTML = '<span class="admin-list-placeholder">Välj en kund för att se information.</span>';
-                                    updateCreateBtn();
-                                    return;
-                                }
-                                try {
-                                    const resp = await fetch(`/Orders/CustomerInfo/${encodeURIComponent(id)}`);
-                                    if (!resp.ok) throw new Error();
-                                    const c = await resp.json();
-                                    customerInfoBlock.innerHTML = `
-                                        <div class="order-customer-info">
-                                            <p class="info-label">Kund</p>
-                                            <p><strong>${esc(c.fullName)}</strong></p>
-                                            <p>${esc(c.email)}</p>
-                                            <p class="info-label">Leveransadress</p>
-                                            <p>${esc(c.address)}</p>
-                                            <p>${esc(c.postalCode)} ${esc(c.city)}</p>
-                                            <p>${esc(c.country)} (${esc(c.countryCode)})</p>
-                                            <p class="info-label">Telefon</p>
-                                            <p>${esc(c.phone)}</p>
-                                        </div>`;
-                                } catch {
-                                    customerInfoBlock.innerHTML = '<span class="admin-list-placeholder" style="color:#ff453a;">Kunde inte hämta kundinformation.</span>';
-                                }
-                                updateCreateBtn();
+                // --- Hat select: populate sizes with stock ---
+                hatSelect.addEventListener('change', () => {
+                    addHatError.textContent = '';
+                    sizeSelect.innerHTML = '<option value="">-- Välj storlek --</option>';
+                    quantityInput.value = 1;
+                    quantityRow.style.display = 'none';
+                    const opt = hatSelect.options[hatSelect.selectedIndex];
+                    if (opt && opt.value) {
+                        const sizes = JSON.parse(opt.dataset.sizes || '[]');
+                        const stock = JSON.parse(opt.dataset.stock || '{}');
+                        // Only show sizes that actually have stock
+                        const inStock = sizes.filter(s => (stock[s] || 0) > 0);
+                        if (inStock.length > 0) {
+                            inStock.forEach(s => {
+                                const o = document.createElement('option');
+                                o.value = s;
+                                o.textContent = `${s} (${stock[s]} i lager)`;
+                                o.dataset.max = stock[s];
+                                sizeSelect.appendChild(o);
                             });
+                            sizeRow.style.display = '';
+                        } else {
+                            sizeRow.style.display = '';
+                            const o = document.createElement('option');
+                            o.disabled = true;
+                            o.textContent = 'Slutsålt i alla storlekar';
+                            sizeSelect.appendChild(o);
+                        }
+                    } else {
+                        sizeRow.style.display = 'none';
+                    }
+                });
 
-                            // --- Add hat ---
-                            addHatBtn.addEventListener('click', () => {
-                                addHatError.textContent = '';
-                                const opt = hatSelect.options[hatSelect.selectedIndex];
-                                if (!opt || !opt.value) {
-                                    addHatError.textContent = 'Välj en hatt först.';
-                                    return;
-                                }
-                                const hatId = opt.value;
-                                if (cart.some(h => h.hatId === hatId)) {
-                                    addHatError.textContent = 'Den hatten är redan tillagd.';
-                                    return;
-                                }
-                                cart.push({
-                                    hatId,
-                                    name: opt.dataset.name,
-                                    unitPrice: parseFloat(opt.dataset.price)
-                                });
-                                renderCart();
-                                updateCreateBtn();
-                            });
+                // --- Size select: update quantity max ---
+                sizeSelect.addEventListener('change', () => {
+                    addHatError.textContent = '';
+                    const opt = sizeSelect.options[sizeSelect.selectedIndex];
+                    if (opt && opt.value && opt.dataset.max) {
+                        quantityInput.max = opt.dataset.max;
+                        quantityInput.value = 1;
+                        quantityRow.style.display = '';
+                    } else {
+                        quantityRow.style.display = 'none';
+                    }
+                });
 
-                            function renderCart() {
-                                hatList.innerHTML = '';
-                                if (cart.length === 0) {
-                                    hatListBlock.style.display = 'none';
-                                    return;
-                                }
-                                hatListBlock.style.display = 'block';
-                                let total = 0;
-                                cart.forEach(h => {
-                                    total += h.unitPrice;
-                                    const li = document.createElement('li');
-                                    li.className = 'order-hat-item';
-                                    li.innerHTML = `
-                                        <span>${esc(h.name)}</span>
-                                        <span class="order-hat-item-price">${h.unitPrice.toFixed(2)} kr</span>
-                                        <button class="order-hat-remove" data-id="${esc(h.hatId)}" title="Ta bort">✕</button>`;
-                                    hatList.appendChild(li);
-                                });
-                                totalAmountEl.textContent = total.toFixed(2) + ' kr';
-                                hatList.querySelectorAll('.order-hat-remove').forEach(btn => {
-                                    btn.addEventListener('click', () => {
-                                        cart = cart.filter(h => h.hatId !== btn.dataset.id);
-                                        renderCart();
-                                        updateCreateBtn();
-                                    });
-                                });
-                            }
+                // --- Customer select ---
+                customerSelect.addEventListener('change', async () => {
+                    const id = customerSelect.value;
+                    if (!id) {
+                        customerInfoBlock.innerHTML = '<span class="admin-list-placeholder">Välj en kund för att se information.</span>';
+                        updateCreateBtn();
+                        return;
+                    }
+                    try {
+                        const resp = await fetch(`/Orders/CustomerInfo/${encodeURIComponent(id)}`);
+                        if (!resp.ok) throw new Error();
+                        const c = await resp.json();
+                        customerInfoBlock.innerHTML = `
+                                                                <div class="order-customer-info">
+                                                                    <p class="info-label">Kund</p>
+                                                                    <p><strong>${esc(c.fullName)}</strong></p>
+                                                                    <p>${esc(c.email)}</p>
+                                                                    <p class="info-label">Leveransadress</p>
+                                                                    <p>${esc(c.address)}</p>
+                                                                    <p>${esc(c.postalCode)} ${esc(c.city)}</p>
+                                                                    <p>${esc(c.country)} (${esc(c.countryCode)})</p>
+                                                                    <p class="info-label">Telefon</p>
+                                                                    <p>${esc(c.phone)}</p>
+                                                                </div>`;
+                    } catch {
+                        customerInfoBlock.innerHTML = '<span class="admin-list-placeholder" style="color:#ff453a;">Kunde inte hämta kundinformation.</span>';
+                    }
+                    updateCreateBtn();
+                });
 
-                            function updateCreateBtn() {
-                                const hasCustomer = !!customerSelect.value;
-                                const hasHats = cart.length > 0;
-                                createOrderBtn.style.display = (hasCustomer && hasHats) ? '' : 'none';
-                            }
+                // --- Add hat ---
+                addHatBtn.addEventListener('click', () => {
+                    addHatError.textContent = '';
+                    const opt = hatSelect.options[hatSelect.selectedIndex];
+                    if (!opt || !opt.value) {
+                        addHatError.textContent = 'Välj en hatt först.';
+                        return;
+                    }
+                    const size = sizeSelect.value;
+                    if (!size) {
+                        addHatError.textContent = 'Välj en storlek först.';
+                        return;
+                    }
+                    const sizeOpt = sizeSelect.options[sizeSelect.selectedIndex];
+                    const maxStock = parseInt(sizeOpt.dataset.max || '0', 10);
+                    const qty = parseInt(quantityInput.value, 10);
+                    if (isNaN(qty) || qty < 1) {
+                        addHatError.textContent = 'Ange ett giltigt antal (minst 1).';
+                        return;
+                    }
+                    if (qty > maxStock) {
+                        addHatError.textContent = `Max ${maxStock} i lager för den storleken.`;
+                        return;
+                    }
+                    const hatId = opt.value;
+                    if (cart.some(h => h.hatId === hatId && h.size === size)) {
+                        addHatError.textContent = 'Den hatten i den storleken är redan tillagd.';
+                        return;
+                    }
+                    cart.push({
+                        hatId,
+                        name: opt.dataset.name,
+                        size,
+                        quantity: qty,
+                        maxStock,
+                        unitPrice: parseFloat(opt.dataset.price)
+                    });
+                    renderCart();
+                    updateCreateBtn();
+                });
 
-                            // ---  Create order ---
-                            createOrderBtn.addEventListener('click', async () => {
-                                createOrderError.textContent = '';
-                                createOrderBtn.disabled = true;
-                                createOrderBtn.textContent = 'Sparar…';
-                                try {
-                                    const payload = {
-                                        customerId: customerSelect.value,
-                                        items: cart.map(h => ({ hatId: h.hatId, name: h.name, unitPrice: h.unitPrice }))
-                                    };
-                                    const resp = await fetch('/Orders/Create', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(payload)
-                                    });
-                                    if (!resp.ok) {
-                                        const err = await resp.json().catch(() => ({}));
-                                        throw new Error(err.error || 'Något gick fel.');
-                                    }
-                                    window.location.href = '/Orders';
-                                } catch (e) {
-                                    createOrderError.textContent = e.message;
-                                    createOrderBtn.disabled = false;
-                                    createOrderBtn.textContent = 'Skapa order';
-                                }
-                            });
+                function renderCart() {
+                    hatList.innerHTML = '';
+                    if (cart.length === 0) {
+                        hatListBlock.style.display = 'none';
+                        return;
+                    }
+                    hatListBlock.style.display = 'block';
+                    let total = 0;
+                    cart.forEach(h => {
+                        const lineTotal = h.unitPrice * h.quantity;
+                        total += lineTotal;
+                        const li = document.createElement('li');
+                        li.className = 'order-hat-item';
+                        li.innerHTML = `
+                                        <span>${esc(h.name)} (${esc(h.size)}) × ${h.quantity}</span>
+                                        <span class="order-hat-item-price">${lineTotal.toFixed(2)} kr</span>
+                                        <button class="order-hat-remove" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" title="Ta bort">✕</button>`;
+                        hatList.appendChild(li);
+                    });
+                    totalAmountEl.textContent = total.toFixed(2) + ' kr';
+                    hatList.querySelectorAll('.order-hat-remove').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            cart = cart.filter(h => !(h.hatId === btn.dataset.id && h.size === btn.dataset.size));
+                            renderCart();
+                            updateCreateBtn();
+                        });
+                    });
+                }
 
-                            function esc(str) {
-                                if (!str) return '';
-                                return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-                            }
+                function updateCreateBtn() {
+                    const hasCustomer = !!customerSelect.value;
+                    const hasHats = cart.length > 0;
+                    createOrderBtn.style.display = (hasCustomer && hasHats) ? '' : 'none';
+                }
+
+                // ---  Create order ---
+                createOrderBtn.addEventListener('click', async () => {
+                    createOrderError.textContent = '';
+                    createOrderBtn.disabled = true;
+                    createOrderBtn.textContent = 'Sparar…';
+                    try {
+                        const payload = {
+                            customerId: customerSelect.value,
+                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice }))
+                        };
+                        const resp = await fetch('/Orders/Create', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!resp.ok) {
+                            const err = await resp.json().catch(() => ({}));
+                            throw new Error(err.error || 'Något gick fel.');
+                        }
+                        window.location.href = '/Orders';
+                    } catch (e) {
+                        createOrderError.textContent = e.message;
+                        createOrderBtn.disabled = false;
+                        createOrderBtn.textContent = 'Skapa order';
+                    }
+                });
+
+                function esc(str) {
+                    if (!str) return '';
+                    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                }
             </script>
         }

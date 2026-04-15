@@ -1,0 +1,189 @@
+/* ── Warehouse page ── */
+.site-main:has(.warehouse-wrapper) {
+  align-items: stretch;
+  text-align: left;
+  max-width: 1400px;
+}
+
+.warehouse-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-bottom: 2.5rem;
+  width: 100%;
+}
+
+/* ── Hat card grid ── */
+.warehouse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.warehouse-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease;
+}
+
+.warehouse-card:hover {
+  border-color: #2e2e2e;
+}
+
+/* ── Card header ── */
+.warehouse-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.3rem 0.85rem;
+  border-bottom: 1px solid #1c1c1c;
+}
+
+.warehouse-card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e8e0d4;
+  margin: 0;
+}
+
+.warehouse-card-price {
+  font-size: 0.75rem;
+  color: #c9a84c;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ── Card body ── */
+.warehouse-card-body {
+  padding: 1rem 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.warehouse-card-meta {
+  font-size: 0.73rem;
+  color: #555;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* ── Stock grid (size blocks) ── */
+.warehouse-stock-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.warehouse-size-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.warehouse-size-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666;
+  font-weight: 600;
+}
+
+.warehouse-size-input {
+  width: 54px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.45rem 0.4rem;
+  font-size: 0.88rem;
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.warehouse-size-input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
+}
+
+/* low stock indicator */
+.warehouse-size-input.--low {
+  border-color: #7a3a2a;
+  color: #e07050;
+}
+
+/* ── Card footer ── */
+.warehouse-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.3rem;
+  border-top: 1px solid #1a1a1a;
+}
+
+.warehouse-save-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #0a0a0a;
+  background: #c9a84c;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.18s ease;
+  flex-shrink: 0;
+}
+
+.warehouse-save-btn:hover {
+  background: #d4b96a;
+}
+
+.warehouse-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.warehouse-status {
+  font-size: 0.72rem;
+  color: #4caf7d;
+  letter-spacing: 0.02em;
+}
+
+.warehouse-status.--error {
+  color: #ff453a;
+}
+
+/* ── Empty state ── */
+.warehouse-empty {
+  color: #444;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* ── Remove browser spinner arrows from number inputs ── */
+.warehouse-size-input::-webkit-outer-spin-button,
+.warehouse-size-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.warehouse-size-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

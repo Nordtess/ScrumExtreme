@@ -1,5 +1,118 @@
+@model IEnumerable<ScrumExtreme.Domain.Entities.Hats>
 @{
     ViewData["Title"] = "Lagerstatus";
+    var hatList = Model?.ToList() ?? new List<ScrumExtreme.Domain.Entities.Hats>();
 }
 
-<h2>Lagerstatus</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/warehouse.css" asp-append-version="true" />
+}
+
+<div class="warehouse-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Lagerstatus</h1>
+        <p class="admin-page-subtitle">Se och ändra lagersaldo för alla hattar</p>
+    </div>
+
+    @if (!hatList.Any())
+    {
+        <p class="warehouse-empty">Inga hattar hittades i systemet.</p>
+    }
+    else
+    {
+        <div class="warehouse-grid">
+            @foreach (var hat in hatList)
+            {
+                <div class="warehouse-card">
+                    <div class="warehouse-card-header">
+                        <h2 class="warehouse-card-name">@hat.Name</h2>
+                        <span class="warehouse-card-price">@hat.Price kr</span>
+                    </div>
+                    <div class="warehouse-card-body">
+                        @if (!string.IsNullOrWhiteSpace(hat.MaterialList))
+                        {
+                            <p class="warehouse-card-meta">@hat.MaterialList</p>
+                        }
+                        <div class="warehouse-stock-grid">
+                            @foreach (var size in hat.Sizes)
+                            {
+                                var qty = hat.Stock.TryGetValue(size, out var q) ? q : 0;
+                                <div class="warehouse-size-block">
+                                    <span class="warehouse-size-label">@size</span>
+                                    <input class="warehouse-size-input @(qty <= 0 ? "--low" : "")" type="number" min="0" step="1"
+                                           data-size="@size" value="@qty" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="warehouse-card-footer">
+                        <button class="warehouse-save-btn" data-hat-id="@hat.Id">Spara</button>
+                        <span class="warehouse-status"></span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.warehouse-save-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const card = btn.closest('.warehouse-card');
+                const hatId = btn.dataset.hatId;
+                const statusEl = card.querySelector('.warehouse-status');
+
+                statusEl.textContent = '';
+                statusEl.className = 'warehouse-status';
+
+                const inputs = card.querySelectorAll('.warehouse-size-input');
+                const saves = [];
+
+                for (const input of inputs) {
+                    const size = input.dataset.size;
+                    const quantity = parseInt(input.value, 10);
+                    if (isNaN(quantity) || quantity < 0) {
+                        statusEl.textContent = 'Ogiltigt antal för ' + size;
+                        statusEl.className = 'warehouse-status --error';
+                        return;
+                    }
+                    saves.push(
+                        fetch('/Warehouse/UpdateStock', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ hatId, size, quantity })
+                        })
+                    );
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'Sparar…';
+
+                try {
+                    const results = await Promise.all(saves);
+                    if (!results.every(r => r.ok)) throw new Error();
+
+                    // Update low-stock indicators
+                    inputs.forEach(input => {
+                        const val = parseInt(input.value, 10);
+                        input.classList.toggle('--low', val <= 0);
+                    });
+
+                    statusEl.textContent = 'Sparat ✓';
+                    statusEl.className = 'warehouse-status';
+                    setTimeout(() => { statusEl.textContent = ''; }, 2500);
+                } catch {
+                    statusEl.textContent = 'Fel vid sparning.';
+                    statusEl.className = 'warehouse-status --error';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Spara';
+                }
+            });
+        });
+    </script>
+}

@@ -17,5 +17,7 @@ namespace ScrumExtreme.Domain.Entities
         [BsonElement("price")] public double Price { get; set; }
 
         [BsonElement("materiallist")] public string MaterialList { get; set; } = string.Empty;
+
+        [BsonElement("stock")] public Dictionary<string, int> Stock { get; set; } = new();
     }
 }

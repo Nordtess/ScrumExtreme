@@ -74,6 +74,23 @@ public class OrdersController : Controller
         if (customer == null)
             return BadRequest(new { error = "Kunden hittades inte." });
 
+        // Validate stock before creating the order
+        foreach (var item in model.Items)
+        {
+            if (item.Quantity < 1)
+                return BadRequest(new { error = $"Antal för '{item.Name}' ({item.Size}) måste vara minst 1." });
+
+            var hat = await _hatService.GetByIdAsync(item.HatId);
+            if (hat == null)
+                return BadRequest(new { error = $"Hatten '{item.Name}' hittades inte." });
+            if (!string.IsNullOrEmpty(item.Size))
+            {
+                hat.Stock.TryGetValue(item.Size, out var stock);
+                if (stock < item.Quantity)
+                    return BadRequest(new { error = $"'{item.Name}' storlek {item.Size}: endast {stock} i lager (du begärde {item.Quantity})." });
+            }
+        }
+
         var orderNumber = $"ORD-{DateTime.UtcNow.Year}-{Random.Shared.Next(1000, 9999)}";
 
         var order = new Order
@@ -96,13 +113,27 @@ public class OrdersController : Controller
             {
                 ProductId = i.HatId,
                 Name = i.Name,
-                Quantity = 1,
+                Size = i.Size,
+                Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice
             }).ToList(),
-            TotalAmount = model.Items.Sum(i => i.UnitPrice)
+            TotalAmount = model.Items.Sum(i => i.UnitPrice * i.Quantity)
         };
 
         await _orderService.CreateOrderAsync(order);
+
+        // Decrement stock for each ordered item
+        foreach (var item in order.Items)
+        {
+            var hat = await _hatService.GetByIdAsync(item.ProductId);
+            if (hat != null && !string.IsNullOrEmpty(item.Size))
+            {
+                hat.Stock.TryGetValue(item.Size, out var current);
+                hat.Stock[item.Size] = Math.Max(0, current - item.Quantity);
+                await _hatService.UpdateHatAsync(hat);
+            }
+        }
+
         return Ok(new { success = true });
     }
 }

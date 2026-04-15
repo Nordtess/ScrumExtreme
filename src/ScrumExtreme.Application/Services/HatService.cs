@@ -26,6 +26,9 @@ namespace ScrumExtreme.Application.Services
 
         public async Task<Hats?> GetByIdAsync(string id) =>
             await _repository.GetByIdAsync(id);
+
+        public async Task UpdateHatAsync(Hats hat) =>
+            await _repository.UpdateAsync(hat.Id, hat);
     }
 
 

@@ -51,15 +51,6 @@ namespace ScrumExtreme.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 🔥 DENNA SAKNADES
-        [HttpPost]
-        public async Task<IActionResult> ShowHats()
-        {
-            var hats = await _hatService.GetAllHatsAsync();
-            ViewBag.Hats = hats;
-            return View("Index", new CreateHatsViewModel());
-        }
-
     }
 
 

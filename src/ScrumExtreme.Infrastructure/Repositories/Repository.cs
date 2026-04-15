@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ScrumExtreme.Domain.Attributes;
 using ScrumExtreme.Domain.Interfaces;
@@ -18,8 +19,16 @@ public class Repository<T> : IRepository<T> where T : class
         _collection = database.GetCollection<T>(collectionName);
     }
 
+    // MongoDB stores _id as ObjectId; we must parse the string to ObjectId when filtering.
+    private static FilterDefinition<T> ById(string id)
+    {
+        if (ObjectId.TryParse(id, out var oid))
+            return Builders<T>.Filter.Eq("_id", oid);
+        return Builders<T>.Filter.Eq("_id", id);
+    }
+
     public async Task<T?> GetByIdAsync(string id) =>
-        await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+        await _collection.Find(ById(id)).FirstOrDefaultAsync();
 
     public async Task<IEnumerable<T>> GetAllAsync() =>
         await _collection.Find(_ => true).ToListAsync();
@@ -28,8 +37,8 @@ public class Repository<T> : IRepository<T> where T : class
         await _collection.InsertOneAsync(entity);
 
     public async Task UpdateAsync(string id, T entity) =>
-        await _collection.ReplaceOneAsync(Builders<T>.Filter.Eq("_id", id), entity);
+        await _collection.ReplaceOneAsync(ById(id), entity);
 
     public async Task DeleteAsync(string id) =>
-        await _collection.DeleteOneAsync(Builders<T>.Filter.Eq("_id", id));
+        await _collection.DeleteOneAsync(ById(id));
 }
