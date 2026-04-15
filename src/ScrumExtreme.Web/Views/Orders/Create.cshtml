@@ -168,6 +168,7 @@
                     sizeSelect.innerHTML = '<option value="">-- Välj storlek --</option>';
                     quantityInput.value = 1;
                     quantityRow.style.display = 'none';
+                    clearQtyState();
                     const opt = hatSelect.options[hatSelect.selectedIndex];
                     if (opt && opt.value) {
                         const sizes = JSON.parse(opt.dataset.sizes || '[]');
@@ -203,10 +204,30 @@
                         quantityInput.max = opt.dataset.max;
                         quantityInput.value = 1;
                         quantityRow.style.display = '';
+                        validateQty();
                     } else {
                         quantityRow.style.display = 'none';
+                        clearQtyState();
                     }
                 });
+
+                // --- Live qty validation ---
+                function validateQty() {
+                    const qty = parseInt(quantityInput.value, 10);
+                    const max = parseInt(quantityInput.max, 10);
+                    const valid = !isNaN(qty) && qty >= 1 && (!quantityInput.max || qty <= max);
+                    quantityInput.classList.toggle('--valid', valid);
+                    quantityInput.classList.toggle('--invalid', !valid);
+                    addHatBtn.classList.toggle('--valid', valid);
+                    addHatBtn.classList.toggle('--invalid', !valid);
+                }
+
+                function clearQtyState() {
+                    quantityInput.classList.remove('--valid', '--invalid');
+                    addHatBtn.classList.remove('--valid', '--invalid');
+                }
+
+                quantityInput.addEventListener('input', validateQty);
 
                 // --- Customer select ---
                 customerSelect.addEventListener('change', async () => {

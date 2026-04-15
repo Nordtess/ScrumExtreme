@@ -70,7 +70,7 @@
                 statusEl.className = 'warehouse-status';
 
                 const inputs = card.querySelectorAll('.warehouse-size-input');
-                const saves = [];
+                const stockMap = {};
 
                 for (const input of inputs) {
                     const size = input.dataset.size;
@@ -80,23 +80,22 @@
                         statusEl.className = 'warehouse-status --error';
                         return;
                     }
-                    saves.push(
-                        fetch('/Warehouse/UpdateStock', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ hatId, size, quantity })
-                        })
-                    );
+                    stockMap[size] = quantity;
                 }
 
                 btn.disabled = true;
                 btn.textContent = 'Sparar…';
 
                 try {
-                    const results = await Promise.all(saves);
-                    if (!results.every(r => r.ok)) throw new Error();
+                    const result = await fetch('/Warehouse/UpdateAllStock', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ hatId, stock: stockMap })
+                    });
+                    if (!result.ok) throw new Error();
 
                     // Update low-stock indicators
+                    const inputs = card.querySelectorAll('.warehouse-size-input');
                     inputs.forEach(input => {
                         const val = parseInt(input.value, 10);
                         input.classList.toggle('--low', val <= 0);

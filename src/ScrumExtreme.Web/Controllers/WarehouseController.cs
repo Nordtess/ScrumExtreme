@@ -34,6 +34,23 @@ public class WarehouseController : Controller
         await _hatService.UpdateHatAsync(hat);
         return Ok(new { success = true });
     }
+
+    [HttpPost("UpdateAllStock")]
+    public async Task<IActionResult> UpdateAllStock([FromBody] UpdateAllStockRequest req)
+    {
+        if (string.IsNullOrEmpty(req.HatId) || req.Stock == null || req.Stock.Values.Any(v => v < 0))
+            return BadRequest(new { error = "Ogiltiga parametrar." });
+
+        var hat = await _hatService.GetByIdAsync(req.HatId);
+        if (hat == null)
+            return NotFound(new { error = "Hatten hittades inte." });
+
+        foreach (var kv in req.Stock)
+            hat.Stock[kv.Key] = kv.Value;
+
+        await _hatService.UpdateHatAsync(hat);
+        return Ok(new { success = true });
+    }
 }
 
 public class UpdateStockRequest
@@ -41,4 +58,10 @@ public class UpdateStockRequest
     public string HatId { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public int Quantity { get; set; }
+}
+
+public class UpdateAllStockRequest
+{
+    public string HatId { get; set; } = string.Empty;
+    public Dictionary<string, int> Stock { get; set; } = new();
 }
