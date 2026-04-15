@@ -1,0 +1,121 @@
+﻿@using ScrumExtreme.Domain.Entities
+@{
+    ViewData["Title"] = "Orderhantering";
+
+    var orders = ViewBag.Orders as List<Order>;
+    var customers = ViewBag.Customers as List<User>;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Orderhantering</h1>
+        <p class="admin-page-subtitle">Tilldela kund till order</p>
+    </div>
+
+    <!-- 🔴 ERROR MESSAGE -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="admin-error">
+            @TempData["Error"]
+        </div>
+    }
+
+    <!-- 🟢 SUCCESS MESSAGE -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="admin-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <form action="/Orders/Assignment/Assign" method="post" class="admin-layout">
+
+        <!-- LEFT: ORDERS -->
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Ordrar
+                    <span class="admin-customer-count">@orders?.Count</span>
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+                <div class="admin-customer-list">
+
+                    @if (orders != null && orders.Any())
+                    {
+                        foreach (var o in orders)
+                        {
+                            <label class="admin-customer-row">
+                                <input type="radio" name="selectedOrderId" value="@o.Id" />
+
+                                <span class="admin-customer-name">
+                                    @o.OrderNumber
+                                </span>
+
+                                <span class="admin-customer-country">
+                                    @o.Status
+                                </span>
+                            </label>
+                        }
+                    }
+                    else
+                    {
+                        <p>Inga ordrar hittades</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: CUSTOMERS -->
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Kunder
+                    <span class="admin-customer-count">@customers?.Count</span>
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+                <div class="admin-customer-list">
+
+                    @if (customers != null && customers.Any())
+                    {
+                        foreach (var c in customers)
+                        {
+                            <label class="admin-customer-row">
+                                <input type="radio" name="userId" value="@c.Id" />
+
+                                <span class="admin-customer-name">
+                                    @c.FirstName @c.LastName
+                                </span>
+
+                                <span class="admin-customer-country">
+                                    @c.Country
+                                </span>
+                            </label>
+                        }
+                    }
+                    else
+                    {
+                        <p>Inga kunder hittades</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-submit-area">
+            <button type="submit" class="admin-btn-primary">
+                Tilldela kund
+            </button>
+        </div>
+
+    </form>
+</div>

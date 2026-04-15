@@ -27,4 +27,6 @@ public class OrderService : IOrderService
         var all = await _repository.GetAllAsync();
         return all.Where(o => o.UserId == userId);
     }
+    public async Task UpdateOrderAsync(Order order) =>
+    await _repository.UpdateAsync(order.Id, order);
 }

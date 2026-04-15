@@ -8,4 +8,5 @@ public interface IOrderService
     Task CreateOrderAsync(Order order);
     Task<Order?> GetByIdAsync(string id);
     Task<IEnumerable<Order>> GetByUserIdAsync(string userId);
+    Task UpdateOrderAsync(Order order);
 }
