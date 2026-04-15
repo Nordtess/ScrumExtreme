@@ -41,9 +41,9 @@ namespace ScrumExtreme.Web.Controllers
             var hat = new Hats
             {
                 Name = textInfo.ToTitleCase(model.Name.Trim().ToLower()),
-                Sizes = model.Sizes,
+                Sizes = model.Sizes ?? new List<string>(),
                 Price = model.Price,
-                MaterialList = textInfo.ToTitleCase(model.MaterialList.Trim().ToLower()),
+                MaterialList = textInfo.ToTitleCase((model.MaterialList ?? string.Empty).Trim().ToLower()),
             };
 
             await _hatService.CreateHatsAsync(hat);
