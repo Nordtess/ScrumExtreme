@@ -42,6 +42,7 @@
                                 <div class="warehouse-size-block">
                                     <span class="warehouse-size-label">@size</span>
                                     <input class="warehouse-size-input @(qty <= 0 ? "--low" : "")" type="number" min="0" step="1"
+                                           inputmode="numeric" pattern="[0-9]*"
                                            data-size="@size" value="@qty" />
                                 </div>
                             }
@@ -50,6 +51,10 @@
                     <div class="warehouse-card-footer">
                         <button class="warehouse-save-btn" data-hat-id="@hat.Id">Spara</button>
                         <span class="warehouse-status"></span>
+                        @if (!string.IsNullOrWhiteSpace(hat.MaterialList))
+                        {
+                            <span class="warehouse-material-hint" data-material="@hat.MaterialList" style="display:none;"></span>
+                        }
                     </div>
                 </div>
             }
@@ -60,6 +65,54 @@
 
 @section Scripts {
     <script>
+        // ── Input sanitisation: no negatives, no leading zeros ─────────────
+        document.querySelectorAll('.warehouse-size-input').forEach(input => {
+            input.addEventListener('input', () => {
+                // Strip anything that isn't a digit
+                let raw = input.value.replace(/[^0-9]/g, '');
+                // Remove leading zeros (keep "0" itself)
+                raw = raw === '' ? '' : String(parseInt(raw, 10));
+                input.value = raw;
+                updateMaterialHint(input.closest('.warehouse-card'));
+            });
+
+            // Block non-digit keys (allow control keys)
+            input.addEventListener('keydown', e => {
+                const allow = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+                if (!allow.includes(e.key) && !/^[0-9]$/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+
+            // On blur ensure no empty — reset to 0
+            input.addEventListener('blur', () => {
+                if (input.value === '') {
+                    input.value = '0';
+                    updateMaterialHint(input.closest('.warehouse-card'));
+                }
+            });
+        });
+
+        // ── Material usage hint ─────────────────────────────────────────────
+        function updateMaterialHint(card) {
+            const hintEl = card.querySelector('.warehouse-material-hint');
+            if (!hintEl) return;
+            const material = hintEl.dataset.material;
+            const inputs = card.querySelectorAll('.warehouse-size-input');
+            let total = 0;
+            inputs.forEach(inp => {
+                const v = parseInt(inp.value, 10);
+                if (!isNaN(v) && v > 0) total += v;
+            });
+            if (total > 0) {
+                hintEl.textContent = `Beräknad materialåtgång: ${total} ${material}`;
+                hintEl.style.display = '';
+            } else {
+                hintEl.style.display = 'none';
+            }
+        }
+
+        // ── Save ────────────────────────────────────────────────────────────
         document.querySelectorAll('.warehouse-save-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const card = btn.closest('.warehouse-card');
@@ -95,8 +148,8 @@
                     if (!result.ok) throw new Error();
 
                     // Update low-stock indicators
-                    const inputs = card.querySelectorAll('.warehouse-size-input');
-                    inputs.forEach(input => {
+                    const allInputs = card.querySelectorAll('.warehouse-size-input');
+                    allInputs.forEach(input => {
                         const val = parseInt(input.value, 10);
                         input.classList.toggle('--low', val <= 0);
                     });
