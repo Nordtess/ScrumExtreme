@@ -22,9 +22,15 @@ public class OrderService : IOrderService
     public async Task<Order?> GetByIdAsync(string id) =>
         await _repository.GetByIdAsync(id);
 
+    // Ändrat namn från GetByCustomerIdAsync till GetByUserIdAsync 
+    // för att matcha IOrderService exakt!
     public async Task<IEnumerable<Order>> GetByUserIdAsync(string userId)
     {
         var all = await _repository.GetAllAsync();
+        // Ändra CustomerId till UserId här!
+        return all.Where(o => o.UserId == userId);
+        // Här mappar vi mot UserId i din Order-entitet. 
+        // (Se till att Order-klassen har egenskapen UserId)
         return all.Where(o => o.UserId == userId);
     }
 }

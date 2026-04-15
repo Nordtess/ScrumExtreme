@@ -13,3 +13,5 @@ public class ShippingAddress
     [BsonElement("country")] public string Country { get; set; } = string.Empty;
     [BsonElement("phonenumber")] public string PhoneNumber { get; set; } = string.Empty;
 }
+
+
