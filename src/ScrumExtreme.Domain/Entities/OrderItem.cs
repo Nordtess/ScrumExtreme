@@ -15,4 +15,7 @@ public class OrderItem
 
     [BsonElement("unitPrice")]
     public double UnitPrice { get; set; }
+
+    [BsonElement("size")]
+    public string Size { get; set; } = string.Empty;
 }

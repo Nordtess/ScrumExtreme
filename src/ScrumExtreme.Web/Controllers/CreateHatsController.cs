@@ -41,23 +41,14 @@ namespace ScrumExtreme.Web.Controllers
             var hat = new Hats
             {
                 Name = textInfo.ToTitleCase(model.Name.Trim().ToLower()),
-                Sizes = model.Sizes,
+                Sizes = model.Sizes ?? new List<string>(),
                 Price = model.Price,
-                MaterialList = textInfo.ToTitleCase(model.MaterialList.Trim().ToLower()),
+                MaterialList = textInfo.ToTitleCase((model.MaterialList ?? string.Empty).Trim().ToLower()),
             };
 
             await _hatService.CreateHatsAsync(hat);
             TempData["Success"] = "Ny hatt skapades!";
             return RedirectToAction(nameof(Index));
-        }
-
-        // 🔥 DENNA SAKNADES
-        [HttpPost]
-        public async Task<IActionResult> ShowHats()
-        {
-            var hats = await _hatService.GetAllHatsAsync();
-            ViewBag.Hats = hats;
-            return View("Index", new CreateHatsViewModel());
         }
 
     }

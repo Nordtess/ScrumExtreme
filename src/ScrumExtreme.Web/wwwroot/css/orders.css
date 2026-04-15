@@ -135,3 +135,59 @@
   margin-top: 0.4rem;
   min-height: 1rem;
 }
+
+/* ── Quantity input ── */
+#quantityInput {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Remove spinner arrows */
+#quantityInput::-webkit-outer-spin-button,
+#quantityInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#quantityInput[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+#quantityInput:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+#quantityInput.--valid {
+  border-color: #4caf7d;
+  box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.1);
+}
+
+#quantityInput.--invalid {
+  border-color: #ff453a;
+  box-shadow: 0 0 0 3px rgba(255, 69, 58, 0.1);
+}
+
+/* Add-hat button state feedback */
+.admin-btn-secondary.--valid:hover {
+  background: rgba(76, 175, 125, 0.15);
+  border-color: #4caf7d;
+  color: #4caf7d;
+}
+
+.admin-btn-secondary.--invalid:hover {
+  background: rgba(255, 69, 58, 0.12);
+  border-color: #ff453a;
+  color: #ff453a;
+}

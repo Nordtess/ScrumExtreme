@@ -1,5 +1,355 @@
+@model IEnumerable<ScrumExtreme.Domain.Entities.Hats>
+@using System.Linq
 @{
     ViewData["Title"] = "Lagerstatus";
+    var hatList = Model?.ToList() ?? new List<ScrumExtreme.Domain.Entities.Hats>();
+
+    // Collect unique materials from all hats for the Material section
+    var allMaterials = hatList
+        .Where(h => !string.IsNullOrWhiteSpace(h.MaterialList))
+        .SelectMany(h => h.MaterialList.Split(',', System.StringSplitOptions.RemoveEmptyEntries))
+        .Select(m => m.Trim())
+        .Where(m => !string.IsNullOrEmpty(m))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .OrderBy(m => m)
+        .ToList();
+
+    // Placeholder tillbehör items (frontend-only demo data)
+    var tillbehorItems = new[] { "Fjäder", "Diamant", "Sidenband", "Pärlor", "Brosch" };
 }
 
-<h2>Lagerstatus</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/warehouse.css" asp-append-version="true" />
+}
+
+<div class="warehouse-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Lagerstatus</h1>
+        <p class="admin-page-subtitle">Se och ändra lagersaldo för hattar, material och tillbehör</p>
+    </div>
+
+    <!-- ── Filter bar ── -->
+    <div class="warehouse-filter-bar">
+        <label class="warehouse-filter-label" for="sectionFilter">Visa</label>
+        <select id="sectionFilter" class="warehouse-filter-select">
+            <option value="all">Visa alla</option>
+            <option value="hats">Hattar</option>
+            <option value="material">Material</option>
+            <option value="tillbehor">Tillbehör</option>
+        </select>
+    </div>
+
+    <!-- ════════════════════ HATTAR ════════════════════ -->
+    <section class="warehouse-section" data-section="hats">
+        <div class="warehouse-section-header">
+            <h2 class="warehouse-section-title">Hattar</h2>
+            <span class="warehouse-section-count">@hatList.Count st</span>
+        </div>
+
+        @if (!hatList.Any())
+        {
+            <p class="warehouse-empty">Inga hattar hittades i systemet.</p>
+        }
+        else
+        {
+            <div class="warehouse-grid">
+                @foreach (var hat in hatList)
+                {
+                    var savedTotal = hat.Stock.Values.Sum();
+                    <div class="warehouse-card" data-saved-total="@savedTotal">
+                        <div class="warehouse-card-header">
+                            <h2 class="warehouse-card-name">@hat.Name</h2>
+                            <span class="warehouse-card-price">@hat.Price kr</span>
+                        </div>
+                        <div class="warehouse-card-body">
+                            @if (!string.IsNullOrWhiteSpace(hat.MaterialList))
+                            {
+                                <p class="warehouse-card-meta">@hat.MaterialList</p>
+                            }
+                            <div class="warehouse-stock-grid">
+                                @foreach (var size in hat.Sizes)
+                                {
+                                    var qty = hat.Stock.TryGetValue(size, out var q) ? q : 0;
+                                    <div class="warehouse-size-block">
+                                        <span class="warehouse-size-label">@size</span>
+                                        <input class="warehouse-size-input @(qty <= 0 ? "--low" : "")" type="number" min="0" step="1"
+                                               inputmode="numeric" pattern="[0-9]*"
+                                               data-size="@size" value="@qty" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="warehouse-card-footer">
+                            <button class="warehouse-save-btn" data-hat-id="@hat.Id">Spara</button>
+                            <span class="warehouse-status"></span>
+                            @if (!string.IsNullOrWhiteSpace(hat.MaterialList))
+                            {
+                                <span class="warehouse-material-hint" data-material="@hat.MaterialList" style="display:none;"></span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <!-- ── Divider ── -->
+    <div class="warehouse-divider" data-section-divider="material"></div>
+
+    <!-- ════════════════════ MATERIAL ════════════════════ -->
+    <section class="warehouse-section" data-section="material">
+        <div class="warehouse-section-header">
+            <h2 class="warehouse-section-title">Material</h2>
+            <span class="warehouse-section-count">@allMaterials.Count st</span>
+        </div>
+        <p class="warehouse-section-note">Lagersaldo för råmaterial.</p>
+
+        @if (!allMaterials.Any())
+        {
+            <p class="warehouse-empty">Inga material registrerade på hattarna ännu.</p>
+        }
+        else
+        {
+            <div class="warehouse-list" id="material-list">
+                <div class="warehouse-list-header">
+                    <span>Namn</span>
+                    <span>Antal</span>
+                    <span>Pris/st (kr)</span>
+                    <span>I lager (kr)</span>
+                </div>
+                @foreach (var mat in allMaterials)
+                {
+                    <div class="warehouse-list-row">
+                        <span class="warehouse-list-name">@mat</span>
+                        <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                               inputmode="numeric" pattern="[0-9]*" value="0" aria-label="Antal @mat" />
+                        <input class="warehouse-price-input" type="number" min="0" step="1"
+                               inputmode="numeric" pattern="[0-9]*" value="0" aria-label="Pris @mat" />
+                        <span class="warehouse-list-total">0 kr</span>
+                    </div>
+                }
+                <div class="warehouse-list-footer">
+                    <span class="warehouse-footer-label">Totalt lagervärde:</span>
+                    <span class="warehouse-footer-total" id="material-grand-total">0 kr</span>
+                    <button class="warehouse-save-btn --small" disabled title="Backend ej implementerat">Spara alla</button>
+                </div>
+            </div>
+        }
+    </section>
+
+    <!-- ── Divider ── -->
+    <div class="warehouse-divider" data-section-divider="tillbehor"></div>
+
+    <!-- ════════════════════ TILLBEHÖR ════════════════════ -->
+    <section class="warehouse-section" data-section="tillbehor">
+        <div class="warehouse-section-header">
+            <h2 class="warehouse-section-title">Tillbehör</h2>
+            <span class="warehouse-section-count">@tillbehorItems.Length st</span>
+        </div>
+        <p class="warehouse-section-note">Lagersaldo för dekorativa tillbehör.</p>
+
+        <div class="warehouse-list" id="tillbehor-list">
+            <div class="warehouse-list-header">
+                <span>Namn</span>
+                <span>Antal</span>
+                <span>Pris/st (kr)</span>
+                <span>I lager (kr)</span>
+            </div>
+            @foreach (var item in tillbehorItems)
+            {
+                <div class="warehouse-list-row">
+                    <span class="warehouse-list-name">@item</span>
+                    <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                           inputmode="numeric" pattern="[0-9]*" value="0" aria-label="Antal @item" />
+                    <input class="warehouse-price-input" type="number" min="0" step="1"
+                           inputmode="numeric" pattern="[0-9]*" value="0" aria-label="Pris @item" />
+                    <span class="warehouse-list-total">0 kr</span>
+                </div>
+            }
+            <div class="warehouse-list-footer">
+                <span class="warehouse-footer-label">Totalt lagervärde:</span>
+                <span class="warehouse-footer-total" id="tillbehor-grand-total">0 kr</span>
+                <button class="warehouse-save-btn --small" disabled title="Backend ej implementerat">Spara alla</button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@section Scripts {
+    <script>
+        // ── Section filter ──────────────────────────────────────────────────
+        const filterSelect = document.getElementById('sectionFilter');
+        const sections     = document.querySelectorAll('.warehouse-section');
+        const dividers     = document.querySelectorAll('.warehouse-divider');
+
+        filterSelect.addEventListener('change', applyFilter);
+
+        function applyFilter() {
+            const val = filterSelect.value;
+            sections.forEach(s => {
+                s.style.display = (val === 'all' || s.dataset.section === val) ? '' : 'none';
+            });
+            // Show divider only when both surrounding sections are visible
+            dividers.forEach(d => {
+                const key = d.dataset.sectionDivider; // e.g. "material"
+                const keys = ['hats', 'material', 'tillbehor'];
+                const idx  = keys.indexOf(key);
+                const prev = document.querySelector(`.warehouse-section[data-section="${keys[idx - 1]}"]`);
+                const next = document.querySelector(`.warehouse-section[data-section="${key}"]`);
+                const bothVisible = prev && next &&
+                    prev.style.display !== 'none' && next.style.display !== 'none';
+                d.style.display = bothVisible ? '' : 'none';
+            });
+        }
+
+        // ── Input sanitisation (hat stock inputs) ──────────────────────────
+        function sanitiseInput(input) {
+            let raw = input.value.replace(/[^0-9]/g, '');
+            raw = raw === '' ? '' : String(parseInt(raw, 10));
+            input.value = raw;
+        }
+
+        document.querySelectorAll('.warehouse-size-input').forEach(input => {
+            input.addEventListener('input', () => {
+                sanitiseInput(input);
+                updateMaterialHint(input.closest('.warehouse-card'));
+            });
+            input.addEventListener('keydown', e => {
+                const allow = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+                if (!allow.includes(e.key) && !/^[0-9]$/.test(e.key)) e.preventDefault();
+            });
+            input.addEventListener('blur', () => {
+                if (input.value === '') {
+                    input.value = '0';
+                    updateMaterialHint(input.closest('.warehouse-card'));
+                }
+            });
+        });
+
+        // ── Same sanitisation for material / tillbehör inputs ──────────────
+        document.querySelectorAll('.warehouse-simple-input').forEach(input => {
+            input.addEventListener('input', () => sanitiseInput(input));
+            input.addEventListener('keydown', e => {
+                const allow = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+                if (!allow.includes(e.key) && !/^[0-9]$/.test(e.key)) e.preventDefault();
+            });
+            input.addEventListener('blur', () => {
+                if (input.value === '') input.value = '0';
+            });
+        });
+
+        // ── Material usage hint (only shows when NEW total > saved total) ──
+        function updateMaterialHint(card) {
+            const hintEl = card.querySelector('.warehouse-material-hint');
+            if (!hintEl) return;
+            const material    = hintEl.dataset.material;
+            const savedTotal  = parseInt(card.dataset.savedTotal || '0', 10);
+            const inputs      = card.querySelectorAll('.warehouse-size-input');
+            let currentTotal  = 0;
+            inputs.forEach(inp => {
+                const v = parseInt(inp.value, 10);
+                if (!isNaN(v)) currentTotal += v;
+            });
+            const added = currentTotal - savedTotal;
+            if (added > 0) {
+                hintEl.textContent = `Beräknad materialåtgång: ${added} ${material}`;
+                hintEl.style.display = '';
+            } else {
+                hintEl.style.display = 'none';
+            }
+        }
+
+        // ── Live totals for material / tillbehör lists ─────────────────────
+        function updateListTotals(list) {
+            let grand = 0;
+            list.querySelectorAll('.warehouse-list-row').forEach(row => {
+                const qty   = parseInt(row.querySelector('.warehouse-qty-input').value,   10) || 0;
+                const price = parseInt(row.querySelector('.warehouse-price-input').value, 10) || 0;
+                const total = qty * price;
+                grand += total;
+                row.querySelector('.warehouse-list-total').textContent = total.toLocaleString('sv-SE') + ' kr';
+            });
+            list.querySelector('.warehouse-footer-total').textContent = grand.toLocaleString('sv-SE') + ' kr';
+        }
+
+        document.querySelectorAll('.warehouse-list').forEach(list => {
+            list.querySelectorAll('.warehouse-qty-input, .warehouse-price-input').forEach(input => {
+                input.addEventListener('input', () => {
+                    sanitiseInput(input);
+                    updateListTotals(list);
+                });
+                input.addEventListener('keydown', e => {
+                    const allow = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+                    if (!allow.includes(e.key) && !/^[0-9]$/.test(e.key)) e.preventDefault();
+                });
+                input.addEventListener('blur', () => {
+                    if (input.value === '') { input.value = '0'; updateListTotals(list); }
+                });
+            });
+        });
+
+        // ── Save hat stock ──────────────────────────────────────────────────
+        document.querySelectorAll('.warehouse-save-btn:not([disabled])').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const card     = btn.closest('.warehouse-card');
+                const hatId    = btn.dataset.hatId;
+                const statusEl = card.querySelector('.warehouse-status');
+
+                statusEl.textContent = '';
+                statusEl.className   = 'warehouse-status';
+
+                const inputs   = card.querySelectorAll('.warehouse-size-input');
+                const stockMap = {};
+
+                for (const input of inputs) {
+                    const size     = input.dataset.size;
+                    const quantity = parseInt(input.value, 10);
+                    if (isNaN(quantity) || quantity < 0) {
+                        statusEl.textContent = 'Ogiltigt antal för ' + size;
+                        statusEl.className   = 'warehouse-status --error';
+                        return;
+                    }
+                    stockMap[size] = quantity;
+                }
+
+                btn.disabled      = true;
+                btn.textContent   = 'Sparar…';
+
+                try {
+                    const result = await fetch('/Warehouse/UpdateAllStock', {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:    JSON.stringify({ hatId, stock: stockMap })
+                    });
+                    if (!result.ok) throw new Error();
+
+                    // Update saved total so the hint resets correctly
+                    const newTotal = Object.values(stockMap).reduce((a, b) => a + b, 0);
+                    card.dataset.savedTotal = newTotal;
+
+                    inputs.forEach(input => {
+                        const val = parseInt(input.value, 10);
+                        input.classList.toggle('--low', val <= 0);
+                    });
+
+                    // Hide hint after save
+                    const hintEl = card.querySelector('.warehouse-material-hint');
+                    if (hintEl) hintEl.style.display = 'none';
+
+                    statusEl.textContent = 'Sparat ✓';
+                    statusEl.className   = 'warehouse-status';
+                    setTimeout(() => { statusEl.textContent = ''; }, 2500);
+                } catch {
+                    statusEl.textContent = 'Fel vid sparning.';
+                    statusEl.className   = 'warehouse-status --error';
+                } finally {
+                    btn.disabled    = false;
+                    btn.textContent = 'Spara';
+                }
+            });
+        });
+    </script>
+}

@@ -17,8 +17,10 @@ public class AddCustomerController : Controller
 
     [HttpGet("")]
     [HttpGet("/")]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var users = await _userService.GetAllUsersAsync();
+        ViewBag.Customers = users;
         return View(new CreateCustomerViewModel());
     }
 
