@@ -29,40 +29,52 @@
                 </h2>
             </div>
             <div class="admin-panel-body">
-                <form asp-action="CreateHats" method="post" class="admin-form">
+                <form asp-action="CreateHats" method="post" class="admin-form" id="createHatForm">
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="Name">Namn</label>
-                            <input asp-for="Name" placeholder="T.ex. Fedora" />
+                            <input asp-for="Name" id="Name" placeholder="T.ex. Fedora" />
+                            <span class="admin-error" id="error-Name"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="Size">Storlek</label>
-                            <input asp-for="Size" placeholder="T.ex. S, M, L, XL" />
+                            <label>Tillgängliga storlekar</label>
+                            <div class="size-checkbox-group" id="sizesGroup">
+                                @foreach (var size in new[] { "XS", "S", "M", "L", "XL", "XXL", "One Size" })
+                                {
+                                    var isChecked = Model.Sizes != null && Model.Sizes.Contains(size);
+                                    <label class="size-checkbox-label">
+                                        <input type="checkbox" name="Sizes" value="@size" @(isChecked ? "checked" : "") />
+                                        @size
+                                    </label>
+                                }
+                            </div>
+                            <span class="admin-error" id="error-Sizes"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="Price">Pris (SEK)</label>
-                            <input asp-for="Price" type="number" step="0.01" min="0" />
+                            <input asp-for="Price" id="Price" type="number" step="0.01" min="1" />
+                            <span class="admin-error" id="error-Price"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="MaterialList">Materiallista</label>
-                            <input asp-for="MaterialList" placeholder="T.ex. Ull, Bomull" />
+                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull" />
+                            <span class="admin-error" id="error-MaterialList"></span>
                         </div>
                     </div>
 
                     <div class="admin-submit-area">
-                        <button type="submit" class="admin-btn-primary">
-                            Skapa hatt
-                        </button>
+                        <button type="submit" class="admin-btn-primary" id="hatSubmitBtn">Skapa hatt</button>
+                        <span class="admin-submit-error" id="hatSubmitError"></span>
                     </div>
 
                 </form>
@@ -111,7 +123,7 @@
                             {
                                 <div class="admin-customer-row">
                                     <span>@hat.Name</span>
-                                    <span>@hat.Size</span>
+                                    <span style="color:#888;font-size:0.82rem;">@string.Join(", ", hat.Sizes)</span>
                                     <span>@hat.Price kr</span>
                                 </div>
                             }
@@ -127,4 +139,5 @@
 
 @section Scripts {
     <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="~/js/createhats.js" asp-append-version="true"></script>
 }

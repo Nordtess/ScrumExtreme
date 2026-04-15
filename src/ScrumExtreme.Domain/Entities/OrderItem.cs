@@ -14,5 +14,5 @@ public class OrderItem
     public int Quantity { get; set; }
 
     [BsonElement("unitPrice")]
-    public decimal UnitPrice { get; set; }
+    public double UnitPrice { get; set; }
 }

@@ -10,23 +10,24 @@ public class OrdersController : Controller
 {
     private readonly IOrderService _orderService;
     private readonly IUserService _userService;
-    private readonly IProductService _productService;
+    private readonly IHatService _hatService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
-        IProductService productService)
+        IHatService hatService)
     {
         _orderService = orderService;
         _userService = userService;
-        _productService = productService;
+        _hatService = hatService;
     }
 
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
         var orders = await _orderService.GetAllOrdersAsync();
-        ViewBag.ProjectName = "ScrumExtreme";
+        var users = await _userService.GetAllUsersAsync();
+        ViewBag.EmailLookup = users.ToDictionary(u => u.Id, u => u.Email);
         return View(orders);
     }
 
@@ -36,63 +37,72 @@ public class OrdersController : Controller
         var users = await _userService.GetAllUsersAsync();
         ViewBag.Customers = users.Where(u => !u.IsAdmin);
 
-        var products = await _productService.GetAllProductsAsync();
-        ViewBag.Products = products;
+        var hats = await _hatService.GetAllHatsAsync();
+        ViewBag.Hats = hats;
 
-        ViewBag.ProjectName = "ScrumExtreme";
         return View();
     }
 
-    [HttpPost("Create")]
-    public async Task<IActionResult> Create(CreateOrderViewModel model)
+    [HttpGet("CustomerInfo/{id}")]
+    public async Task<IActionResult> CustomerInfo(string id)
     {
-        if (!ModelState.IsValid)
+        var users = await _userService.GetAllUsersAsync();
+        var user = users.FirstOrDefault(u => u.Id == id);
+        if (user == null) return NotFound();
+
+        return Json(new
         {
-            var users = await _userService.GetAllUsersAsync();
-            ViewBag.Customers = users.Where(u => !u.IsAdmin);
+            fullName = $"{user.FirstName} {user.LastName}",
+            address = user.Address,
+            city = user.City,
+            postalCode = user.PostalCode,
+            country = user.Country,
+            countryCode = user.CountryCode,
+            phone = user.PhoneNumber,
+            email = user.Email
+        });
+    }
 
-            var products = await _productService.GetAllProductsAsync();
-            ViewBag.Products = products;
+    [HttpPost("Create")]
+    public async Task<IActionResult> Create([FromBody] CreateOrderViewModel model)
+    {
+        if (string.IsNullOrEmpty(model.CustomerId) || model.Items == null || !model.Items.Any())
+            return BadRequest(new { error = "Välj en kund och lägg till minst en hatt." });
 
-            ViewBag.ProjectName = "ScrumExtreme";
-            return View(model);
-        }
+        var users = await _userService.GetAllUsersAsync();
+        var customer = users.FirstOrDefault(u => u.Id == model.CustomerId);
+        if (customer == null)
+            return BadRequest(new { error = "Kunden hittades inte." });
 
-        var product = await _productService.GetByIdAsync(model.ProductId);
-        if (product == null)
-        {
-            ModelState.AddModelError(nameof(model.ProductId), "Produkten kunde inte hittas.");
-
-            var users = await _userService.GetAllUsersAsync();
-            ViewBag.Customers = users.Where(u => !u.IsAdmin);
-
-            var products = await _productService.GetAllProductsAsync();
-            ViewBag.Products = products;
-
-            ViewBag.ProjectName = "ScrumExtreme";
-            return View(model);
-        }
+        var orderNumber = $"ORD-{DateTime.UtcNow.Year}-{Random.Shared.Next(1000, 9999)}";
 
         var order = new Order
         {
-            UserId = model.CustomerId,
+            OrderNumber = orderNumber,
+            UserId = customer.Id,
             OrderDate = DateTime.UtcNow,
             Status = OrderStatus.Pending,
-            Items = new List<OrderItem>
-    {
-        new OrderItem
-        {
-            ProductId = product.Id,
-            Name = product.Name,
-            Quantity = 1,
-            UnitPrice = product.Price
-        }
-    }
-};
+            ShippingAddress = new ShippingAddress
+            {
+                FullName = $"{customer.FirstName} {customer.LastName}",
+                Address = customer.Address,
+                City = customer.City,
+                PostalCode = customer.PostalCode,
+                Country = customer.Country,
+                CountryCode = customer.CountryCode,
+                Phone = customer.PhoneNumber
+            },
+            Items = model.Items.Select(i => new OrderItem
+            {
+                ProductId = i.HatId,
+                Name = i.Name,
+                Quantity = 1,
+                UnitPrice = i.UnitPrice
+            }).ToList(),
+            TotalAmount = model.Items.Sum(i => i.UnitPrice)
+        };
 
         await _orderService.CreateOrderAsync(order);
-
-        TempData["Success"] = "Förfrågan registrerad!";
-        return RedirectToAction("Index");
+        return Ok(new { success = true });
     }
 }
