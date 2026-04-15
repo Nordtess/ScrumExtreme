@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             validate: function (v) {
                 if (v.trim() === '') return 'Pris är obligatoriskt.';
                 const num = parseFloat(v);
-                if (isNaN(num) || num < 0) return 'Ange ett giltigt pris (0 eller högre).';
+                if (isNaN(num) || num < 1) return 'Priset måste vara minst 1 kr.';
                 return null;
             }
         },
