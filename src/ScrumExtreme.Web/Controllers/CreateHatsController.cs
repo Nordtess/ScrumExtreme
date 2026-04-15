@@ -14,10 +14,7 @@ namespace ScrumExtreme.Web.Controllers
             _hatService = hatService;
         }
 
-
-
         [HttpGet]
-
         public IActionResult Index()
         {
             return View(new CreateHatsViewModel());
@@ -33,10 +30,10 @@ namespace ScrumExtreme.Web.Controllers
 
             var hat = new Hats
             {
-                Name = ToTitleCase(model.Name),
-                Size = model.Size.Trim().ToUpper(),
+                Name = model.Name,
+                Size = model.Size,
                 Price = model.Price,
-                MaterialList = ToTitleCase(model.MaterialList),
+                MaterialList = model.MaterialList,
             };
 
             await _hatService.CreateHatsAsync(hat);
@@ -44,19 +41,16 @@ namespace ScrumExtreme.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet("GetAllHats")]
-        public async Task<IActionResult> GetAllHats()
+        // 🔥 DENNA SAKNADES
+        [HttpPost]
+        public async Task<IActionResult> ShowHats()
         {
             var hats = await _hatService.GetAllHatsAsync();
-            return View(hats);
+            ViewBag.Hats = hats;
+            return View("Index", new CreateHatsViewModel());
         }
 
-        private static string ToTitleCase(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input)) return input;
-            return string.Join(' ', input.Trim().Split(' ')
-                .Select(w => w.Length == 0 ? w : char.ToUpper(w[0]) + w[1..].ToLower()));
-        }
     }
+
 
 }
