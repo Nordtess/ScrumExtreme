@@ -1,0 +1,137 @@
+/* Selects styled to match .admin-field input in addcustomer.css */
+.admin-field select {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.admin-field select:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+.admin-field select option {
+  background: #111;
+  color: #e8e0d4;
+}
+
+/* Secondary gold button for "Lägg till hatt" */
+.admin-btn-secondary {
+  background: transparent;
+  border: 1px solid #c9a84c;
+  color: #c9a84c;
+  border-radius: 7px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.admin-btn-secondary:hover {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+/* Hat list in the right panel */
+.order-hat-list {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.order-hat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  color: #e8e0d4;
+}
+
+.order-hat-item-price {
+  color: #c9a84c;
+  font-weight: 600;
+}
+
+.order-hat-remove {
+  background: none;
+  border: none;
+  color: #ff453a;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0 0.25rem;
+  line-height: 1;
+}
+
+/* Customer info block */
+.order-customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #e8e0d4;
+  margin-bottom: 1rem;
+}
+
+.order-customer-info p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.order-customer-info .info-label {
+  font-size: 0.72rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.6rem;
+}
+
+.order-total {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #2a2a2a;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e8e0d4;
+}
+
+.order-total-amount {
+  color: #c9a84c;
+}
+
+.order-panel-actions {
+  margin-top: 1rem;
+}
+
+.order-error {
+  color: #ff453a;
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  min-height: 1rem;
+}

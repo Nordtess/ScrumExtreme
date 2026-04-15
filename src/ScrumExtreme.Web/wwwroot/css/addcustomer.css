@@ -219,6 +219,38 @@
   min-height: 0.9rem;
 }
 
+/* ── Size checkboxes ── */
+.size-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+}
+
+.size-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+  color: #e8e0d4;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.size-checkbox-label:hover {
+  border-color: #c9a84c;
+}
+
+.size-checkbox-label input[type="checkbox"] {
+  accent-color: #c9a84c;
+  width: auto;
+  cursor: pointer;
+}
+
 /* ── Buttons ── */
 .admin-btn-primary {
   width: 100%;

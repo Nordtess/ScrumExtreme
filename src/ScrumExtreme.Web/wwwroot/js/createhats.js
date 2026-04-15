@@ -5,46 +5,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitBtn   = document.getElementById('hatSubmitBtn');
     const submitError = document.getElementById('hatSubmitError');
 
-    // ── Validation rules ─────────────────────────────────────────────────
-    const rules = {
+    const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ,\s\-]+$/;
+
+    // ── Text field rules ─────────────────────────────────────────────────
+    const fieldRules = {
         Name: {
-            required: true,
-            pattern: /^[^\d]+$/,
-            messages: {
-                required: 'Namn är obligatoriskt.',
-                pattern:  'Namnet får inte innehålla siffror.'
-            }
-        },
-        Size: {
-            required: true,
-            pattern: /^[^\d]+$/,
-            messages: {
-                required: 'Storlek är obligatoriskt.',
-                pattern:  'Storlek får inte innehålla siffror.'
+            validate: function (v) {
+                if (!v.trim()) return 'Namn är obligatoriskt.';
+                if (!onlyLetters.test(v.trim())) return 'Namnet får inte innehålla siffror.';
+                return null;
             }
         },
         Price: {
-            required: true,
-            min: 0,
-            messages: {
-                required: 'Pris är obligatoriskt.',
-                min:      'Priset kan inte vara negativt.'
+            validate: function (v) {
+                if (v.trim() === '') return 'Pris är obligatoriskt.';
+                const num = parseFloat(v);
+                if (isNaN(num) || num < 0) return 'Ange ett giltigt pris (0 eller högre).';
+                return null;
             }
         },
         MaterialList: {
-            required: true,
-            pattern: /^[^\d]+$/,
-            messages: {
-                required: 'Materiallista är obligatorisk.',
-                pattern:  'Materiallistan får inte innehålla siffror.'
+            validate: function (v) {
+                if (!v.trim()) return 'Materiallista är obligatorisk.';
+                if (!onlyLetters.test(v.trim())) return 'Materiallistan får inte innehålla siffror.';
+                return null;
             }
         }
     };
 
     // ── Helpers ───────────────────────────────────────────────────────────
-    function setError(fieldId, msg) {
-        const el = document.getElementById('error-' + fieldId);
-        if (el) el.textContent = msg;
+    function setError(id, msg) {
+        const el = document.getElementById('error-' + id);
+        if (el) el.textContent = msg || '';
     }
 
     function setInputState(input, state) {
@@ -52,50 +44,39 @@ document.addEventListener('DOMContentLoaded', function () {
         if (state) input.classList.add(state);
     }
 
-    function validateField(fieldId) {
-        const input = document.getElementById(fieldId);
+    function validateTextField(id) {
+        const input = document.getElementById(id);
         if (!input) return true;
-
-        const rule = rules[fieldId];
-        const value = input.value.trim();
-
-        if (rule.required && value === '') {
-            setError(fieldId, rule.messages.required);
-            setInputState(input, 'invalid');
-            return false;
-        }
-
-        if (fieldId === 'Price') {
-            const num = parseFloat(value);
-            if (isNaN(num) || num < rule.min) {
-                setError(fieldId, rule.messages.min);
-                setInputState(input, 'invalid');
-                return false;
-            }
-        }
-
-        if (rule.pattern && !rule.pattern.test(value)) {
-            setError(fieldId, rule.messages.pattern);
-            setInputState(input, 'invalid');
-            return false;
-        }
-
-        setError(fieldId, '');
-        setInputState(input, 'valid');
-        return true;
+        const err = fieldRules[id].validate(input.value);
+        setInputState(input, err ? 'invalid' : 'valid');
+        setError(id, err);
+        return !err;
     }
 
-    // ── Attach blur listeners ─────────────────────────────────────────────
-    Object.keys(rules).forEach(function (fieldId) {
-        const input = document.getElementById(fieldId);
+    function validateSizes() {
+        const checked = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
+        const errorEl = document.getElementById('error-Sizes');
+        if (errorEl) errorEl.textContent = checked ? '' : 'Minst en storlek måste väljas.';
+        const group = document.getElementById('sizesGroup');
+        if (group) {
+            group.style.outline = checked ? '' : '1px solid #ff453a';
+            group.style.borderRadius = '6px';
+        }
+        return checked;
+    }
+
+    // ── Attach blur + input listeners ─────────────────────────────────────
+    Object.keys(fieldRules).forEach(function (id) {
+        const input = document.getElementById(id);
         if (!input) return;
         input.addEventListener('blur', function () {
-            validateField(fieldId);
+            input.dataset.touched = '1';
+            validateTextField(id);
             updateSubmitBtn();
         });
         input.addEventListener('input', function () {
             if (input.dataset.touched) {
-                validateField(fieldId);
+                validateTextField(id);
                 updateSubmitBtn();
             }
         });
@@ -104,30 +85,40 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ── Submit button hover state ─────────────────────────────────────────
+    form.querySelectorAll('input[name="Sizes"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            validateSizes();
+            updateSubmitBtn();
+        });
+    });
+
+    // ── Submit button state ───────────────────────────────────────────────
     function isFormValid() {
-        return Object.keys(rules).every(function (fieldId) {
-            const input = document.getElementById(fieldId);
+        const textOk  = Object.keys(fieldRules).every(function (id) {
+            const input = document.getElementById(id);
             return input && input.classList.contains('valid');
         });
+        const sizesOk = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
+        return textOk && sizesOk;
     }
 
     function updateSubmitBtn() {
         submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
-        if (isFormValid()) {
-            submitBtn.classList.add('btn-hover-valid');
-        } else {
-            submitBtn.classList.add('btn-hover-invalid');
-        }
+        submitBtn.classList.add(isFormValid() ? 'btn-hover-valid' : 'btn-hover-invalid');
     }
 
     // ── Form submit ───────────────────────────────────────────────────────
     form.addEventListener('submit', function (e) {
-        const allValid = Object.keys(rules).map(validateField).every(Boolean);
-        if (!allValid) {
+        Object.keys(fieldRules).forEach(function (id) {
+            const input = document.getElementById(id);
+            if (input) input.dataset.touched = '1';
+        });
+        const textValid  = Object.keys(fieldRules).map(validateTextField).every(Boolean);
+        const sizesValid = validateSizes();
+        updateSubmitBtn();
+        if (!textValid || !sizesValid) {
             e.preventDefault();
             submitError.textContent = 'Rätta felen ovan innan du skickar.';
-            updateSubmitBtn();
         } else {
             submitError.textContent = '';
         }

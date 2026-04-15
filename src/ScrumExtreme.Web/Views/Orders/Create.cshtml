@@ -1,11 +1,7 @@
-﻿@model ScrumExtreme.Web.Models.CreateOrderViewModel
-@using ScrumExtreme.Domain.Entities
-
-@{
+﻿@{
     ViewData["Title"] = "Skapa Order";
-    var customers = ViewBag.Customers as IEnumerable<User>;
-    var products = ViewBag.Products as IEnumerable<Product>;
-    var projectName = ViewBag.ProjectName as string ?? "ScrumExtreme";
+    var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
+    var hats = ViewBag.Hats as IEnumerable<ScrumExtreme.Domain.Entities.Hats>;
 }
 
 @section Styles {
@@ -14,9 +10,6 @@
 }
 
 <div class="admin-wrapper">
-    <div class="project-info">
-        <p>🚀 Projekt: <strong>@projectName</strong></p>
-    </div>
 
     @if (TempData["Success"] != null)
     {
@@ -39,12 +32,12 @@
             </div>
 
             <div class="admin-panel-body">
-                <form asp-action="Create" method="post" class="admin-form" id="createOrderForm">
+                <div class="admin-form">
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="CustomerId">Kund</label>
-                            <select asp-for="CustomerId" class="admin-input">
+                            <label for="customerSelect">Kund</label>
+                            <select id="customerSelect">
                                 <option value="">-- Välj kund --</option>
                                 @if (customers != null && customers.Any())
                                 {
@@ -59,41 +52,42 @@
                                     <option disabled>Inga kunder tillgängliga</option>
                                 }
                             </select>
-                            <span asp-validation-for="CustomerId" class="admin-error"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="ProductId">Produkt</label>
-                            <select asp-for="ProductId" class="admin-input">
-                                <option value="">-- Välj produkt --</option>
-                                @if (products != null && products.Any())
+                            <label for="hatSelect">Hatt</label>
+                            <select id="hatSelect">
+                                <option value="">-- Välj hatt --</option>
+                                @if (hats != null && hats.Any())
                                 {
-                                    @foreach (var product in products)
+                                    @foreach (var hat in hats)
                                     {
-                                        <option value="@product.Id">@product.Name - @product.Price kr</option>
+                                        <option value="@hat.Id" data-name="@hat.Name"
+                                                data-price="@hat.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                            @hat.Name – @hat.Price kr
+                                        </option>
                                     }
                                 }
                                 else
                                 {
-                                    <option disabled>Inga produkter tillgängliga</option>
+                                    <option disabled>Inga hattar tillgängliga</option>
                                 }
                             </select>
-                            <span asp-validation-for="ProductId" class="admin-error"></span>
                         </div>
                     </div>
 
                     <div class="admin-submit-area">
-                        <button type="submit" class="admin-btn-primary" id="submitBtn">Spara order</button>
-                        <span id="submitError" class="admin-submit-error"></span>
+                        <button type="button" class="admin-btn-secondary" id="addHatBtn">Lägg till hatt</button>
+                        <span id="addHatError" class="order-error"></span>
                     </div>
 
-                </form>
+                </div>
             </div>
         </div>
 
-        <!-- Right: Info -->
+        <!-- Right: Order info -->
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
@@ -102,29 +96,166 @@
             </div>
 
             <div class="admin-panel-body">
-                <div class="admin-customer-list">
-                    @if (customers?.Any() ?? false)
-                    {
-                        <p><strong>Tillgängliga kunder:</strong> @customers.Count()</p>
-                        <p><strong>Tillgängliga produkter:</strong> @products?.Count() ?? 0</p>
-                        <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
-                            Välj en kund och en produkt för att skapa en order.
-                        </p>
-                    }
-                    else
-                    {
-                        <span class="admin-list-placeholder" style="color: #d9534f;">
-                            ⚠️ Ingen data tillgänglig. Lägg till kunder först!
-                        </span>
-                    }
+
+                <div id="customerInfoBlock">
+                    <span class="admin-list-placeholder">Välj en kund för att se information.</span>
                 </div>
+
+                <div id="hatListBlock" style="display:none; margin-top: 1rem;">
+                    <p class="info-label"
+                           style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">
+                        Valda hattar</p>
+                        <ul class="order-hat-list" id="hatList"></ul>
+                        <div class="order-total">
+                            <span>Totalt</span>
+                            <span class="order-total-amount" id="totalAmount">0 kr</span>
+                        </div>
+                    </div>
+
+                    <div class="order-panel-actions">
+                        <button type="button" class="admin-btn-primary" id="createOrderBtn" style="display:none;">Skapa
+                            order</button>
+                            <span id="createOrderError" class="order-error"></span>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
+
         </div>
 
-    </div>
+        @section Scripts {
+            <script>
+                            const customerSelect = document.getElementById('customerSelect');
+                            const hatSelect = document.getElementById('hatSelect');
+                            const addHatBtn = document.getElementById('addHatBtn');
+                            const addHatError = document.getElementById('addHatError');
+                            const customerInfoBlock = document.getElementById('customerInfoBlock');
+                            const hatListBlock = document.getElementById('hatListBlock');
+                            const hatList = document.getElementById('hatList');
+                            const totalAmountEl = document.getElementById('totalAmount');
+                            const createOrderBtn = document.getElementById('createOrderBtn');
+                            const createOrderError = document.getElementById('createOrderError');
 
-</div>
+                            let cart = []; // { hatId, name, unitPrice }
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+                            // --- Customer select ---
+                            customerSelect.addEventListener('change', async () => {
+                                const id = customerSelect.value;
+                                if (!id) {
+                                    customerInfoBlock.innerHTML = '<span class="admin-list-placeholder">Välj en kund för att se information.</span>';
+                                    updateCreateBtn();
+                                    return;
+                                }
+                                try {
+                                    const resp = await fetch(`/Orders/CustomerInfo/${encodeURIComponent(id)}`);
+                                    if (!resp.ok) throw new Error();
+                                    const c = await resp.json();
+                                    customerInfoBlock.innerHTML = `
+                                        <div class="order-customer-info">
+                                            <p class="info-label">Kund</p>
+                                            <p><strong>${esc(c.fullName)}</strong></p>
+                                            <p>${esc(c.email)}</p>
+                                            <p class="info-label">Leveransadress</p>
+                                            <p>${esc(c.address)}</p>
+                                            <p>${esc(c.postalCode)} ${esc(c.city)}</p>
+                                            <p>${esc(c.country)} (${esc(c.countryCode)})</p>
+                                            <p class="info-label">Telefon</p>
+                                            <p>${esc(c.phone)}</p>
+                                        </div>`;
+                                } catch {
+                                    customerInfoBlock.innerHTML = '<span class="admin-list-placeholder" style="color:#ff453a;">Kunde inte hämta kundinformation.</span>';
+                                }
+                                updateCreateBtn();
+                            });
+
+                            // --- Add hat ---
+                            addHatBtn.addEventListener('click', () => {
+                                addHatError.textContent = '';
+                                const opt = hatSelect.options[hatSelect.selectedIndex];
+                                if (!opt || !opt.value) {
+                                    addHatError.textContent = 'Välj en hatt först.';
+                                    return;
+                                }
+                                const hatId = opt.value;
+                                if (cart.some(h => h.hatId === hatId)) {
+                                    addHatError.textContent = 'Den hatten är redan tillagd.';
+                                    return;
+                                }
+                                cart.push({
+                                    hatId,
+                                    name: opt.dataset.name,
+                                    unitPrice: parseFloat(opt.dataset.price)
+                                });
+                                renderCart();
+                                updateCreateBtn();
+                            });
+
+                            function renderCart() {
+                                hatList.innerHTML = '';
+                                if (cart.length === 0) {
+                                    hatListBlock.style.display = 'none';
+                                    return;
+                                }
+                                hatListBlock.style.display = 'block';
+                                let total = 0;
+                                cart.forEach(h => {
+                                    total += h.unitPrice;
+                                    const li = document.createElement('li');
+                                    li.className = 'order-hat-item';
+                                    li.innerHTML = `
+                                        <span>${esc(h.name)}</span>
+                                        <span class="order-hat-item-price">${h.unitPrice.toFixed(2)} kr</span>
+                                        <button class="order-hat-remove" data-id="${esc(h.hatId)}" title="Ta bort">✕</button>`;
+                                    hatList.appendChild(li);
+                                });
+                                totalAmountEl.textContent = total.toFixed(2) + ' kr';
+                                hatList.querySelectorAll('.order-hat-remove').forEach(btn => {
+                                    btn.addEventListener('click', () => {
+                                        cart = cart.filter(h => h.hatId !== btn.dataset.id);
+                                        renderCart();
+                                        updateCreateBtn();
+                                    });
+                                });
+                            }
+
+                            function updateCreateBtn() {
+                                const hasCustomer = !!customerSelect.value;
+                                const hasHats = cart.length > 0;
+                                createOrderBtn.style.display = (hasCustomer && hasHats) ? '' : 'none';
+                            }
+
+                            // ---  Create order ---
+                             createOrde rBtn.addEventListener ('click', async ()=> {
+                                createOrderError.textContent = '';
+                                createOrderBtn.disabled = true;
+                                createOrderBtn.textContent = 'Sparar…';
+                                try {
+                                    const payload = {
+                                        customerId: customerSelect.value,
+                                        items: cart.map(h => ({ hatId: h.hatId, name: h.name, unitPrice: h.unitPrice }))
+                                    };
+                                    const resp = await fetch('/Orders/Create', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(payload)
+                                    });
+                                    if (!resp.ok) {
+                                        const err = await resp.json().catch(() => ({}));
+                                        throw new Error(err.error || 'Något gick fel.');
+                                    }
+                                    window.location.href = '/Orders';
+                                } catch (e) {
+                                    createOrderError.textContent = e.message;
+                                    createOrderBtn.disabled = false;
+                                    createOrderBtn.textContent = 'Skapa order';
+                                }
+                            });
+
+                            function esc(str) {
+                                if (!str) return '';
+                                return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                            }
+            </script>
+        }

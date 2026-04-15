@@ -1,11 +1,8 @@
-@model ScrumExtreme.Web.Models.CreateOrderViewModel
-@using ScrumExtreme.Domain.Entities
+@model IEnumerable<ScrumExtreme.Domain.Entities.Order>
 
 @{
-    ViewData["Title"] = "Orderhantering";
-    var customers = ViewBag.Customers as IEnumerable<User>;
-    var products = ViewBag.Products as IEnumerable<Product>;
-    var projectName = ViewBag.ProjectName as string ?? "ScrumExtreme";
+    ViewData["Title"] = "Ordrar";
+    var emailLookup = ViewBag.EmailLookup as Dictionary<string, string> ?? new Dictionary<string, string>();
 }
 
 @section Styles {
@@ -14,9 +11,6 @@
 }
 
 <div class="admin-wrapper">
-    <div class="project-info">
-        <p>🚀 Projekt: <strong>@projectName</strong></p>
-    </div>
 
     @if (TempData["Success"] != null)
     {
@@ -24,87 +18,44 @@
     }
 
     <div class="admin-page-header">
-        <h1 class="admin-page-title">Orderhantering</h1>
-        <p class="admin-page-subtitle">Skapa och hantera ordrar i systemet</p>
+        <h1 class="admin-page-title">Ordrar</h1>
+        <p class="admin-page-subtitle">Alla ordrar i systemet</p>
     </div>
 
-    <div class="admin-layout">
-
-        <!-- Left: Create order -->
-        <div class="admin-panel">
-            <div class="admin-panel-header">
-                <h2 class="admin-panel-title">
-                    <span class="admin-panel-dot"></span>Lägg till ny order
-                </h2>
-            </div>
-
-            <div class="admin-panel-body">
-                <form asp-action="Create" method="post" class="admin-form" id="createOrderForm">
-
-                    <div class="admin-field-row --single">
-                        <div class="admin-field">
-                            <label asp-for="CustomerId">Kund</label>
-                            <select asp-for="CustomerId">
-                                <option value="">Välj kund</option>
-                                @if (customers != null)
-                                {
-                                    foreach (var customer in customers)
-                                    {
-                                        <option value="@customer.Id">@customer.FirstName @customer.LastName</option>
-                                    }
-                                }
-                            </select>
-                            <span asp-validation-for="CustomerId" class="admin-error"></span>
-                        </div>
-                    </div>
-
-                    <div class="admin-field-row --single">
-                        <div class="admin-field">
-                            <label asp-for="ProductId">Produkt</label>
-                            <select asp-for="ProductId">
-                                <option value="">Välj produkt</option>
-                                @if (products != null)
-                                {
-                                    foreach (var product in products)
-                                    {
-                                        <option value="@product.Id">@product.Name</option>
-                                    }
-                                }
-                            </select>
-                            <span asp-validation-for="ProductId" class="admin-error"></span>
-                        </div>
-                    </div>
-
-                    <div class="admin-submit-area">
-                        <button type="submit" class="admin-btn-primary" id="submitBtn">Spara order</button>
-                        <span id="submitError" class="admin-submit-error"></span>
-                    </div>
-
-                </form>
-            </div>
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">
+                <span class="admin-panel-dot"></span>Orderhistorik
+                @if (Model != null)
+                {
+                    <span class="admin-customer-count">@Model.Count()</span>
+                }
+            </h2>
+            <a asp-action="Create" class="admin-panel-btn">Skapa ny order →</a>
         </div>
-
-        <!-- Right: Info -->
-        <div class="admin-panel">
-            <div class="admin-panel-header">
-                <h2 class="admin-panel-title">
-                    <span class="admin-panel-dot"></span>Orderinformation
-                </h2>
-            </div>
-
-            <div class="admin-panel-body">
-                <div class="admin-customer-list">
-                    <span class="admin-list-placeholder">
-                        Välj en kund och en produkt för att skapa en order.
-                    </span>
+        <div class="admin-panel-body">
+            <div class="admin-customer-list">
+                @if (Model == null || !Model.Any())
+                {
+                    <span class="admin-list-placeholder">Inga ordrar hittades.</span>
+                }
+                else
+                {
+                    foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                    {
+                        <div class="admin-customer-row">
+                            <span class="admin-customer-name">@order.OrderNumber</span>
+                            <span style="color:#888;font-size:0.82rem;">@(emailLookup.TryGetValue(order.UserId, out var email) ?
+                                                        email : "–")</span>
+                                <span class="admin-customer-country">@order.Status</span>
+                                <span style="color:#666;font-size:0.8rem;">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                                <span style="color:#c9a84c;font-size:0.85rem;font-weight:600;">@order.TotalAmount.ToString("0.00")
+                                    kr</span>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
+
         </div>
-
-    </div>
-
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
