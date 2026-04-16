@@ -115,7 +115,13 @@ public class OrdersController : Controller
                 Name = i.Name,
                 Size = i.Size,
                 Quantity = i.Quantity,
-                UnitPrice = i.UnitPrice
+                UnitPrice = i.UnitPrice,
+
+                IsModified = i.IsModified,
+                ModificationDescription = i.ModificationDescription,
+                MaterialIds = i.MaterialIds,
+                AddedMaterialCost = i.AddedMaterialCost,
+                ExtraWorkHours = i.ExtraWorkHours
             }).ToList(),
             TotalAmount = model.Items.Sum(i => i.UnitPrice * i.Quantity)
         };
