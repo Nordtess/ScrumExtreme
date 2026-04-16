@@ -191,3 +191,18 @@
   border-color: #ff453a;
   color: #ff453a;
 }
+
+/* Modified hat fields */
+.inline-checkbox {
+    display: inline-flex; 
+    align-items: center;
+    gap: 0.5rem;
+    width: auto; 
+}
+.inline-checkbox input[type="checkbox"] {
+    margin: 0;
+}
+
+#modifiedHatFields {
+    margin-top: 0.5rem;
+}
