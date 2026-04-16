@@ -18,4 +18,9 @@ public class OrderItem
 
     [BsonElement("size")]
     public string Size { get; set; } = string.Empty;
+
+    [BsonElement("customHat")]
+    public SpecialHats? SpecialHats { get; set; }
+
+
 }
