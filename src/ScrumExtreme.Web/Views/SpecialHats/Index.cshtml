@@ -1,6 +1,7 @@
-﻿@model ScrumExtreme.Web.Models.CreateHatsViewModel
+﻿@model ScrumExtreme.Web.Models.SpecialHatsViewModel
 @{
     ViewData["Title"] = "Hatthantering";
+    var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
 }
 
 @section Styles {
@@ -22,14 +23,39 @@
     <div class="admin-layout --single">
 
         <!-- Create hat form -->
+        
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
-                    <span class="admin-panel-dot"></span>Lägg till ny Specialhatt
+                    <span class="admin-panel-dot"></span>Lägg en beställning på en specialhatt
                 </h2>
             </div>
             <div class="admin-panel-body">
-                <form asp-action="CreateHats" method="post" class="admin-form" id="createHatForm">
+                <form asp-action="CreateSpecial" method="post" class="admin-form" id="createHatForm">
+
+                    <div class="admin-field">
+                        <label asp-for="CustomerId">Kund</label>
+
+                        <select asp-for="CustomerId" class="form-control">
+                            <option value="">-- Välj kund --</option>
+
+                            @if (customers != null && customers.Any())
+                            {
+                                foreach (var customer in customers)
+                                {
+                                    <option value="@customer.Id">
+                                        @customer.FirstName @customer.LastName (@customer.Email)
+                                    </option>
+                                }
+                            }
+                            else
+                            {
+                                <option disabled>Inga kunder tillgängliga</option>
+                            }
+                        </select>
+
+                        <span class="admin-error" asp-validation-for="CustomerId"></span>
+                    </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
