@@ -11,15 +11,18 @@ public class OrdersController : Controller
     private readonly IOrderService _orderService;
     private readonly IUserService _userService;
     private readonly IHatService _hatService;
+    private readonly IItemService _itemService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
-        IHatService hatService)
+        IHatService hatService,
+        IItemService itemService)
     {
         _orderService = orderService;
         _userService = userService;
         _hatService = hatService;
+        _itemService = itemService;
     }
 
     [HttpGet("")]
@@ -39,6 +42,9 @@ public class OrdersController : Controller
 
         var hats = await _hatService.GetAllHatsAsync();
         ViewBag.Hats = hats;
+
+        var items = await _itemService.GetAllItemsAsync();
+        ViewBag.Items = items;
 
         return View();
     }
@@ -119,7 +125,7 @@ public class OrdersController : Controller
 
                 IsModified = i.IsModified,
                 ModificationDescription = i.ModificationDescription,
-                MaterialIds = i.MaterialIds,
+                ItemIds = i.ItemIds,
                 AddedMaterialCost = i.AddedMaterialCost,
                 ExtraWorkHours = i.ExtraWorkHours
             }).ToList(),

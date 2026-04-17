@@ -24,10 +24,9 @@ public class OrderItem
 
     [BsonElement("modificationDescription")]
     public string ModificationDescription { get; set; } = string.Empty;
-
-    //Ska senare ändras till List<Material> när Material-entiteten finns
-    [BsonElement("materialIds")]
-    public List<string> MaterialIds { get; set; } = new();
+    
+    [BsonElement("itemIds")]
+    public List<string> ItemIds { get; set; } = new();
 
     [BsonElement("addedMaterialCost")] 
     public double AddedMaterialCost { get; set; }
