@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ScrumExtreme.Application.Interfaces;
+using ScrumExtreme.Domain.Entities;
+using ScrumExtreme.Web.Models;
 
 namespace ScrumExtreme.Web.Controllers;
 
@@ -7,17 +9,24 @@ namespace ScrumExtreme.Web.Controllers;
 public class WarehouseController : Controller
 {
     private readonly IHatService _hatService;
+    private readonly IItemService _itemService;
 
-    public WarehouseController(IHatService hatService)
+    public WarehouseController(IHatService hatService, IItemService itemService)
     {
         _hatService = hatService;
+        _itemService = itemService;
     }
 
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
         var hats = await _hatService.GetAllHatsAsync();
-        return View(hats);
+        var items = await _itemService.GetAllItemsAsync();
+        return View(new WarehouseViewModel
+        {
+            Hats = hats,
+            Items = items.OrderBy(i => i.Name)
+        });
     }
 
     [HttpPost("UpdateStock")]
@@ -51,6 +60,58 @@ public class WarehouseController : Controller
         await _hatService.UpdateHatAsync(hat);
         return Ok(new { success = true });
     }
+
+    [HttpPost("CreateItem")]
+    public async Task<IActionResult> CreateItem([FromBody] CreateItemRequest req)
+    {
+        if (string.IsNullOrWhiteSpace(req.Name) || req.Price <= 0 || req.Stock < 0)
+            return BadRequest(new { error = "Pris måste vara större än 0." });
+
+        var existing = await _itemService.GetAllItemsAsync();
+        if (existing.Any(i => i.Name.Equals(req.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
+            return Conflict(new { error = $"\"{req.Name}\" finns redan." });
+
+        var textInfo = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
+        var item = new Item
+        {
+            Name = textInfo.ToTitleCase(req.Name.Trim().ToLower()),
+            Price = req.Price,
+            Stock = req.Stock
+        };
+
+        await _itemService.CreateItemAsync(item);
+        return Ok(new { success = true, id = item.Id, name = item.Name });
+    }
+
+    [HttpPost("UpdateItem")]
+    public async Task<IActionResult> UpdateItem([FromBody] UpdateItemRequest req)
+    {
+        if (string.IsNullOrEmpty(req.ItemId) || req.Price < 0 || req.Stock < 0)
+            return BadRequest(new { error = "Ogiltiga parametrar." });
+
+        var item = await _itemService.GetByIdAsync(req.ItemId);
+        if (item == null)
+            return NotFound(new { error = "Tillbehöret hittades inte." });
+
+        item.Price = req.Price;
+        item.Stock = req.Stock;
+        await _itemService.UpdateItemAsync(item);
+        return Ok(new { success = true });
+    }
+
+    [HttpDelete("DeleteItem/{id}")]
+    public async Task<IActionResult> DeleteItem(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return BadRequest(new { error = "Ogiltigt id." });
+
+        var item = await _itemService.GetByIdAsync(id);
+        if (item == null)
+            return NotFound(new { error = "Tillbehöret hittades inte." });
+
+        await _itemService.DeleteItemAsync(id);
+        return Ok(new { success = true });
+    }
 }
 
 public class UpdateStockRequest
@@ -64,4 +125,18 @@ public class UpdateAllStockRequest
 {
     public string HatId { get; set; } = string.Empty;
     public Dictionary<string, int> Stock { get; set; } = new();
+}
+
+public class CreateItemRequest
+{
+    public string Name { get; set; } = string.Empty;
+    public double Price { get; set; }
+    public int Stock { get; set; }
+}
+
+public class UpdateItemRequest
+{
+    public string ItemId { get; set; } = string.Empty;
+    public double Price { get; set; }
+    public int Stock { get; set; }
 }
