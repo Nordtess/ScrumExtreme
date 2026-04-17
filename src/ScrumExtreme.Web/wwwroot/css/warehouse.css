@@ -293,6 +293,12 @@
   padding: 0.65rem 1.1rem;
 }
 
+/* tillbehör rows have an extra delete column */
+#tillbehor-list .warehouse-list-header,
+#tillbehor-list .warehouse-list-row {
+  grid-template-columns: 1fr 90px 110px 120px 32px;
+}
+
 .warehouse-list-header {
   background: #0d0d0d;
   border-bottom: 1px solid #1e1e1e;
@@ -366,6 +372,65 @@
   padding: 0.8rem 1.1rem;
   background: #0d0d0d;
   border-top: 1px solid #1e1e1e;
+}
+
+/* ── Add-item row ───────────────────────────────────── */
+.warehouse-add-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.warehouse-text-input {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #e8e0d4;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.85rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 160px;
+}
+
+.warehouse-text-input::placeholder {
+  color: #444;
+}
+
+.warehouse-text-input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+/* ── Delete button ───────────────────────────────────────── */
+.warehouse-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: 1px solid #3a1a1a;
+  border-radius: 5px;
+  color: #7a3a2a;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.warehouse-delete-btn:hover {
+  background: #3a1a1a;
+  color: #ff6b55;
+  border-color: #5a2a2a;
 }
 
 .warehouse-footer-label {

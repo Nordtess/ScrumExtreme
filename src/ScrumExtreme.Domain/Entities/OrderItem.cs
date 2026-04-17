@@ -34,5 +34,8 @@ public class OrderItem
 
     [BsonElement("extraWorkHours")]
     public double ExtraWorkHours { get; set; }
+    [BsonElement("customHat")]
+    public SpecialHats? SpecialHats { get; set; }
+
 
 }
