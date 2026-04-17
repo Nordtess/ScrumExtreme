@@ -27,6 +27,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IHatService, HatsService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 var app = builder.Build();
 
@@ -49,8 +50,63 @@ app.MapControllerRoute(
 try
 {
     var client = app.Services.GetRequiredService<IMongoClient>();
-    await client.GetDatabase(mongoDatabaseName).RunCommandAsync<BsonDocument>(new BsonDocument("ping", 1));
+    var database = client.GetDatabase(mongoDatabaseName);
+    await database.RunCommandAsync<BsonDocument>(new BsonDocument("ping", 1));
     Console.WriteLine("✅ MongoDB connection successful!");
+
+    // Ensure Items collection exists with JSON schema validation
+    var collectionNames = await (await database.ListCollectionNamesAsync()).ToListAsync();
+    if (!collectionNames.Contains("Items"))
+    {
+        var validator = new BsonDocument
+        {
+            {
+                "$jsonSchema", new BsonDocument
+                {
+                    { "bsonType", "object" },
+                    { "required", new BsonArray { "name", "price", "stock" } },
+                    {
+                        "properties", new BsonDocument
+                        {
+                            {
+                                "name", new BsonDocument
+                                {
+                                    { "bsonType", "string" },
+                                    { "minLength", 1 },
+                                    { "maxLength", 100 },
+                                    { "description", "Namn på tillbehöret, obligatoriskt" }
+                                }
+                            },
+                            {
+                                "price", new BsonDocument
+                                {
+                                    { "bsonType", "double" },
+                                    { "minimum", 0 },
+                                    { "description", "Pris per enhet, måste vara >= 0" }
+                                }
+                            },
+                            {
+                                "stock", new BsonDocument
+                                {
+                                    { "bsonType", "int" },
+                                    { "minimum", 0 },
+                                    { "description", "Antal i lager, måste vara >= 0" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        var options = new CreateCollectionOptions<BsonDocument>
+        {
+            Validator = new BsonDocumentFilterDefinition<BsonDocument>(validator),
+            ValidationLevel = DocumentValidationLevel.Strict,
+            ValidationAction = DocumentValidationAction.Error
+        };
+        await database.CreateCollectionAsync("Items", options);
+        Console.WriteLine("✅ Items collection created with schema validation.");
+    }
 }
 catch (Exception ex)
 {
