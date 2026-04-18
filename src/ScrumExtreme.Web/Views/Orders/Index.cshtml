@@ -44,7 +44,12 @@
                     foreach (var order in Model.OrderByDescending(o => o.OrderDate))
                     {
                         <div class="admin-customer-row">
-                            <span class="admin-customer-name">@order.OrderNumber</span>
+                            <span class="admin-customer-name">@order.OrderNumber
+                                @if (order.Items != null && order.Items.Any(i => i.IsModified))
+                                {
+                                    <span style="color:#c9a84c; font-size:0.8rem;">(Modifierad)</span>
+                                }
+                            </span>
                             <span style="color:#888;font-size:0.82rem;">@(emailLookup.TryGetValue(order.UserId, out var email) ?
                                                         email : "–")</span>
                                 <span class="admin-customer-country">@order.Status</span>

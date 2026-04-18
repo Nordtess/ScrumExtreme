@@ -112,7 +112,7 @@
                             <div class="admin-field">
                                 <label for="modificationDescriptionInput">Beskrivning</label>
                                 <textarea id="modificationDescriptionInput"
-                                          placeholder="T.ex. broderi, fjäder, band..."></textarea>
+                                          placeholder="T.ex. broderi,text..."></textarea>
                             </div>
                         </div>
 
@@ -384,11 +384,10 @@
                         addHatError.textContent = 'Den hatten i den storleken är redan tillagd.';
                         return;
                     }
-            // Tillfällig: text -> lista av material (ersätts av dropdown senare)
-                    const itemIds = itemIdsInput.value
-                    .split(',')
-                    .map(x => x.trim())
-                    .filter(x => x.length > 0);
+        // Hämta id:n från valda tillbehör att spara
+                    const itemIds = selectedItems.map(function(item){
+                        return item.id;
+                    });
 
                     cart.push({
                         hatId,
@@ -409,14 +408,25 @@
                 });
 
                 //Visar innehållet i selectedItems på sidan
-                function renderSelectedItems() {
-                    selectedItemsList.innerHTML = '';
+            function renderSelectedItems() {
+                selectedItemsList.innerHTML = '';
 
-                    selectedItems.forEach(item => {
-                        const li = document.createElement('li');
-                        li.textContent = item.name;
+                selectedItems.forEach(item => {
+                    const li = document.createElement('li');
+                        li.innerHTML =
+                            '<span>' + item.name + '</span>' +
+                            '<button type="button" class= "remove-item-btn" data-id="' + item.id + '">✕</button>';
                         selectedItemsList.appendChild(li);
+                });
+                    
+                selectedItemsList.querySelectorAll('button').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        selectedItems = selectedItems.filter(function(item) {
+                    return item.id !== btn.dataset.id;
+                });
+                renderSelectedItems();
                     });
+                });
                 }
 
                 function renderCart() {
