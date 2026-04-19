@@ -1,8 +1,10 @@
 @model IEnumerable<ScrumExtreme.Domain.Entities.Order>
 
+@using ScrumExtreme.Domain.Entities
 @{
     ViewData["Title"] = "Ordrar";
-    var emailLookup = ViewBag.EmailLookup as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var userLookup = ViewBag.UserLookup as Dictionary<string, ScrumExtreme.Domain.Entities.User>
+                     ?? new Dictionary<string, ScrumExtreme.Domain.Entities.User>();
 }
 
 @section Styles {
@@ -43,19 +45,64 @@
                 {
                     foreach (var order in Model.OrderByDescending(o => o.OrderDate))
                     {
+                        string orderTypClass;
+                        string orderTypLabel;
+                        if (order.Items != null && order.Items.Any(i => i.SpecialHats != null))
+                        {
+                            orderTypClass = "order-type-badge order-type-special";
+                            orderTypLabel = "Special";
+                        }
+                        else if (order.Items != null && order.Items.Any(i => i.IsModified))
+                        {
+                            orderTypClass = "order-type-badge order-type-modified";
+                            orderTypLabel = "Modifierad";
+                        }
+                        else
+                        {
+                            orderTypClass = "order-type-badge order-type-standard";
+                            orderTypLabel = "Standard";
+                        }
+                        var hasUser = userLookup.TryGetValue(order.UserId, out var u);
+                        string firstName = hasUser ? u!.FirstName : "–";
+                        string lastName = hasUser ? u!.LastName : "";
+                        string email = hasUser ? u!.Email : "–";
+                        string country = hasUser ? u!.Country : "–";
                         <div class="admin-customer-row">
                             <span class="admin-customer-name">@order.OrderNumber</span>
-                            <span style="color:#888;font-size:0.82rem;">@(emailLookup.TryGetValue(order.UserId, out var email) ?
-                                                        email : "–")</span>
-                                <span class="admin-customer-country">@order.Status</span>
-                                <span style="color:#666;font-size:0.8rem;">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
-                                <span style="color:#c9a84c;font-size:0.85rem;font-weight:600;">@order.TotalAmount.ToString("0.00")
-                                    kr</span>
-                                </div>
-                            }
+                            <span class="@orderTypClass">@orderTypLabel</span>
+                            <span class="order-col-name">@firstName</span>
+                            <span class="order-col-name">@lastName</span>
+                            <span class="order-col-email">@email</span>
+                            <span class="order-col-country">@country</span>
+                            <span class="admin-customer-country">@order.Status</span>
+                            <span style="color:#666;font-size:0.8rem;">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                            <span style="color:#c9a84c;font-size:0.85rem;font-weight:600;">@order.TotalAmount.ToString("0.00")
+                                kr</span>
+                                <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
+                            </div>
                         }
-                    </div>
+                    }
                 </div>
             </div>
-
         </div>
+
+    </div>
+
+    @section Scripts {
+        <script>
+            document.querySelectorAll('.order-delete-btn').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const id = this.dataset.id;
+                    if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
+                    const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
+                    if (res.ok) {
+                        this.closest('.admin-customer-row').remove();
+                        const countEl = document.querySelector('.admin-customer-count');
+                        if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+                    } else {
+                        alert('Något gick fel. Försök igen.');
+                    }
+                });
+            });
+        </script>
+    }

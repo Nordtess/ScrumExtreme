@@ -11,15 +11,18 @@ public class OrdersController : Controller
     private readonly IOrderService _orderService;
     private readonly IUserService _userService;
     private readonly IHatService _hatService;
+    private readonly IItemService _itemService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
-        IHatService hatService)
+        IHatService hatService,
+        IItemService itemService)
     {
         _orderService = orderService;
         _userService = userService;
         _hatService = hatService;
+        _itemService = itemService;
     }
 
     [HttpGet("")]
@@ -27,7 +30,7 @@ public class OrdersController : Controller
     {
         var orders = await _orderService.GetAllOrdersAsync();
         var users = await _userService.GetAllUsersAsync();
-        ViewBag.EmailLookup = users.ToDictionary(u => u.Id, u => u.Email);
+        ViewBag.UserLookup = users.ToDictionary(u => u.Id, u => u);
         return View(orders);
     }
 
@@ -39,6 +42,9 @@ public class OrdersController : Controller
 
         var hats = await _hatService.GetAllHatsAsync();
         ViewBag.Hats = hats;
+
+        var items = await _itemService.GetAllItemsAsync();
+        ViewBag.Items = items;
 
         return View();
     }
@@ -115,7 +121,13 @@ public class OrdersController : Controller
                 Name = i.Name,
                 Size = i.Size,
                 Quantity = i.Quantity,
-                UnitPrice = i.UnitPrice
+                UnitPrice = i.UnitPrice,
+
+                IsModified = i.IsModified,
+                ModificationDescription = i.ModificationDescription,
+                ItemIds = i.ItemIds,
+                AddedMaterialCost = i.AddedMaterialCost,
+                ExtraWorkHours = i.ExtraWorkHours
             }).ToList(),
             TotalAmount = model.Items.Sum(i => i.UnitPrice * i.Quantity)
         };
@@ -137,4 +149,13 @@ public class OrdersController : Controller
         return Ok(new { success = true });
     }
 
+    [HttpPost("Delete/{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+
+        await _orderService.DeleteOrderAsync(id);
+        return Ok(new { success = true });
+    }
 }
