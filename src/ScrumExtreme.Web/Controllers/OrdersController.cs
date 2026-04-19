@@ -148,4 +148,14 @@ public class OrdersController : Controller
 
         return Ok(new { success = true });
     }
+
+    [HttpPost("Delete/{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+
+        await _orderService.DeleteOrderAsync(id);
+        return Ok(new { success = true });
+    }
 }

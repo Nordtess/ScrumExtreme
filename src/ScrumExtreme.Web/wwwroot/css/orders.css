@@ -87,6 +87,68 @@
   line-height: 1;
 }
 
+/* Order type badge */
+.order-type-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.order-type-standard {
+  background: rgba(255, 255, 255, 0.05);
+  color: #888;
+  border: 1px solid #2a2a2a;
+}
+
+.order-type-modified {
+  background: rgba(201, 168, 76, 0.12);
+  color: #c9a84c;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.order-type-special {
+  background: rgba(180, 130, 255, 0.12);
+  color: #b482ff;
+  border: 1px solid rgba(180, 130, 255, 0.3);
+}
+
+/* Delete button on order rows */
+.order-delete-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  line-height: 1;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+  justify-self: end;
+}
+
+.order-delete-btn:hover {
+  color: #ff453a;
+  border-color: rgba(255, 69, 58, 0.35);
+  background: rgba(255, 69, 58, 0.08);
+}
+
+/* Override row layout for the orders history list */
+.admin-panel .admin-customer-row {
+  display: grid;
+  grid-template-columns: 160px 90px 1fr 80px 140px 90px 32px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 /* Customer info block */
 .order-customer-info {
   display: flex;
@@ -194,19 +256,19 @@
 
 /* Modified hat fields */
 .inline-checkbox {
-    display: inline-flex; 
-    align-items: center;
-    gap: 0.5rem;
-    width: auto; 
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: auto;
 }
 .inline-checkbox input[type="checkbox"] {
-    margin: 0;
+  margin: 0;
 }
 
 #modifiedHatFields {
-    margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .remove-item-btn {
-    margin-left: 8px;
+  margin-left: 8px;
 }
