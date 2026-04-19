@@ -68,7 +68,9 @@
                         string email = hasUser ? u!.Email : "–";
                         string country = hasUser ? u!.Country : "–";
                         <div class="admin-customer-row">
-                            <span class="admin-customer-name">@order.OrderNumber</span>
+                            <a asp-action="Details" asp-route-id="@order.Id" class="admin-customer-name">
+                                @order.OrderNumber
+                            </a>
                             <span class="@orderTypClass">@orderTypLabel</span>
                             <span class="order-col-name">@firstName</span>
                             <span class="order-col-name">@lastName</span>
