@@ -19,6 +19,20 @@ public class OrderItem
     [BsonElement("size")]
     public string Size { get; set; } = string.Empty;
 
+    [BsonElement("isModified")]
+    public bool IsModified {  get; set; }
+
+    [BsonElement("modificationDescription")]
+    public string ModificationDescription { get; set; } = string.Empty;
+    
+    [BsonElement("itemIds")]
+    public List<string> ItemIds { get; set; } = new();
+
+    [BsonElement("addedMaterialCost")] 
+    public double AddedMaterialCost { get; set; }
+
+    [BsonElement("extraWorkHours")]
+    public double ExtraWorkHours { get; set; }
     [BsonElement("customHat")]
     public SpecialHats? SpecialHats { get; set; }
 

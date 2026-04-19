@@ -2,6 +2,7 @@
     ViewData["Title"] = "Skapa Order";
     var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
     var hats = ViewBag.Hats as IEnumerable<ScrumExtreme.Domain.Entities.Hats>;
+    var items = ViewBag.Items as IEnumerable<ScrumExtreme.Domain.Entities.Item>;
 }
 
 @section Styles {
@@ -96,6 +97,66 @@
                         </div>
                     </div>
 
+                    <!-- Modifierad hatt -->
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
+                            <label class="inline-checkbox" for="isModifiedInput">
+                                <span>Modifiera hatt</span>
+                                <input type="checkbox" id="isModifiedInput" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="modifiedHatFields" style="display:none;">
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label for="modificationDescriptionInput">Beskrivning</label>
+                                <textarea id="modificationDescriptionInput"
+                                          placeholder="T.ex. broderi,text..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label for="itemSelect">Tillbehör</label>
+                                <select id="itemSelect">
+                                <option value=""> Välj tillbehör </option>
+                                    @if (items !=null && items.Any())
+                                    {
+                                        @foreach (var item in items)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option disabled>Inga tillbehör finns tillgängliga</option>
+                                    }
+                                </select>
+
+                                <button type="button" class="admin-btn-secondary" id="addItemBtn">
+                                    Lägg till tillbehör
+                                </button>
+
+                                <ul id="selectedItemsList"></ul>
+                            </div>
+                        </div>
+
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label for="addedMaterialCostInput">Extra materialkostnad</label>
+                                <input type="number" id="addedMaterialCostInput" min="0" step="0.01" value="0" />
+                            </div>
+                        </div>
+
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label for="extraWorkHoursInput">Extra timmar</label>
+                                <input type="number" id="extraWorkHoursInput" min="0" step="0.5" value="0" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="admin-submit-area">
                         <button type="button" class="admin-btn-secondary" id="addHatBtn">Lägg till hatt</button>
                         <span id="addHatError" class="order-error"></span>
@@ -159,6 +220,17 @@
                 const totalAmountEl = document.getElementById('totalAmount');
                 const createOrderBtn = document.getElementById('createOrderBtn');
                 const createOrderError = document.getElementById('createOrderError');
+                const isModifiedInput = document.getElementById('isModifiedInput');
+                const modificationDescriptionInput = document.getElementById('modificationDescriptionInput');
+                const itemIdsInput = document.getElementById('itemIdsInput');
+                const addedMaterialCostInput = document.getElementById('addedMaterialCostInput');
+                const extraWorkHoursInput = document.getElementById('extraWorkHoursInput');
+                const modifiedHatFields = document.getElementById('modifiedHatFields');
+                const itemSelect = document.getElementById('itemSelect');
+                const addItemBtn = document.getElementById('addItemBtn');
+                const selectedItemsList = document.getElementById('selectedItemsList');
+
+                let selectedItems = [];
 
                 let cart = []; // { hatId, name, unitPrice, size, quantity, maxStock }
 
@@ -229,6 +301,16 @@
 
                 quantityInput.addEventListener('input', validateQty);
 
+                        // --- Show/hide modified hat fields ---
+                function toggleModifiedHatFields() {
+                    modifiedHatFields.style.display = isModifiedInput.checked ? 'block' : 'none';
+                }
+
+                isModifiedInput.addEventListener('change', toggleModifiedHatFields);
+
+                    // Kör direkt när sidan laddas
+                toggleModifiedHatFields();
+
                 // --- Customer select ---
                 customerSelect.addEventListener('change', async () => {
                     const id = customerSelect.value;
@@ -257,6 +339,20 @@
                         customerInfoBlock.innerHTML = '<span class="admin-list-placeholder" style="color:#ff453a;">Kunde inte hämta kundinformation.</span>';
                     }
                     updateCreateBtn();
+                });
+
+                // --- Add items ---
+                addItemBtn.addEventListener('click', () => {
+                    const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+                    if (!selectedOption || !selectedOption.value){
+                        return;
+                    }
+
+                    selectedItems.push({
+                        id: selectedOption.value,
+                        name: selectedOption.text
+                    });
+                    renderSelectedItems();
                 });
 
                 // --- Add hat ---
@@ -288,17 +384,50 @@
                         addHatError.textContent = 'Den hatten i den storleken är redan tillagd.';
                         return;
                     }
+        // Hämta id:n från valda tillbehör att spara
+                    const itemIds = selectedItems.map(function(item){
+                        return item.id;
+                    });
+
                     cart.push({
                         hatId,
                         name: opt.dataset.name,
                         size,
                         quantity: qty,
                         maxStock,
-                        unitPrice: parseFloat(opt.dataset.price)
+                        unitPrice: parseFloat(opt.dataset.price),
+
+                        isModified: isModifiedInput.checked,
+                        modificationDescription: modificationDescriptionInput.value.trim(),
+                        itemIds: itemIds,
+                        addedMaterialCost: parseFloat(addedMaterialCostInput.value || '0'),
+                        extraWorkHours: parseFloat(extraWorkHoursInput.value || '0')
                     });
                     renderCart();
                     updateCreateBtn();
                 });
+
+                //Visar innehållet i selectedItems på sidan
+            function renderSelectedItems() {
+                selectedItemsList.innerHTML = '';
+
+                selectedItems.forEach(item => {
+                    const li = document.createElement('li');
+                        li.innerHTML =
+                            '<span>' + item.name + '</span>' +
+                            '<button type="button" class= "remove-item-btn" data-id="' + item.id + '">✕</button>';
+                        selectedItemsList.appendChild(li);
+                });
+                    
+                selectedItemsList.querySelectorAll('button').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        selectedItems = selectedItems.filter(function(item) {
+                    return item.id !== btn.dataset.id;
+                });
+                renderSelectedItems();
+                    });
+                });
+                }
 
                 function renderCart() {
                     hatList.innerHTML = '';
@@ -343,7 +472,10 @@
                     try {
                         const payload = {
                             customerId: customerSelect.value,
-                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice }))
+                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice,
+                             isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds, 
+                             addedMaterialCost: h.addedMaterialCost, extraWorkHours: h.extraWorkHours
+                            }))
                         };
                         const resp = await fetch('/Orders/Create', {
                             method: 'POST',
