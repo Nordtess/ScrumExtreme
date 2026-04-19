@@ -158,4 +158,23 @@ public class OrdersController : Controller
         await _orderService.DeleteOrderAsync(id);
         return Ok(new { success = true });
     }
+
+    [HttpGet("Details/{id}")]
+    public async Task<IActionResult> Details(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+        var user = await _userService.GetByIdAsync(order.UserId);
+
+        var viewModel = new OrderDetailsViewModel
+        {
+            Order = order,
+            CustomerEmail = user?.Email ?? "Okänd kund"
+        };
+        return View(viewModel);
+    }
 }

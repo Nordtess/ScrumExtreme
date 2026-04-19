@@ -1,0 +1,80 @@
+﻿@model ScrumExtreme.Web.Models.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Orderdetaljer - " + Model.Order.OrderNumber;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Order @Model.Order.OrderNumber</h1>
+        <p class="admin-page-subtitle">Placerad: @Model.Order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm") | Status: <strong>@Model.Order.Status</strong></p>
+    </div>
+
+    <div class="admin-panel" style="margin-bottom: 20px;">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Kund- och leveransuppgifter</h2>
+        </div>
+
+        <div class="admin-panel-body" style="padding: 20px;">
+            <p><strong>Namn:</strong> @Model.Order.ShippingAddress.FullName</p>
+            <p><strong>E-post:</strong> @Model.CustomerEmail</p>
+            <p><strong>Telefon:</strong> @Model.Order.ShippingAddress.Phone</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;" />
+            <p><strong>Adress:</strong></p>
+            <p>
+                @Model.Order.ShippingAddress.Address<br />
+                @Model.Order.ShippingAddress.PostalCode @Model.Order.ShippingAddress.City<br />
+                @Model.Order.ShippingAddress.Country (@Model.Order.ShippingAddress.CountryCode)
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Beställda artiklar</h2>
+        </div>
+
+        <div class="admin-panel-body">
+            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee;">
+                        <th style="padding: 10px;">Artikel</th>
+                        <th style="padding: 10px;">Storlek</th>
+                        <th style="padding: 10px;">Antal</th>
+                        <th style="padding: 10px;">A-pris</th>
+                        <th style="padding: 10px;">Totalt</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Order.Items)
+                    {
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">@item.Name</td>
+                            <td style="padding: 10px;">@(string.IsNullOrEmpty(item.Size) ? "–" : item.Size)</td>
+                            <td style="padding: 10px;">@item.Quantity</td>
+                            <td style="padding: 10px;">@item.UnitPrice.ToString("0.00") kr</td>
+                            <td style="padding: 10px;">@( (item.Quantity * item.UnitPrice).ToString("0.00") ) kr</td>
+                        </tr>
+                    }
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="padding: 15px 10px; text-align: right; font-weight: bold;">Totalsumma:</td>
+                        <td style="padding: 15px 10px; font-weight: bold; color: #c9a84c;">@Model.Order.TotalAmount.ToString("0.00") kr</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a asp-action="Index" class="admin-panel-btn" style="text-decoration: none;">← Tillbaka till orderlistan</a>
+    </div>
+</div>
