@@ -144,9 +144,33 @@
 /* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
-  grid-template-columns: 160px 90px 1fr 80px 140px 90px 32px;
+  grid-template-columns: 160px 90px 90px 100px 1fr 80px 80px 140px 90px 32px;
   align-items: center;
   gap: 0.75rem;
+}
+
+.order-col-name {
+  font-size: 0.85rem;
+  color: #d8d0c8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-col-email {
+  font-size: 0.82rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-col-country {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Customer info block */
