@@ -3,18 +3,7 @@
 @{
     ViewData["Title"] = "Lagerstatus";
     var hatList = Model?.Hats?.ToList() ?? new List<ScrumExtreme.Domain.Entities.Hats>();
-
-    // Collect unique materials from all hats for the Material section
-    var allMaterials = hatList
-        .Where(h => !string.IsNullOrWhiteSpace(h.MaterialList))
-        .SelectMany(h => h.MaterialList.Split(',', System.StringSplitOptions.RemoveEmptyEntries))
-        .Select(m => m.Trim())
-        .Where(m => !string.IsNullOrEmpty(m))
-        .Distinct(StringComparer.OrdinalIgnoreCase)
-        .OrderBy(m => m)
-        .ToList();
-
-
+    var materialList = Model?.Materials?.ToList() ?? new List<ScrumExtreme.Domain.Entities.Material>();
 }
 
 @section Styles {
@@ -101,41 +90,47 @@
     <section class="warehouse-section" data-section="material">
         <div class="warehouse-section-header">
             <h2 class="warehouse-section-title">Material</h2>
-            <span class="warehouse-section-count">@allMaterials.Count st</span>
+            <span class="warehouse-section-count" id="material-count">@materialList.Count st</span>
         </div>
         <p class="warehouse-section-note">Lagersaldo för råmaterial.</p>
 
-        @if (!allMaterials.Any())
-        {
-            <p class="warehouse-empty">Inga material registrerade på hattarna ännu.</p>
-        }
-        else
-        {
-            <div class="warehouse-list" id="material-list">
-                <div class="warehouse-list-header">
-                    <span>Namn</span>
-                    <span>Antal</span>
-                    <span>Pris/st (kr)</span>
-                    <span>I lager (kr)</span>
-                </div>
-                @foreach (var mat in allMaterials)
-                {
-                    <div class="warehouse-list-row">
-                        <span class="warehouse-list-name">@mat</span>
-                        <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
-                               inputmode="numeric" pattern="[0-9]*" value="0" aria-label="Antal @mat" />
-                        <input class="warehouse-price-input" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*"
-                               value="0" aria-label="Pris @mat" />
-                        <span class="warehouse-list-total">0 kr</span>
-                    </div>
-                }
-                <div class="warehouse-list-footer">
-                    <span class="warehouse-footer-label">Totalt lagervärde:</span>
-                    <span class="warehouse-footer-total" id="material-grand-total">0 kr</span>
-                    <button class="warehouse-save-btn --small" disabled title="Backend ej implementerat">Spara alla</button>
-                </div>
+        <div class="warehouse-add-row">
+            <input id="new-material-name" type="text" placeholder="Namn" class="warehouse-text-input" maxlength="100" />
+            <input id="new-material-stock" type="number" min="0" step="1" placeholder="Antal" class="warehouse-simple-input"
+                   inputmode="numeric" pattern="[0-9]*" />
+            <input id="new-material-price" type="number" min="0" step="1" placeholder="Pris/st"
+                   class="warehouse-simple-input" inputmode="numeric" pattern="[0-9]*" />
+            <button id="add-material-btn" class="warehouse-save-btn --small">Lägg till</button>
+            <span id="add-material-status" class="warehouse-status"></span>
+        </div>
+
+        <div class="warehouse-list" id="material-list">
+            <div class="warehouse-list-header">
+                <span>Namn</span>
+                <span>Antal</span>
+                <span>Pris/st</span>
+                <span>I lager (kr)</span>
+                <span></span>
             </div>
-        }
+            @foreach (var mat in materialList)
+            {
+                <div class="warehouse-list-row" data-material-id="@mat.Id">
+                    <span class="warehouse-list-name">@mat.Name</span>
+                    <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                           inputmode="numeric" pattern="[0-9]*" value="@mat.Stock" aria-label="Antal @mat.Name" />
+                    <input class="warehouse-price-input" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                           value="@((int)mat.Price)" aria-label="Pris @mat.Name" />
+                    <span class="warehouse-list-total">@((mat.Stock * (int)mat.Price).ToString()) kr</span>
+                    <button class="warehouse-delete-material-btn" data-material-id="@mat.Id" title="Ta bort @mat.Name">✕</button>
+                </div>
+            }
+            <div class="warehouse-list-footer">
+                <span class="warehouse-footer-label">Totalt lagervärde:</span>
+                <span class="warehouse-footer-total" id="material-grand-total">0 kr</span>
+                <button class="warehouse-save-btn --small" id="material-save-btn">Spara alla</button>
+                <span class="warehouse-status" id="material-status"></span>
+            </div>
+        </div>
     </section>
 
     <!-- ── Divider ── -->
@@ -153,7 +148,7 @@
             <input id="new-item-name" type="text" placeholder="Namn" class="warehouse-text-input" maxlength="100" />
             <input id="new-item-stock" type="number" min="0" step="1" placeholder="Antal" class="warehouse-simple-input"
                    inputmode="numeric" pattern="[0-9]*" />
-            <input id="new-item-price" type="number" min="0" step="1" placeholder="Pris/st (kr)"
+            <input id="new-item-price" type="number" min="0" step="1" placeholder="Pris/st"
                    class="warehouse-simple-input" inputmode="numeric" pattern="[0-9]*" />
             <button id="add-item-btn" class="warehouse-save-btn --small">Lägg till</button>
             <span id="add-item-status" class="warehouse-status"></span>
@@ -193,6 +188,12 @@
 @section Scripts {
     <script>
         // ── Section filter ──────────────────────────────────────────────────
+        const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ\s\-]+$/;
+
+        function toTitleCase(str) {
+            return str.toLowerCase().replace(/(?:^|\s|-)\S/g, c => c.toUpperCase());
+        }
+
         const filterSelect = document.getElementById('sectionFilter');
         const sections = document.querySelectorAll('.warehouse-section');
         const dividers = document.querySelectorAll('.warehouse-divider');
@@ -301,6 +302,8 @@
                     if (input.value === '') { input.value = '0'; updateListTotals(list); }
                 });
             });
+            // Calculate totals from server-rendered values on page load
+            updateListTotals(list);
         });
 
         // ── Save hat stock ──────────────────────────────────────────────────
@@ -442,6 +445,11 @@
                     addItemStatus.className = 'warehouse-status --error';
                     return;
                 }
+                if (!onlyLetters.test(name)) {
+                    addItemStatus.textContent = 'Namnet får bara innehålla bokstäver.';
+                    addItemStatus.className = 'warehouse-status --error';
+                    return;
+                }
                 if (price <= 0) {
                     addItemStatus.textContent = 'Pris m\u00e5ste vara st\u00f6rre \u00e4n 0.';
                     addItemStatus.className = 'warehouse-status --error';
@@ -500,6 +508,151 @@
                     addItemStatus.className = 'warehouse-status --error';
                 } finally {
                     addItemBtn.disabled = false;
+                }
+            });
+        }
+
+        // ── Material: delete ────────────────────────────────────────────────
+        function wireDeleteMaterialBtn(btn) {
+            btn.addEventListener('click', async () => {
+                const materialId = btn.dataset.materialId;
+                if (!confirm('Ta bort materialet?')) return;
+                try {
+                    const res = await fetch(`/Warehouse/DeleteMaterial/${materialId}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        btn.closest('.warehouse-list-row').remove();
+                        const count = document.querySelectorAll('#material-list .warehouse-list-row').length;
+                        const countEl = document.getElementById('material-count');
+                        if (countEl) countEl.textContent = count + ' st';
+                        updateListTotals(document.getElementById('material-list'));
+                    } else {
+                        alert('Kunde inte ta bort materialet.');
+                    }
+                } catch {
+                    alert('Nätverksfel vid borttagning.');
+                }
+            });
+        }
+        document.querySelectorAll('.warehouse-delete-material-btn').forEach(wireDeleteMaterialBtn);
+
+        // ── Material: save all ──────────────────────────────────────────────
+        const materialSaveBtn = document.getElementById('material-save-btn');
+        const materialStatus = document.getElementById('material-status');
+        if (materialSaveBtn) {
+            materialSaveBtn.addEventListener('click', async () => {
+                const rows = document.querySelectorAll('#material-list .warehouse-list-row[data-material-id]');
+                if (!rows.length) return;
+                materialSaveBtn.disabled = true;
+                materialSaveBtn.textContent = 'Sparar…';
+                materialStatus.textContent = '';
+                materialStatus.className = 'warehouse-status';
+                let errors = 0;
+                for (const row of rows) {
+                    const materialId = row.dataset.materialId;
+                    const stock = parseInt(row.querySelector('.warehouse-qty-input').value, 10) || 0;
+                    const price = parseInt(row.querySelector('.warehouse-price-input').value, 10) || 0;
+                    try {
+                        const res = await fetch('/Warehouse/UpdateMaterial', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ materialId, stock, price })
+                        });
+                        if (!res.ok) errors++;
+                    } catch { errors++; }
+                }
+                materialSaveBtn.disabled = false;
+                materialSaveBtn.textContent = 'Spara alla';
+                if (errors) {
+                    materialStatus.textContent = `${errors} rad(er) misslyckades.`;
+                    materialStatus.className = 'warehouse-status --error';
+                } else {
+                    materialStatus.textContent = 'Sparat ✓';
+                    materialStatus.className = 'warehouse-status';
+                    setTimeout(() => { materialStatus.textContent = ''; }, 2500);
+                }
+            });
+        }
+
+        // ── Material: add new ───────────────────────────────────────────────
+        const addMaterialBtn = document.getElementById('add-material-btn');
+        const addMaterialStatus = document.getElementById('add-material-status');
+        if (addMaterialBtn) {
+            addMaterialBtn.addEventListener('click', async () => {
+                const nameInput = document.getElementById('new-material-name');
+                const stockInput = document.getElementById('new-material-stock');
+                const priceInput = document.getElementById('new-material-price');
+                const name = nameInput.value.trim();
+                const stock = parseInt(stockInput.value, 10) || 0;
+                const price = parseInt(priceInput.value, 10) || 0;
+
+                if (!name) {
+                    addMaterialStatus.textContent = 'Namn krävs.';
+                    addMaterialStatus.className = 'warehouse-status --error';
+                    return;
+                }
+                if (!onlyLetters.test(name)) {
+                    addMaterialStatus.textContent = 'Namnet får bara innehålla bokstäver.';
+                    addMaterialStatus.className = 'warehouse-status --error';
+                    return;
+                }
+                if (price <= 0) {
+                    addMaterialStatus.textContent = 'Pris måste vara större än 0.';
+                    addMaterialStatus.className = 'warehouse-status --error';
+                    return;
+                }
+                addMaterialBtn.disabled = true;
+                addMaterialStatus.textContent = '';
+                addMaterialStatus.className = 'warehouse-status';
+
+                try {
+                    const res = await fetch('/Warehouse/CreateMaterial', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, stock, price })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        addMaterialStatus.textContent = data.error ?? 'Fel vid skapande.';
+                        addMaterialStatus.className = 'warehouse-status --error';
+                    } else {
+                        const list = document.getElementById('material-list');
+                        const footer = list.querySelector('.warehouse-list-footer');
+                        const newRow = document.createElement('div');
+                        newRow.className = 'warehouse-list-row';
+                        newRow.dataset.materialId = data.id;
+                        newRow.innerHTML = `
+                            <span class="warehouse-list-name">${data.name}</span>
+                            <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                                   inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
+                            <input class="warehouse-price-input" type="number" min="0" step="1"
+                                   inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
+                            <span class="warehouse-list-total">${stock * price} kr</span>
+                            <button class="warehouse-delete-material-btn" data-material-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
+                        list.insertBefore(newRow, footer);
+
+                        wireDeleteMaterialBtn(newRow.querySelector('.warehouse-delete-material-btn'));
+                        newRow.querySelectorAll('.warehouse-qty-input, .warehouse-price-input').forEach(inp => {
+                            inp.addEventListener('input', () => { sanitiseInput(inp); updateListTotals(list); });
+                            inp.addEventListener('blur', () => { if (inp.value === '') { inp.value = '0'; updateListTotals(list); } });
+                        });
+
+                        const cnt = document.querySelectorAll('#material-list .warehouse-list-row').length;
+                        const countEl = document.getElementById('material-count');
+                        if (countEl) countEl.textContent = cnt + ' st';
+                        updateListTotals(list);
+
+                        nameInput.value = '';
+                        stockInput.value = '';
+                        priceInput.value = '';
+                        addMaterialStatus.textContent = data.name + ' tillagd ✓';
+                        addMaterialStatus.className = 'warehouse-status';
+                        setTimeout(() => { addMaterialStatus.textContent = ''; }, 2500);
+                    }
+                } catch {
+                    addMaterialStatus.textContent = 'Nätverksfel.';
+                    addMaterialStatus.className = 'warehouse-status --error';
+                } finally {
+                    addMaterialBtn.disabled = false;
                 }
             });
         }

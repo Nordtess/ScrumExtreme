@@ -14,7 +14,10 @@ namespace ScrumExtreme.Web.Models
         [Required(ErrorMessage = "Pris är obligatoriskt.")]
         public double Price { get; set; }
 
-        [Required(ErrorMessage = "Materiallista är obligatoriskt.")]
-        public string MaterialList { get; set; } = string.Empty;
+        // Materials selected via checkboxes
+        public List<string> SelectedMaterials { get; set; } = new();
+
+        // Populated in GET for rendering checkboxes
+        public List<string> AvailableMaterials { get; set; } = new();
     }
 }
