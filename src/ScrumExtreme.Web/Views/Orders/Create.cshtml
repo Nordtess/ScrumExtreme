@@ -456,7 +456,7 @@
                             </div>
                             <div class="order-hat-row order-hat-sub">
                                 <span>Hatt</span>
-                                <span class="order-hat-item-price">${h.hatBasePrice.toFixed(2)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(h.hatBasePrice)} kr</span>
                             </div>`;
 
                         // Each accessory
@@ -464,7 +464,7 @@
                             html += `
                             <div class="order-hat-row order-hat-sub">
                                 <span>${esc(acc.name)}</span>
-                                <span class="order-hat-item-price">${acc.price.toFixed(2)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(acc.price)} kr</span>
                             </div>`;
                         });
 
@@ -473,7 +473,7 @@
                             html += `
                             <div class="order-hat-row order-hat-sub">
                                 <span>Extra timmar (${h.extraWorkHours}h × 200 kr)</span>
-                                <span class="order-hat-item-price">${h.hoursCost.toFixed(2)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(h.hoursCost)} kr</span>
                             </div>`;
                         }
 
@@ -481,13 +481,13 @@
                         html += `
                             <div class="order-hat-row order-hat-total-row">
                                 <span>Totalt</span>
-                                <span class="order-hat-item-price">${lineTotal.toFixed(2)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(lineTotal)} kr</span>
                             </div>`;
 
                         li.innerHTML = html;
                         hatList.appendChild(li);
                     });
-                    totalAmountEl.textContent = total.toFixed(2) + ' kr';
+                    totalAmountEl.textContent = Math.round(total) + ' kr';
                     hatList.querySelectorAll('.order-hat-remove').forEach(btn => {
                         btn.addEventListener('click', () => {
                             cart = cart.filter(h => !(h.hatId === btn.dataset.id && h.size === btn.dataset.size));
