@@ -8,16 +8,22 @@ namespace ScrumExtreme.Web.Controllers
     public class CreateHatsController : Controller
     {
         private readonly IHatService _hatService;
+        private readonly IMaterialService _materialService;
 
-        public CreateHatsController(IHatService hatService)
+        public CreateHatsController(IHatService hatService, IMaterialService materialService)
         {
             _hatService = hatService;
+            _materialService = materialService;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(new CreateHatsViewModel());
+            var materials = await _materialService.GetMaterialsAsync();
+            return View(new CreateHatsViewModel
+            {
+                AvailableMaterials = materials.Select(m => m.Name).OrderBy(n => n).ToList()
+            });
         }
 
         [HttpPost]
@@ -26,14 +32,23 @@ namespace ScrumExtreme.Web.Controllers
             if (model.Sizes == null || !model.Sizes.Any())
                 ModelState.AddModelError(nameof(model.Sizes), "Minst en storlek måste väljas.");
 
+            // Remove server-side Required on MaterialList — it is now optional (hat may have no material)
+            ModelState.Remove(nameof(model.AvailableMaterials));
+
             if (!ModelState.IsValid)
+            {
+                var mats = await _materialService.GetMaterialsAsync();
+                model.AvailableMaterials = mats.Select(m => m.Name).OrderBy(n => n).ToList();
                 return View("Index", model);
+            }
 
             // Duplicate name check
             var existing = await _hatService.GetAllHatsAsync();
             if (existing.Any(h => h.Name.Equals(model.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
             {
                 ModelState.AddModelError(nameof(model.Name), $"\"{model.Name}\" finns redan i systemet.");
+                var mats = await _materialService.GetMaterialsAsync();
+                model.AvailableMaterials = mats.Select(m => m.Name).OrderBy(n => n).ToList();
                 return View("Index", model);
             }
 
@@ -43,7 +58,7 @@ namespace ScrumExtreme.Web.Controllers
                 Name = textInfo.ToTitleCase(model.Name.Trim().ToLower()),
                 Sizes = model.Sizes ?? new List<string>(),
                 Price = model.Price,
-                MaterialList = textInfo.ToTitleCase((model.MaterialList ?? string.Empty).Trim().ToLower()),
+                MaterialList = string.Join(", ", (model.SelectedMaterials ?? new List<string>()).Select(m => m.Trim())),
             };
 
             await _hatService.CreateHatsAsync(hat);

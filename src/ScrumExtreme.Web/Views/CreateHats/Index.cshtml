@@ -66,9 +66,25 @@
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="MaterialList">Materiallista</label>
-                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull" />
-                            <span class="admin-error" id="error-MaterialList"></span>
+                            <label>Material</label>
+                            @if (Model.AvailableMaterials != null && Model.AvailableMaterials.Any())
+                            {
+                                <div class="size-checkbox-group" id="materialsGroup">
+                                    @foreach (var mat in Model.AvailableMaterials)
+                                    {
+                                        var isChecked = Model.SelectedMaterials != null && Model.SelectedMaterials.Contains(mat);
+                                        <label class="size-checkbox-label">
+                                            <input type="checkbox" name="SelectedMaterials" value="@mat" @(isChecked ? "checked" : "") />
+                                            @mat
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="admin-field-hint">Inga material tillagda ännu. Lägg till material i Lagerstatus.</p>
+                            }
+                            <span class="admin-error" id="error-Materials"></span>
                         </div>
                     </div>
 

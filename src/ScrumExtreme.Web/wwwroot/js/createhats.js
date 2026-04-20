@@ -23,13 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (isNaN(num) || num < 1) return 'Priset måste vara minst 1 kr.';
                 return null;
             }
-        },
-        MaterialList: {
-            validate: function (v) {
-                if (!v.trim()) return 'Materiallista är obligatorisk.';
-                if (!onlyLetters.test(v.trim())) return 'Materiallistan får inte innehålla siffror.';
-                return null;
-            }
         }
     };
 

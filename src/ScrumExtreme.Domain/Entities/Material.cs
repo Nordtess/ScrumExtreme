@@ -12,5 +12,8 @@ namespace ScrumExtreme.Domain.Entities
 
         [BsonElement("price")]
         public decimal Price { get; set; }
+
+        [BsonElement("stock")]
+        public int Stock { get; set; }
     }
 }
