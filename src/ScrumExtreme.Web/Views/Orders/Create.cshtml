@@ -419,15 +419,18 @@
                     const li = document.createElement('li');
                         li.innerHTML =
                             '<span>' + item.name + '</span>' +
-                            '<button type="button" class= "remove-item-btn" data-id="' + item.id + '">✕</button>';
+                            '<button type="button" class="remove-item-btn" data-id="' + item.id + '">✕</button>';
                         selectedItemsList.appendChild(li);
                 });
-                    
-                selectedItemsList.querySelectorAll('button').forEach(function(btn) {
+                    //Hanterar borttagning av enstaka item.
+                selectedItemsList.querySelectorAll('.remove-item-btn').forEach(function(btn) {
                     btn.addEventListener('click', function() {
-                        selectedItems = selectedItems.filter(function(item) {
-                    return item.id !== btn.dataset.id;
+                        const index = selectedItems.findIndex(function(item) {
+                            return item.id === btn.dataset.id;
                 });
+                if (index !== -1){
+                    selectedItems.splice(index,1);
+                }
                 renderSelectedItems();
                     });
                 });
