@@ -296,3 +296,6 @@
 .remove-item-btn {
   margin-left: 8px;
 }
+.remove-item-btn:hover {
+    color: #ff453a;
+}

@@ -407,7 +407,7 @@
                     updateCreateBtn();
                 });
 
-                //Visar innehållet i selectedItems på sidan
+                //Visar valda tillbehör i listan
             function renderSelectedItems() {
                 selectedItemsList.innerHTML = '';
 
@@ -418,12 +418,15 @@
                             '<button type="button" class= "remove-item-btn" data-id="' + item.id + '">✕</button>';
                         selectedItemsList.appendChild(li);
                 });
-                    
+                    //Hanterar borttagning av enstaka item.
                 selectedItemsList.querySelectorAll('button').forEach(function(btn) {
                     btn.addEventListener('click', function() {
-                        selectedItems = selectedItems.filter(function(item) {
-                    return item.id !== btn.dataset.id;
+                        const index = selectedItems.findIndex(function(item) {
+                            return item.id === btn.dataset.id;
                 });
+                if (index !== -1){
+                    selectedItems.splice(index,1);
+                }
                 renderSelectedItems();
                     });
                 });
