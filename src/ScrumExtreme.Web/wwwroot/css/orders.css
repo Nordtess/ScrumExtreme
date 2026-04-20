@@ -360,6 +360,15 @@
   margin-left: 8px;
 }
 
+/* Hint shown when qty > 1 and modification is enabled */
+.order-modify-hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  color: #c9a84c;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
 /* ── Toggle switch for "Modifiera hatt" ──────────────────────────────── */
 .order-toggle-wrap {
   display: flex;

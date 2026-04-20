@@ -111,6 +111,7 @@
                                     <span class="order-toggle-slider"></span>
                                 </div>
                             </label>
+                            <p class="order-modify-hint" id="modifyHint" style="display:none;"></p>
                         </div>
                     </div>
 
@@ -241,6 +242,7 @@
                 const modificationDescriptionInput = document.getElementById('modificationDescriptionInput');
                 const extraWorkHoursInput = document.getElementById('extraWorkHoursInput');
                 const modifiedHatFields = document.getElementById('modifiedHatFields');
+                const modifyHint = document.getElementById('modifyHint');
 
                 let cart = []; // { hatId, name, unitPrice, hatBasePrice, itemCost, size, quantity, maxStock, isModified, modificationDescription, itemIds, extraWorkHours }
 
@@ -314,9 +316,21 @@
                         // --- Show/hide modified hat fields ---
                 function toggleModifiedHatFields() {
                     modifiedHatFields.style.display = isModifiedInput.checked ? 'block' : 'none';
+                    updateModifyHint();
+                }
+
+                function updateModifyHint() {
+                    const qty = parseInt(quantityInput.value, 10) || 1;
+                    if (isModifiedInput.checked && qty > 1) {
+                        modifyHint.textContent = `Modifieringen gäller alla ${qty} hattar – tillbehör och timmar multipliceras × ${qty}.`;
+                        modifyHint.style.display = '';
+                    } else {
+                        modifyHint.style.display = 'none';
+                    }
                 }
 
                 isModifiedInput.addEventListener('change', toggleModifiedHatFields);
+                quantityInput.addEventListener('input', updateModifyHint);
 
                     // Kör direkt när sidan laddas
                 toggleModifiedHatFields();
@@ -461,19 +475,25 @@
 
                         // Each accessory
                         (h.items || []).forEach(acc => {
+                            const accTotal = acc.price * h.quantity;
+                            const accLabel = h.quantity > 1 ? `${esc(acc.name)} × ${h.quantity}` : esc(acc.name);
                             html += `
                             <div class="order-hat-row order-hat-sub">
-                                <span>${esc(acc.name)}</span>
-                                <span class="order-hat-item-price">${Math.round(acc.price)} kr</span>
+                                <span>${accLabel}</span>
+                                <span class="order-hat-item-price">${Math.round(accTotal)} kr</span>
                             </div>`;
                         });
 
                         // Work hours
                         if (h.extraWorkHours > 0) {
+                            const hoursTotal = h.hoursCost * h.quantity;
+                            const hoursLabel = h.quantity > 1
+                                ? `Extra timmar (${h.extraWorkHours}h × 200 kr × ${h.quantity})`
+                                : `Extra timmar (${h.extraWorkHours}h × 200 kr)`;
                             html += `
                             <div class="order-hat-row order-hat-sub">
-                                <span>Extra timmar (${h.extraWorkHours}h × 200 kr)</span>
-                                <span class="order-hat-item-price">${Math.round(h.hoursCost)} kr</span>
+                                <span>${hoursLabel}</span>
+                                <span class="order-hat-item-price">${Math.round(hoursTotal)} kr</span>
                             </div>`;
                         }
 

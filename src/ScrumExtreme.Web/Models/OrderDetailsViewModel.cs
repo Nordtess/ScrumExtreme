@@ -4,7 +4,7 @@ namespace ScrumExtreme.Web.Models
 {
     public class OrderDetailsViewModel
     {
-        public Order Order { get; set; }
-        public string CustomerEmail { get; set; }
+        public required Order Order { get; set; }
+        public required string CustomerEmail { get; set; }
     }
 }
