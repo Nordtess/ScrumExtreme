@@ -65,6 +65,66 @@ public class WarehouseController : Controller
         return Ok(new { success = true });
     }
 
+    [HttpPost("SaveHatStock")]
+    public async Task<IActionResult> SaveHatStock([FromBody] SaveHatStockRequest req)
+    {
+        if (string.IsNullOrEmpty(req.HatId) || req.Stock == null || req.Stock.Values.Any(v => v < 0))
+            return BadRequest(new { error = "Ogiltiga parametrar." });
+
+        var hat = await _hatService.GetByIdAsync(req.HatId);
+        if (hat == null)
+            return NotFound(new { error = "Hatten hittades inte." });
+
+        int oldTotal = hat.Stock.Values.Sum();
+        int newTotal = req.Stock.Values.Sum();
+        int delta = newTotal - oldTotal;
+
+        var updatedMaterialStocks = new Dictionary<string, int>();
+
+        if (delta > 0 && !string.IsNullOrWhiteSpace(hat.MaterialList))
+        {
+            var materialNames = hat.MaterialList
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(n => n.Trim())
+                .Where(n => !string.IsNullOrEmpty(n))
+                .ToList();
+
+            if (materialNames.Count > 0)
+            {
+                var allMaterials = (await _materialService.GetMaterialsAsync()).ToList();
+                var shortages = new List<string>();
+
+                foreach (var name in materialNames)
+                {
+                    var mat = allMaterials.FirstOrDefault(m =>
+                        m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    if (mat == null) continue;
+                    if (mat.Stock < delta)
+                        shortages.Add($"{mat.Name} (behövs {delta}, finns {mat.Stock})");
+                }
+
+                if (shortages.Count > 0)
+                    return Conflict(new { error = "Inte tillräckligt material: " + string.Join(", ", shortages) });
+
+                foreach (var name in materialNames)
+                {
+                    var mat = allMaterials.FirstOrDefault(m =>
+                        m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    if (mat == null) continue;
+                    mat.Stock -= delta;
+                    await _materialService.UpdateMaterialAsync(mat);
+                    updatedMaterialStocks[mat.Id] = mat.Stock;
+                }
+            }
+        }
+
+        foreach (var kv in req.Stock)
+            hat.Stock[kv.Key] = kv.Value;
+        await _hatService.UpdateHatAsync(hat);
+
+        return Ok(new { success = true, materialStocks = updatedMaterialStocks });
+    }
+
     [HttpPost("CreateItem")]
     public async Task<IActionResult> CreateItem([FromBody] CreateItemRequest req)
     {
@@ -178,6 +238,12 @@ public class UpdateStockRequest
 }
 
 public class UpdateAllStockRequest
+{
+    public string HatId { get; set; } = string.Empty;
+    public Dictionary<string, int> Stock { get; set; } = new();
+}
+
+public class SaveHatStockRequest
 {
     public string HatId { get; set; } = string.Empty;
     public Dictionary<string, int> Stock { get; set; } = new();

@@ -334,12 +334,42 @@
                 btn.textContent = 'Sparar…';
 
                 try {
-                    const result = await fetch('/Warehouse/UpdateAllStock', {
+                    const result = await fetch('/Warehouse/SaveHatStock', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ hatId, stock: stockMap })
                     });
-                    if (!result.ok) throw new Error();
+
+                    if (!result.ok) {
+                        let msg = 'Fel vid sparning.';
+                        try {
+                            const body = await result.json();
+                            if (body && body.error) msg = body.error;
+                        } catch { /* ignore */ }
+                        statusEl.textContent = msg;
+                        statusEl.className = 'warehouse-status --error';
+                        return;
+                    }
+
+                    const data = await result.json();
+
+                    // Update material rows in DOM if stock was deducted
+                    if (data.materialStocks) {
+                        for (const [matId, newStock] of Object.entries(data.materialStocks)) {
+                            const row = document.querySelector(`#material-list .warehouse-list-row[data-material-id="${matId}"]`);
+                            if (!row) continue;
+                            const qtyInput = row.querySelector('.warehouse-qty-input');
+                            const priceInput = row.querySelector('.warehouse-price-input');
+                            const totalEl = row.querySelector('.warehouse-list-total');
+                            if (qtyInput) qtyInput.value = newStock;
+                            if (totalEl && priceInput) {
+                                const price = parseInt(priceInput.value, 10) || 0;
+                                totalEl.textContent = (newStock * price) + ' kr';
+                            }
+                        }
+                        // Recalculate material grand total
+                        updateListTotals(document.getElementById('material-list'));
+                    }
 
                     // Update saved total so the hint resets correctly
                     const newTotal = Object.values(stockMap).reduce((a, b) => a + b, 0);
