@@ -84,7 +84,7 @@ namespace ScrumExtreme.Web.Controllers
 
             await _orderService.CreateOrderAsync(order);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Orders");
         }
     }
 }
