@@ -1,0 +1,59 @@
+﻿@model ScrumExtreme.Web.Models.CreateMaterialViewModel
+
+@{
+    ViewData["Title"] = "Materialhantering";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    @if (TempData["Success"] != null)
+    {
+        <p class="admin-toast">@TempData["Success"]</p>
+    }
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Materialhantering</h1>
+        <p class="admin-page-subtitle">Lägg till material i systemet</p>
+    </div>
+
+    <div class="admin-layout">
+
+
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Lägg till material
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+                <form method="post" class="admin-form">
+
+                    <div class="admin-field-row">
+                        <div class="admin-field">
+                            <label asp-for="Name">Materialnamn</label>
+                            <input asp-for="Name" placeholder="T.ex. Bomull" />
+                        </div>
+
+                        <div class="admin-field">
+                            <label asp-for="Price">Pris</label>
+                            <input asp-for="Price" placeholder="T.ex. 50" />
+                        </div>
+                    </div>
+
+                    <div class="admin-submit-area">
+                        <button type="submit" class="admin-btn-primary">Spara</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+      
+    </div>
+
+</div>
