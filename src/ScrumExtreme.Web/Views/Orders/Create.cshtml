@@ -104,10 +104,14 @@
                     <!-- Modifierad hatt -->
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label class="inline-checkbox" for="isModifiedInput">
-                                <span>Modifiera hatt</span>
-                                <input type="checkbox" id="isModifiedInput" />
+                            <label class="order-toggle-wrap" for="isModifiedInput">
+                                <span class="order-toggle-label">Modifiera hatt</span>
+                                <div class="order-toggle">
+                                    <input type="checkbox" id="isModifiedInput" />
+                                    <span class="order-toggle-slider"></span>
+                                </div>
                             </label>
+                            <p class="order-modify-hint" id="modifyHint" style="display:none;"></p>
                         </div>
                     </div>
 
@@ -122,34 +126,44 @@
 
                         <div class="admin-field-row --single">
                             <div class="admin-field">
-                                <label for="itemSelect">Tillbehör</label>
-                                <select id="itemSelect">
-                                <option value=""> Välj tillbehör </option>
-                                    @if (items !=null && items.Any())
+                                <label>Tillbehör</label>
+                                <div class="order-items-list" id="itemsList">
+                                    <div class="order-items-header">
+                                        <span></span>
+                                        <span>Namn</span>
+                                        <span>Pris/st</span>
+                                        <span>Lager</span>
+                                    </div>
+                                    @if (items != null && items.Any())
                                     {
                                         @foreach (var item in items)
                                         {
-                                            <option value="@item.Id">@item.Name</option>
+                                            bool outOfStock = item.Stock <= 0;
+                                            <div class="order-items-row @(outOfStock ? "--out-of-stock" : "")"
+                                                 data-item-id="@item.Id"
+                                                 data-item-name="@item.Name"
+                                                 data-item-price="@item.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                                <label class="order-item-check-label">
+                                                    <input type="checkbox" class="order-item-cb" @(outOfStock ? "disabled" : "") />
+                                                </label>
+                                                <span class="order-item-name">@item.Name</span>
+                                                <span class="order-item-price-col">@((int)item.Price) kr</span>
+                                                @if (outOfStock)
+                                                {
+                                                    <span class="order-item-stock --out">Slut på lager</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="order-item-stock">@item.Stock st</span>
+                                                }
+                                            </div>
                                         }
                                     }
                                     else
                                     {
-                                        <option disabled>Inga tillbehör finns tillgängliga</option>
+                                        <div class="order-items-empty">Inga tillbehör tillgängliga</div>
                                     }
-                                </select>
-
-                                <button type="button" class="admin-btn-secondary" id="addItemBtn">
-                                    Lägg till tillbehör
-                                </button>
-
-                                <ul id="selectedItemsList"></ul>
-                            </div>
-                        </div>
-
-                        <div class="admin-field-row --single">
-                            <div class="admin-field">
-                                <label for="addedMaterialCostInput">Extra materialkostnad</label>
-                                <input type="number" id="addedMaterialCostInput" min="0" step="0.01" value="0" />
+                                </div>
                             </div>
                         </div>
 
@@ -226,17 +240,11 @@
                 const createOrderError = document.getElementById('createOrderError');
                 const isModifiedInput = document.getElementById('isModifiedInput');
                 const modificationDescriptionInput = document.getElementById('modificationDescriptionInput');
-                const itemIdsInput = document.getElementById('itemIdsInput');
-                const addedMaterialCostInput = document.getElementById('addedMaterialCostInput');
                 const extraWorkHoursInput = document.getElementById('extraWorkHoursInput');
                 const modifiedHatFields = document.getElementById('modifiedHatFields');
-                const itemSelect = document.getElementById('itemSelect');
-                const addItemBtn = document.getElementById('addItemBtn');
-                const selectedItemsList = document.getElementById('selectedItemsList');
+                const modifyHint = document.getElementById('modifyHint');
 
-                let selectedItems = [];
-
-                let cart = []; // { hatId, name, unitPrice, size, quantity, maxStock }
+                let cart = []; // { hatId, name, unitPrice, hatBasePrice, itemCost, size, quantity, maxStock, isModified, modificationDescription, itemIds, extraWorkHours }
 
                 // --- Hat select: populate sizes with stock ---
                 hatSelect.addEventListener('change', () => {
@@ -308,9 +316,21 @@
                         // --- Show/hide modified hat fields ---
                 function toggleModifiedHatFields() {
                     modifiedHatFields.style.display = isModifiedInput.checked ? 'block' : 'none';
+                    updateModifyHint();
+                }
+
+                function updateModifyHint() {
+                    const qty = parseInt(quantityInput.value, 10) || 1;
+                    if (isModifiedInput.checked && qty > 1) {
+                        modifyHint.textContent = `Modifieringen gäller alla ${qty} hattar – tillbehör och timmar multipliceras × ${qty}.`;
+                        modifyHint.style.display = '';
+                    } else {
+                        modifyHint.style.display = 'none';
+                    }
                 }
 
                 isModifiedInput.addEventListener('change', toggleModifiedHatFields);
+                quantityInput.addEventListener('input', updateModifyHint);
 
                     // Kör direkt när sidan laddas
                 toggleModifiedHatFields();
@@ -345,19 +365,23 @@
                     updateCreateBtn();
                 });
 
-                // --- Add items ---
-                addItemBtn.addEventListener('click', () => {
-                    const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-                    if (!selectedOption || !selectedOption.value){
-                        return;
-                    }
-
-                    selectedItems.push({
-                        id: selectedOption.value,
-                        name: selectedOption.text
+                // --- Get selected items from checkbox table ---
+                function getSelectedItems() {
+                    if (!isModifiedInput.checked) return [];
+                    const rows = document.querySelectorAll('#itemsList .order-items-row:not(.--out-of-stock)');
+                    const selected = [];
+                    rows.forEach(row => {
+                        const cb = row.querySelector('.order-item-cb');
+                        if (cb && cb.checked) {
+                            selected.push({
+                                id: row.dataset.itemId,
+                                name: row.dataset.itemName,
+                                price: parseFloat(row.dataset.itemPrice) || 0
+                            });
+                        }
                     });
-                    renderSelectedItems();
-                });
+                    return selected;
+                }
 
                 // --- Add hat ---
                 addHatBtn.addEventListener('click', () => {
@@ -388,10 +412,12 @@
                         addHatError.textContent = 'Den hatten i den storleken är redan tillagd.';
                         return;
                     }
-        // Hämta id:n från valda tillbehör att spara
-                    const itemIds = selectedItems.map(function(item){
-                        return item.id;
-                    });
+        // Hämta valda tillbehör och beräkna kostnad
+                    const selectedItems = getSelectedItems();
+                    const itemCost = selectedItems.reduce((sum, i) => sum + i.price, 0);
+                    const hatBasePrice = parseFloat(opt.dataset.price);
+                    const extraHours = parseFloat(extraWorkHoursInput.value || '0');
+                    const hoursCost = extraHours * 200;
 
                     cart.push({
                         hatId,
@@ -399,42 +425,27 @@
                         size,
                         quantity: qty,
                         maxStock,
-                        unitPrice: parseFloat(opt.dataset.price),
-
+                        unitPrice: hatBasePrice + itemCost + hoursCost,
+                        hatBasePrice,
+                        itemCost,
+                        items: selectedItems, // full objects: { id, name, price }
                         isModified: isModifiedInput.checked,
                         modificationDescription: modificationDescriptionInput.value.trim(),
-                        itemIds: itemIds,
-                        addedMaterialCost: parseFloat(addedMaterialCostInput.value || '0'),
-                        extraWorkHours: parseFloat(extraWorkHoursInput.value || '0')
+                        itemIds: selectedItems.map(i => i.id),
+                        extraWorkHours: extraHours,
+                        hoursCost
                     });
+
+                    // Nollställ modifieringsfält
+                    isModifiedInput.checked = false;
+                    toggleModifiedHatFields();
+                    modificationDescriptionInput.value = '';
+                    extraWorkHoursInput.value = '0';
+                    document.querySelectorAll('#itemsList .order-item-cb').forEach(cb => cb.checked = false);
+
                     renderCart();
                     updateCreateBtn();
                 });
-
-                //Visar innehållet i selectedItems på sidan
-            function renderSelectedItems() {
-                selectedItemsList.innerHTML = '';
-
-                selectedItems.forEach(item => {
-                    const li = document.createElement('li');
-                        li.innerHTML =
-                            '<span>' + item.name + '</span>' +
-                            '<button type="button" class="remove-item-btn" data-id="' + item.id + '">✕</button>';
-                        selectedItemsList.appendChild(li);
-                });
-                    //Hanterar borttagning av enstaka item.
-                selectedItemsList.querySelectorAll('.remove-item-btn').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        const index = selectedItems.findIndex(function(item) {
-                            return item.id === btn.dataset.id;
-                });
-                if (index !== -1){
-                    selectedItems.splice(index,1);
-                }
-                renderSelectedItems();
-                    });
-                });
-                }
 
                 function renderCart() {
                     hatList.innerHTML = '';
@@ -447,15 +458,56 @@
                     cart.forEach(h => {
                         const lineTotal = h.unitPrice * h.quantity;
                         total += lineTotal;
+
                         const li = document.createElement('li');
-                        li.className = 'order-hat-item';
-                        li.innerHTML = `
-                                        <span>${esc(h.name)} (${esc(h.size)}) × ${h.quantity}</span>
-                                        <span class="order-hat-item-price">${lineTotal.toFixed(2)} kr</span>
-                                        <button class="order-hat-remove" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" title="Ta bort">✕</button>`;
+                        li.className = 'order-hat-item --expanded';
+
+                        // Header row: hat name + remove button
+                        let html = `
+                            <div class="order-hat-row order-hat-header">
+                                <span class="order-hat-title">${esc(h.name)} <span class="order-hat-size">(${esc(h.size)}) × ${h.quantity}</span></span>
+                                <button class="order-hat-remove" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" title="Ta bort">✕</button>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <span>Hatt</span>
+                                <span class="order-hat-item-price">${Math.round(h.hatBasePrice)} kr</span>
+                            </div>`;
+
+                        // Each accessory
+                        (h.items || []).forEach(acc => {
+                            const accTotal = acc.price * h.quantity;
+                            const accLabel = h.quantity > 1 ? `${esc(acc.name)} × ${h.quantity}` : esc(acc.name);
+                            html += `
+                            <div class="order-hat-row order-hat-sub">
+                                <span>${accLabel}</span>
+                                <span class="order-hat-item-price">${Math.round(accTotal)} kr</span>
+                            </div>`;
+                        });
+
+                        // Work hours
+                        if (h.extraWorkHours > 0) {
+                            const hoursTotal = h.hoursCost * h.quantity;
+                            const hoursLabel = h.quantity > 1
+                                ? `Extra timmar (${h.extraWorkHours}h × 200 kr × ${h.quantity})`
+                                : `Extra timmar (${h.extraWorkHours}h × 200 kr)`;
+                            html += `
+                            <div class="order-hat-row order-hat-sub">
+                                <span>${hoursLabel}</span>
+                                <span class="order-hat-item-price">${Math.round(hoursTotal)} kr</span>
+                            </div>`;
+                        }
+
+                        // Total line for this hat
+                        html += `
+                            <div class="order-hat-row order-hat-total-row">
+                                <span>Totalt</span>
+                                <span class="order-hat-item-price">${Math.round(lineTotal)} kr</span>
+                            </div>`;
+
+                        li.innerHTML = html;
                         hatList.appendChild(li);
                     });
-                    totalAmountEl.textContent = total.toFixed(2) + ' kr';
+                    totalAmountEl.textContent = Math.round(total) + ' kr';
                     hatList.querySelectorAll('.order-hat-remove').forEach(btn => {
                         btn.addEventListener('click', () => {
                             cart = cart.filter(h => !(h.hatId === btn.dataset.id && h.size === btn.dataset.size));
@@ -480,8 +532,8 @@
                         const payload = {
                             customerId: customerSelect.value,
                             items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice,
-                             isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds, 
-                             addedMaterialCost: h.addedMaterialCost, extraWorkHours: h.extraWorkHours
+                             isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds,
+                             addedMaterialCost: 0, extraWorkHours: h.extraWorkHours
                             }))
                         };
                         const resp = await fetch('/Orders/Create', {

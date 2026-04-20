@@ -72,9 +72,69 @@
   color: #e8e0d4;
 }
 
+.order-hat-item.--expanded {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 0;
+}
+
+.order-hat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  color: #e8e0d4;
+}
+
+.order-hat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  padding: 0.5rem 0.75rem;
+}
+
+.order-hat-title {
+  font-weight: 600;
+  color: #e8e0d4;
+}
+
+.order-hat-size {
+  font-weight: 400;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.order-hat-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.28rem 0.75rem;
+  color: #aaa;
+  font-size: 0.82rem;
+}
+
+.order-hat-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid #2a2a2a;
+  padding: 0.4rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #e8e0d4;
+}
+
 .order-hat-item-price {
   color: #c9a84c;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .order-hat-remove {
@@ -241,11 +301,14 @@
 
 /* Remove spinner arrows */
 #quantityInput::-webkit-outer-spin-button,
-#quantityInput::-webkit-inner-spin-button {
+#quantityInput::-webkit-inner-spin-button,
+#extraWorkHoursInput::-webkit-outer-spin-button,
+#extraWorkHoursInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-#quantityInput[type="number"] {
+#quantityInput[type="number"],
+#extraWorkHoursInput[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
@@ -295,4 +358,207 @@
 
 .remove-item-btn {
   margin-left: 8px;
+}
+
+/* Hint shown when qty > 1 and modification is enabled */
+.order-modify-hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  color: #c9a84c;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* ── Toggle switch for "Modifiera hatt" ──────────────────────────────── */
+.order-toggle-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0.65rem 0;
+  user-select: none;
+}
+
+.order-toggle-label {
+  font-size: 0.88rem;
+  color: #e8e0d4;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.order-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.order-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.order-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 24px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.order-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #666;
+  border-radius: 50%;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.order-toggle input:checked + .order-toggle-slider {
+  background: rgba(201, 168, 76, 0.18);
+  border-color: #c9a84c;
+}
+
+.order-toggle input:checked + .order-toggle-slider::before {
+  transform: translateX(20px) translateY(-50%);
+  background: #c9a84c;
+}
+
+/* ── Order items checkbox table (tillbehör selection) ─────────────────── */
+.order-items-list {
+  margin-top: 0.5rem;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order-items-header {
+  display: grid;
+  grid-template-columns: 32px 1fr 90px 90px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #0d0d0d;
+  font-size: 0.72rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.order-items-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 90px 90px;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #1a1a1a;
+  transition: background 0.15s ease;
+}
+
+.order-items-row:last-child {
+  border-bottom: none;
+}
+
+.order-items-row:not(.--out-of-stock):hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.order-items-row.--out-of-stock {
+  opacity: 0.45;
+}
+
+.order-item-check-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Custom checkbox styled in gold */
+.order-item-cb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  background: #0a0a0a;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.order-item-cb:checked {
+  background: #c9a84c;
+  border-color: #c9a84c;
+}
+
+.order-item-cb:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #000;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.order-item-cb:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.order-item-name {
+  font-size: 0.85rem;
+  color: #e8e0d4;
+}
+
+.order-item-price-col {
+  font-size: 0.85rem;
+  color: #c9a84c;
+  font-weight: 600;
+}
+
+.order-item-stock {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.order-item-stock.--out {
+  font-size: 0.75rem;
+  color: #ff453a;
+  font-style: italic;
+}
+
+.order-items-empty {
+  padding: 0.75rem;
+  font-size: 0.82rem;
+  color: #555;
+  text-align: center;
+}
+
+/* Accessories badge in cart row */
+.order-hat-item-accessories {
+  font-size: 0.75rem;
+  color: #c9a84c;
+  margin-left: 0.4rem;
+  opacity: 0.8;
 }
