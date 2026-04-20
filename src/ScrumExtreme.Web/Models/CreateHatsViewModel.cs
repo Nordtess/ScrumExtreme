@@ -16,8 +16,5 @@ namespace ScrumExtreme.Web.Models
 
         [Required(ErrorMessage = "Materiallista är obligatoriskt.")]
         public string MaterialList { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Beskrivning är obligatoriskt.")]
-        public string Description { get; set; } = string.Empty;
     }
 }
