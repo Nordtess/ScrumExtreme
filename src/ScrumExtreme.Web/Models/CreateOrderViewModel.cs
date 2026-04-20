@@ -11,8 +11,7 @@ public class OrderItemInput
     public bool IsModified { get; set; }
     public string ModificationDescription { get; set; } = string.Empty;
     public List<string> ItemIds { get; set; } = new();
-    public double AddedMaterialCost { get; set; }
-    public double ExtraWorkHours {  get; set; }
+    public double ExtraWorkHours { get; set; }
 }
 
 public class CreateOrderViewModel

@@ -80,7 +80,7 @@ public class OrdersController : Controller
         if (customer == null)
             return BadRequest(new { error = "Kunden hittades inte." });
 
-        // Validate stock before creating the order
+        // Validate hat stock before creating the order
         foreach (var item in model.Items)
         {
             if (item.Quantity < 1)
@@ -94,6 +94,19 @@ public class OrdersController : Controller
                 hat.Stock.TryGetValue(item.Size, out var stock);
                 if (stock < item.Quantity)
                     return BadRequest(new { error = $"'{item.Name}' storlek {item.Size}: endast {stock} i lager (du begärde {item.Quantity})." });
+            }
+        }
+
+        // Validate accessory (item) stock
+        foreach (var hatItem in model.Items.Where(i => i.IsModified && i.ItemIds.Any()))
+        {
+            foreach (var accessoryId in hatItem.ItemIds)
+            {
+                var accessory = await _itemService.GetByIdAsync(accessoryId);
+                if (accessory == null)
+                    return BadRequest(new { error = "Ett tillbehör hittades inte. Försök igen." });
+                if (accessory.Stock < hatItem.Quantity)
+                    return BadRequest(new { error = $"'{accessory.Name}': endast {accessory.Stock} i lager (du behöver {hatItem.Quantity})." });
             }
         }
 
@@ -126,7 +139,7 @@ public class OrdersController : Controller
                 IsModified = i.IsModified,
                 ModificationDescription = i.ModificationDescription,
                 ItemIds = i.ItemIds,
-                AddedMaterialCost = i.AddedMaterialCost,
+                AddedMaterialCost = 0,
                 ExtraWorkHours = i.ExtraWorkHours
             }).ToList(),
             TotalAmount = model.Items.Sum(i => i.UnitPrice * i.Quantity)
@@ -134,7 +147,7 @@ public class OrdersController : Controller
 
         await _orderService.CreateOrderAsync(order);
 
-        // Decrement stock for each ordered item
+        // Decrement hat stock
         foreach (var item in order.Items)
         {
             var hat = await _hatService.GetByIdAsync(item.ProductId);
@@ -143,6 +156,20 @@ public class OrdersController : Controller
                 hat.Stock.TryGetValue(item.Size, out var current);
                 hat.Stock[item.Size] = Math.Max(0, current - item.Quantity);
                 await _hatService.UpdateHatAsync(hat);
+            }
+        }
+
+        // Decrement accessory (item) stock
+        foreach (var hatItem in order.Items.Where(i => i.IsModified && i.ItemIds.Any()))
+        {
+            foreach (var accessoryId in hatItem.ItemIds)
+            {
+                var accessory = await _itemService.GetByIdAsync(accessoryId);
+                if (accessory != null)
+                {
+                    accessory.Stock = Math.Max(0, accessory.Stock - hatItem.Quantity);
+                    await _itemService.UpdateItemAsync(accessory);
+                }
             }
         }
 
