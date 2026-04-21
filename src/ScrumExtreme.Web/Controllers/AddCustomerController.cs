@@ -75,5 +75,19 @@ public class AddCustomerController : Controller
 
         return View(customer);
     }
+
+    [HttpDelete("DeleteCustomer/{id}")]
+    public async Task<IActionResult> DeleteCustomer(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest();
+
+        var customer = await _userService.GetByIdAsync(id);
+        if (customer == null)
+            return NotFound();
+
+        await _userService.DeleteUserAsync(id);
+        return Ok();
+    }
 }
 

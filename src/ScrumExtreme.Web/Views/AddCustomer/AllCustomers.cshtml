@@ -53,6 +53,9 @@
                             <div class="admin-customer-meta">
                                 <span class="admin-customer-country">@c.Country</span>
                                 <span class="admin-customer-arrow">›</span>
+                                <button class="customer-delete-btn" data-customer-id="@c.Id"
+                                        data-customer-name="@c.FirstName @c.LastName"
+                                        title="Ta bort @c.FirstName @c.LastName">✕</button>
                             </div>
                         </a>
                     }
@@ -93,5 +96,39 @@
 
             sortRows('newest');
         })();
+    </script>
+
+    <script>
+        // ── Kunder: delete
+        document.querySelector('.admin-customer-list').addEventListener('click', async function (e) {
+            const btn = e.target.closest('.customer-delete-btn');
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = btn.dataset.customerId;
+            const name = btn.dataset.customerName;
+
+            if (!confirm(`Ta bort kunden "${name}"? Åtgärden kan inte ångras.`)) return;
+
+            try {
+                const res = await fetch(`/AddCustomer/DeleteCustomer/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+
+                const row = btn.closest('.admin-customer-row');
+                row.remove();
+
+                const remaining = document.querySelectorAll('.admin-customer-row').length;
+                const badge = document.querySelector('.admin-customer-count');
+                if (badge) badge.textContent = remaining;
+
+                if (remaining === 0) {
+                    document.querySelector('.admin-customer-list')
+                        .innerHTML = '<span class="admin-list-placeholder">Inga kunder hittades.</span>';
+                }
+            } catch {
+                alert('Kunde inte ta bort kunden. Försök igen.');
+            }
+        });
     </script>
 }

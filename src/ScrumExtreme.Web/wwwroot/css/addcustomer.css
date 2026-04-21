@@ -457,6 +457,28 @@
   transform: translateX(2px);
 }
 
+.customer-delete-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #3a3a3a;
+  font-size: 0.8rem;
+  line-height: 1;
+  padding: 0.22rem 0.42rem;
+  cursor: pointer;
+  transition:
+    color 0.18s,
+    border-color 0.18s,
+    background 0.18s;
+  flex-shrink: 0;
+}
+
+.customer-delete-btn:hover {
+  color: #ff453a;
+  border-color: rgba(255, 69, 58, 0.35);
+  background: rgba(255, 69, 58, 0.07);
+}
+
 /* ── Customer details page ── */
 .detail-back-link {
   display: inline-flex;
