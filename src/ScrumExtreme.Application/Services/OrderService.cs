@@ -32,4 +32,14 @@ public class OrderService : IOrderService
 
     public async Task DeleteOrderAsync(string id) =>
         await _repository.DeleteAsync(id);
+
+    public async Task<IEnumerable<Order>> GetPendingOrdersAsync()
+    {
+        var all = await _repository.GetAllAsync();
+        return all.Where(o => o.Status == OrderStatus.Pending);
+    }
+    public async Task UpdateAsync(Order order)
+    {
+        await _repository.UpdateAsync(order.Id, order);
+    }
 }

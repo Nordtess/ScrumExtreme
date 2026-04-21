@@ -1,0 +1,102 @@
+﻿@model List<ScrumExtreme.Web.Models.MaterialSummaryViewModel>
+
+@{
+	ViewData["Title"] = "Materialöversikt";
+}
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/materialsummary.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+	@if (TempData["Success"] != null)
+	{
+		<p class="admin-toast">@TempData["Success"]</p>
+	}
+
+	<div class="admin-page-header">
+		<h1 class="admin-page-title">Materialöversikt</h1>
+		<p class="admin-page-subtitle">
+			Översikt av material som krävs för ordrar som väntar på utskrift
+		</p>
+	</div>
+
+	<div class="admin-layout">
+
+		<div class="admin-panel">
+
+			<div class="admin-panel-header">
+				<h2 class="admin-panel-title">
+					<span class="admin-panel-dot"></span>
+					Material i behov
+
+					@if (Model != null)
+					{
+						<span class="admin-customer-count">@Model.Count()</span>
+					}
+				</h2>
+			</div>
+
+			<div class="admin-panel-body">
+
+				@if (Model == null || !Model.Any())
+				{
+					<span class="admin-list-placeholder">
+						Inga material hittades för väntande ordrar.
+					</span>
+				}
+				else
+				{
+					<div class="admin-customer-list">
+
+						@foreach (var item in Model)
+						{
+							<div class="admin-customer-row">
+
+								<span class="admin-customer-name">
+									@item.MaterialName
+								</span>
+
+								<span class="admin-customer-count">
+									@item.TotalQuantity
+								</span>
+
+							</div>
+						}
+
+					</div>
+				}
+
+			</div>
+		</div>
+
+		<div class="admin-panel">
+
+			<div class="admin-panel-header">
+				<h2 class="admin-panel-title">
+					<span class="admin-panel-dot"></span>
+					Bekräftelse
+				</h2>
+			</div>
+
+			<div class="admin-panel-body">
+
+				<p class="admin-field-hint">
+					Säkerställ att du har skrivit ut materiallistan, sedan bekräftar du genom knappen nedan
+				</p>
+
+				<form asp-action="ConfirmPrinted" method="post" class="admin-submit-area">
+
+					<button type="submit" class="admin-btn-primary">
+						Markera som utskriven
+					</button>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

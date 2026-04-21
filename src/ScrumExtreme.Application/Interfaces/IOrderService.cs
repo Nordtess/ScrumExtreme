@@ -9,4 +9,6 @@ public interface IOrderService
     Task<Order?> GetByIdAsync(string id);
     Task<IEnumerable<Order>> GetByUserIdAsync(string userId);
     Task DeleteOrderAsync(string id);
+    Task<IEnumerable<Order>> GetPendingOrdersAsync();
+    Task UpdateAsync(Order order);
 }
