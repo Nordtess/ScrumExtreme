@@ -29,6 +29,9 @@ namespace ScrumExtreme.Application.Services
 
         public async Task UpdateHatAsync(Hats hat) =>
             await _repository.UpdateAsync(hat.Id, hat);
+
+        public async Task DeleteHatAsync(string id) =>
+            await _repository.DeleteAsync(id);
     }
 
 

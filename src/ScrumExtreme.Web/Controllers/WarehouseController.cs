@@ -125,6 +125,20 @@ public class WarehouseController : Controller
         return Ok(new { success = true, materialStocks = updatedMaterialStocks });
     }
 
+    [HttpDelete("DeleteHat/{id}")]
+    public async Task<IActionResult> DeleteHat(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return BadRequest(new { error = "Ogiltigt id." });
+
+        var hat = await _hatService.GetByIdAsync(id);
+        if (hat == null)
+            return NotFound(new { error = "Hatten hittades inte." });
+
+        await _hatService.DeleteHatAsync(id);
+        return Ok(new { success = true });
+    }
+
     [HttpPost("CreateItem")]
     public async Task<IActionResult> CreateItem([FromBody] CreateItemRequest req)
     {

@@ -11,5 +11,6 @@ namespace ScrumExtreme.Application.Interfaces
         Task CreateHatsAsync(Hats hats);
         Task<Hats?> GetByIdAsync(string id);
         Task UpdateHatAsync(Hats hat);
+        Task DeleteHatAsync(string id);
     }
 }
