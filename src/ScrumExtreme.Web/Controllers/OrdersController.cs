@@ -139,8 +139,7 @@ public class OrdersController : Controller
                 IsModified = i.IsModified,
                 ModificationDescription = i.ModificationDescription,
                 ItemIds = i.ItemIds,
-                AddedMaterialCost = 0,
-                ExtraWorkHours = i.ExtraWorkHours
+                AddedMaterialCost = 0
             }).ToList(),
             TotalAmount = model.Items.Sum(i => i.UnitPrice * i.Quantity)
         };

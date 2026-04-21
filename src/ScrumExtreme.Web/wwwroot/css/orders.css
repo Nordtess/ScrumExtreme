@@ -416,14 +416,11 @@
 
 /* Remove spinner arrows */
 #quantityInput::-webkit-outer-spin-button,
-#quantityInput::-webkit-inner-spin-button,
-#extraWorkHoursInput::-webkit-outer-spin-button,
-#extraWorkHoursInput::-webkit-inner-spin-button {
+#quantityInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-#quantityInput[type="number"],
-#extraWorkHoursInput[type="number"] {
+#quantityInput[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
