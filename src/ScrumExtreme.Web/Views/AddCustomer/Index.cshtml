@@ -126,10 +126,16 @@
                         {
                             foreach (var c in list)
                             {
-                                <div class="admin-customer-row">
+                                <a asp-controller="AddCustomer"
+                                   asp-action="Details"
+                                   asp-route-id="@c.Id"
+                                   class="admin-customer-row">
+
+
                                     <span class="admin-customer-name">@c.FirstName @c.LastName</span>
                                     <span class="admin-customer-country">@c.Country</span>
-                                </div>
+                                </a>
+
                             }
                         }
                     }

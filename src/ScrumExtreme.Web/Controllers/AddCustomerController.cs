@@ -3,8 +3,6 @@ using ScrumExtreme.Application.Interfaces;
 using ScrumExtreme.Domain.Entities;
 using ScrumExtreme.Web.Models;
 
-namespace ScrumExtreme.Web.Controllers;
-
 [Route("AddCustomer")]
 public class AddCustomerController : Controller
 {
@@ -57,4 +55,17 @@ public class AddCustomerController : Controller
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
         return RedirectToAction(nameof(Index));
     }
+
+    // Ny kod
+    [HttpGet("Details/{id}")]
+    public async Task<IActionResult> Details(string id)
+    {
+        var customer = await _userService.GetByIdAsync(id);
+
+        if (customer == null)
+            return NotFound();
+
+        return View(customer);
+    }
 }
+
