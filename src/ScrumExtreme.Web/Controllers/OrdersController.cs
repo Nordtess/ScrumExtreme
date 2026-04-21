@@ -197,10 +197,15 @@ public class OrdersController : Controller
         }
         var user = await _userService.GetByIdAsync(order.UserId);
 
+        var allItems = await _itemService.GetAllItemsAsync();
+
+        var materialDict = allItems.ToDictionary(i => i.Id, i => i.Name);
+
         var viewModel = new OrderDetailsViewModel
         {
             Order = order,
-            CustomerEmail = user?.Email ?? "Okänd kund"
+            CustomerEmail = user?.Email ?? "Okänd kund",
+            MaterialNames = materialDict
         };
         return View(viewModel);
     }

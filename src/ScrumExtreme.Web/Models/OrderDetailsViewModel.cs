@@ -6,5 +6,6 @@ namespace ScrumExtreme.Web.Models
     {
         public required Order Order { get; set; }
         public required string CustomerEmail { get; set; }
+        public Dictionary<string, string> MaterialNames { get; set; } = new Dictionary<string, string>();
     }
 }
