@@ -31,8 +31,6 @@ public class OrderItem
     [BsonElement("addedMaterialCost")] 
     public double AddedMaterialCost { get; set; }
 
-    [BsonElement("extraWorkHours")]
-    public double ExtraWorkHours { get; set; }
     [BsonElement("customHat")]
     public SpecialHats? SpecialHats { get; set; }
 

@@ -167,12 +167,6 @@
                             </div>
                         </div>
 
-                        <div class="admin-field-row --single">
-                            <div class="admin-field">
-                                <label for="extraWorkHoursInput">Extra timmar</label>
-                                <input type="number" id="extraWorkHoursInput" min="0" step="0.5" value="0" />
-                            </div>
-                        </div>
                     </div>
 
                     <div class="admin-submit-area">
@@ -240,11 +234,10 @@
                 const createOrderError = document.getElementById('createOrderError');
                 const isModifiedInput = document.getElementById('isModifiedInput');
                 const modificationDescriptionInput = document.getElementById('modificationDescriptionInput');
-                const extraWorkHoursInput = document.getElementById('extraWorkHoursInput');
                 const modifiedHatFields = document.getElementById('modifiedHatFields');
                 const modifyHint = document.getElementById('modifyHint');
 
-                let cart = []; // { hatId, name, unitPrice, hatBasePrice, itemCost, size, quantity, maxStock, isModified, modificationDescription, itemIds, extraWorkHours }
+                let cart = []; // { hatId, name, unitPrice, hatBasePrice, itemCost, size, quantity, maxStock, isModified, modificationDescription, itemIds }
 
                 // --- Hat select: populate sizes with stock ---
                 hatSelect.addEventListener('change', () => {
@@ -322,7 +315,7 @@
                 function updateModifyHint() {
                     const qty = parseInt(quantityInput.value, 10) || 1;
                     if (isModifiedInput.checked && qty > 1) {
-                        modifyHint.textContent = `Modifieringen gäller alla ${qty} hattar – tillbehör och timmar multipliceras × ${qty}.`;
+                        modifyHint.textContent = `Modifieringen gäller alla ${qty} hattar – tillbehör multipliceras × ${qty}.`;
                         modifyHint.style.display = '';
                     } else {
                         modifyHint.style.display = 'none';
@@ -416,8 +409,7 @@
                     const selectedItems = getSelectedItems();
                     const itemCost = selectedItems.reduce((sum, i) => sum + i.price, 0);
                     const hatBasePrice = parseFloat(opt.dataset.price);
-                    const extraHours = parseFloat(extraWorkHoursInput.value || '0');
-                    const hoursCost = extraHours * 200;
+
 
                     cart.push({
                         hatId,
@@ -425,22 +417,19 @@
                         size,
                         quantity: qty,
                         maxStock,
-                        unitPrice: hatBasePrice + itemCost + hoursCost,
+                        unitPrice: hatBasePrice + itemCost,
                         hatBasePrice,
                         itemCost,
                         items: selectedItems, // full objects: { id, name, price }
                         isModified: isModifiedInput.checked,
                         modificationDescription: modificationDescriptionInput.value.trim(),
-                        itemIds: selectedItems.map(i => i.id),
-                        extraWorkHours: extraHours,
-                        hoursCost
+                        itemIds: selectedItems.map(i => i.id)
                     });
 
                     // Nollställ modifieringsfält
                     isModifiedInput.checked = false;
                     toggleModifiedHatFields();
                     modificationDescriptionInput.value = '';
-                    extraWorkHoursInput.value = '0';
                     document.querySelectorAll('#itemsList .order-item-cb').forEach(cb => cb.checked = false);
 
                     renderCart();
@@ -484,18 +473,6 @@
                             </div>`;
                         });
 
-                        // Work hours
-                        if (h.extraWorkHours > 0) {
-                            const hoursTotal = h.hoursCost * h.quantity;
-                            const hoursLabel = h.quantity > 1
-                                ? `Extra timmar (${h.extraWorkHours}h × 200 kr × ${h.quantity})`
-                                : `Extra timmar (${h.extraWorkHours}h × 200 kr)`;
-                            html += `
-                            <div class="order-hat-row order-hat-sub">
-                                <span>${hoursLabel}</span>
-                                <span class="order-hat-item-price">${Math.round(hoursTotal)} kr</span>
-                            </div>`;
-                        }
 
                         // Total line for this hat
                         html += `
@@ -533,7 +510,7 @@
                             customerId: customerSelect.value,
                             items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice,
                              isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds,
-                             addedMaterialCost: 0, extraWorkHours: h.extraWorkHours
+                             addedMaterialCost: 0
                             }))
                         };
                         const resp = await fetch('/Orders/Create', {
