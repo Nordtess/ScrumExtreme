@@ -1,0 +1,97 @@
+@model IEnumerable<ScrumExtreme.Domain.Entities.User>
+@{
+    ViewData["Title"] = "Alla kunder";
+    var list = (Model ?? Enumerable.Empty<ScrumExtreme.Domain.Entities.User>()).ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper --narrow">
+
+    @if (TempData["Success"] != null)
+    {
+        <p class="admin-toast">@TempData["Success"]</p>
+    }
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Alla kunder</h1>
+        <p class="admin-page-subtitle">Översikt och hantering av alla kunder i systemet</p>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">
+                <span class="admin-panel-dot"></span>Kundlista
+                <span class="admin-customer-count">@list.Count</span>
+            </h2>
+            <a asp-controller="AddCustomer" asp-action="Index" class="admin-panel-btn">Lägg till kund →</a>
+        </div>
+        <div class="admin-panel-body">
+            <div class="customer-sort-bar">
+                <span class="customer-sort-label">Sortera:</span>
+                <button class="customer-sort-pill active" data-sort="newest">Senast skapad</button>
+                <button class="customer-sort-pill" data-sort="oldest">Tidigast skapad</button>
+                <button class="customer-sort-pill" data-sort="name">Namn A–Ö</button>
+            </div>
+            <div class="admin-customer-list">
+                @if (list.Count == 0)
+                {
+                    <span class="admin-list-placeholder">Inga kunder hittades.</span>
+                }
+                else
+                {
+                    foreach (var c in list)
+                    {
+                        <a asp-controller="AddCustomer" asp-action="Details" asp-route-id="@c.Id" class="admin-customer-row"
+                               data-created="@c.CreatedAt.ToString("o")" data-name="@c.LastName @c.FirstName">
+                            <div class="admin-customer-info">
+                                <span class="admin-customer-name">@c.FirstName @c.LastName</span>
+                                <span class="admin-customer-email">@c.Email</span>
+                            </div>
+                            <div class="admin-customer-meta">
+                                <span class="admin-customer-country">@c.Country</span>
+                                <span class="admin-customer-arrow">›</span>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const pills = document.querySelectorAll('.customer-sort-pill');
+            const list = document.querySelector('.admin-customer-list');
+
+            function sortRows(mode) {
+                const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
+                rows.sort((a, b) => {
+                    if (mode === 'newest') {
+                        return new Date(b.dataset.created) - new Date(a.dataset.created);
+                    } else if (mode === 'oldest') {
+                        return new Date(a.dataset.created) - new Date(b.dataset.created);
+                    } else {
+                        return a.dataset.name.localeCompare(b.dataset.name, 'sv');
+                    }
+                });
+                rows.forEach(r => list.appendChild(r));
+            }
+
+            pills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    pills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    sortRows(pill.dataset.sort);
+                });
+            });
+
+            sortRows('newest');
+        })();
+    </script>
+}

@@ -17,19 +17,22 @@ public class AddCustomerController : Controller
 
     [HttpGet("")]
     [HttpGet("/")]
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        var users = await _userService.GetAllUsersAsync();
-        ViewBag.Customers = users;
         return View(new CreateCustomerViewModel());
     }
 
-    [HttpPost("HamtaAllaKunder")]
-    public async Task<IActionResult> HamtaAllaKunder()
+    [HttpGet("AllCustomers")]
+    public async Task<IActionResult> AllCustomers()
     {
         var users = await _userService.GetAllUsersAsync();
-        ViewBag.Customers = users;
-        return View("Index", new CreateCustomerViewModel());
+        return View(users);
+    }
+
+    [HttpPost("HamtaAllaKunder")]
+    public IActionResult HamtaAllaKunder()
+    {
+        return RedirectToAction(nameof(AllCustomers));
     }
 
     [HttpPost("SkapaKund")]
@@ -55,7 +58,7 @@ public class AddCustomerController : Controller
 
         await _userService.CreateUserAsync(user);
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AllCustomers));
     }
 
     // Ny kod
