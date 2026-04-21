@@ -29,6 +29,7 @@ builder.Services.AddScoped<IHatService, HatsService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<IMaterialService, MaterialService>();
 
 var app = builder.Build();
 

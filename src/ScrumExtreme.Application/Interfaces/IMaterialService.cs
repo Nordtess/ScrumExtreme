@@ -7,7 +7,8 @@ namespace ScrumExtreme.Application.Interfaces
 {
     public interface IMaterialService
     {
-        Task<IEnumerable<Material>> GetMaterialsAsync();    
+        Task<IEnumerable<Material>> GetMaterialsAsync();
+        Task<IEnumerable<Material>> GetAllMaterialsAsync();
         Task CreateMaterialAsync(Material material);
 
     }

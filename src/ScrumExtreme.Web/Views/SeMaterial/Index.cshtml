@@ -1,0 +1,80 @@
+﻿@using System.Linq
+@model IEnumerable<ScrumExtreme.Domain.Entities.Material>
+
+@{
+    ViewData["Title"] = "Materialhantering";
+    var searchValue = Context.Request.Query["search"].ToString();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Materialhantering</h1>
+        <p class="admin-page-subtitle">Se allt material och sök efter specifikt material</p>
+    </div>
+
+    <div class="admin-layout">
+
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Materiallista
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+
+                <form method="get" class="admin-form">
+                    <div class="admin-field-row">
+                        <div class="admin-field">
+                            <label for="search">Sök material</label>
+                            <input type="text"
+                                   id="search"
+                                   name="search"
+                                   value="@searchValue"
+                                   placeholder="T.ex. Bomull" />
+                        </div>
+                    </div>
+
+                    <div class="admin-submit-area">
+                        <button type="submit" class="admin-btn-primary">Sök</button>
+                    </div>
+                </form>
+
+                <br />
+
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Namn</th>
+                                <th>Pris</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var material in Model)
+                            {
+                                <tr>
+                                    <td>@material.Name</td>
+                                    <td>@material.Price kr</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Inga material hittades.</p>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

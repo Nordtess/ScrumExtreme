@@ -13,9 +13,13 @@ public class MaterialService : IMaterialService
         _repository = repository;
     }
 
+
     public async Task<IEnumerable<Material>> GetMaterialsAsync() =>
         await _repository.GetAllAsync();
 
     public async Task CreateMaterialAsync(Material material) =>
         await _repository.AddAsync(material);
+
+    public async Task<IEnumerable<Material>> GetAllMaterialsAsync() =>
+        await _repository.GetAllAsync();
 }
