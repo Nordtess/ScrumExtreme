@@ -7,27 +7,32 @@ using ScrumExtreme.Web.Models;
 public class AddCustomerController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IOrderService _orderService;
 
-    public AddCustomerController(IUserService userService)
+    public AddCustomerController(IUserService userService, IOrderService orderService)
     {
         _userService = userService;
+        _orderService = orderService;
     }
 
     [HttpGet("")]
     [HttpGet("/")]
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        var users = await _userService.GetAllUsersAsync();
-        ViewBag.Customers = users;
         return View(new CreateCustomerViewModel());
     }
 
-    [HttpPost("HamtaAllaKunder")]
-    public async Task<IActionResult> HamtaAllaKunder()
+    [HttpGet("AllCustomers")]
+    public async Task<IActionResult> AllCustomers()
     {
         var users = await _userService.GetAllUsersAsync();
-        ViewBag.Customers = users;
-        return View("Index", new CreateCustomerViewModel());
+        return View(users);
+    }
+
+    [HttpPost("HamtaAllaKunder")]
+    public IActionResult HamtaAllaKunder()
+    {
+        return RedirectToAction(nameof(AllCustomers));
     }
 
     [HttpPost("SkapaKund")]
@@ -53,7 +58,7 @@ public class AddCustomerController : Controller
 
         await _userService.CreateUserAsync(user);
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AllCustomers));
     }
 
     // Ny kod
@@ -65,7 +70,24 @@ public class AddCustomerController : Controller
         if (customer == null)
             return NotFound();
 
+        var orders = await _orderService.GetByUserIdAsync(id);
+        ViewBag.Orders = orders;
+
         return View(customer);
+    }
+
+    [HttpDelete("DeleteCustomer/{id}")]
+    public async Task<IActionResult> DeleteCustomer(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest();
+
+        var customer = await _userService.GetByIdAsync(id);
+        if (customer == null)
+            return NotFound();
+
+        await _userService.DeleteUserAsync(id);
+        return Ok();
     }
 }
 

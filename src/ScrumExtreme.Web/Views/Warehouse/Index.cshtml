@@ -76,6 +76,7 @@
                                 <span class="warehouse-material-hint" data-material="@hat.MaterialList"
                                       style="display:none;"></span>
                             }
+                            <button class="warehouse-delete-hat-btn" data-hat-id="@hat.Id" title="Ta bort @hat.Name">✕</button>
                         </div>
                     </div>
                 }
@@ -96,8 +97,8 @@
 
         <div class="warehouse-add-row">
             <input id="new-material-name" type="text" placeholder="Namn" class="warehouse-text-input" maxlength="100" />
-            <input id="new-material-stock" type="number" min="0" step="1" placeholder="Antal" class="warehouse-simple-input"
-                   inputmode="numeric" pattern="[0-9]*" />
+            <input id="new-material-stock" type="number" min="0" step="1" placeholder="Antal"
+                   class="warehouse-simple-input" inputmode="numeric" pattern="[0-9]*" />
             <input id="new-material-price" type="number" min="0" step="1" placeholder="Pris/st"
                    class="warehouse-simple-input" inputmode="numeric" pattern="[0-9]*" />
             <button id="add-material-btn" class="warehouse-save-btn --small">Lägg till</button>
@@ -121,7 +122,8 @@
                     <input class="warehouse-price-input" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*"
                            value="@((int)mat.Price)" aria-label="Pris @mat.Name" />
                     <span class="warehouse-list-total">@((mat.Stock * (int)mat.Price).ToString()) kr</span>
-                    <button class="warehouse-delete-material-btn" data-material-id="@mat.Id" title="Ta bort @mat.Name">✕</button>
+                    <button class="warehouse-delete-material-btn" data-material-id="@mat.Id"
+                            title="Ta bort @mat.Name">✕</button>
                 </div>
             }
             <div class="warehouse-list-footer">
@@ -506,13 +508,13 @@
                         newRow.className = 'warehouse-list-row';
                         newRow.dataset.itemId = data.id;
                         newRow.innerHTML = `
-                                    <span class="warehouse-list-name">${data.name}</span>
-                                    <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
-                                           inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
-                                    <input class="warehouse-price-input" type="number" min="0" step="1"
-                                           inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
-                                    <span class="warehouse-list-total">${stock * price} kr</span>
-                                    <button class="warehouse-delete-btn" data-item-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
+                                        <span class="warehouse-list-name">${data.name}</span>
+                                        <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                                               inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
+                                        <input class="warehouse-price-input" type="number" min="0" step="1"
+                                               inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
+                                        <span class="warehouse-list-total">${stock * price} kr</span>
+                                        <button class="warehouse-delete-btn" data-item-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
                         list.insertBefore(newRow, footer);
 
                         wireDeleteBtn(newRow.querySelector('.warehouse-delete-btn'));
@@ -541,6 +543,27 @@
                 }
             });
         }
+
+        // ── Hattar: delete ──────────────────────────────────────────────────
+        document.querySelectorAll('.warehouse-delete-hat-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const hatId = btn.dataset.hatId;
+                if (!confirm('Ta bort hatten permanent?')) return;
+                try {
+                    const res = await fetch(`/Warehouse/DeleteHat/${hatId}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        btn.closest('.warehouse-card').remove();
+                        const count = document.querySelectorAll('.warehouse-section[data-section="hats"] .warehouse-card').length;
+                        const countEl = document.querySelector('.warehouse-section[data-section="hats"] .warehouse-section-count');
+                        if (countEl) countEl.textContent = count + ' st';
+                    } else {
+                        alert('Kunde inte ta bort hatten.');
+                    }
+                } catch {
+                    alert('Nätverksfel vid borttagning.');
+                }
+            });
+        });
 
         // ── Material: delete ────────────────────────────────────────────────
         function wireDeleteMaterialBtn(btn) {
@@ -651,13 +674,13 @@
                         newRow.className = 'warehouse-list-row';
                         newRow.dataset.materialId = data.id;
                         newRow.innerHTML = `
-                            <span class="warehouse-list-name">${data.name}</span>
-                            <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
-                                   inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
-                            <input class="warehouse-price-input" type="number" min="0" step="1"
-                                   inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
-                            <span class="warehouse-list-total">${stock * price} kr</span>
-                            <button class="warehouse-delete-material-btn" data-material-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
+                                <span class="warehouse-list-name">${data.name}</span>
+                                <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                                       inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
+                                <input class="warehouse-price-input" type="number" min="0" step="1"
+                                       inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
+                                <span class="warehouse-list-total">${stock * price} kr</span>
+                                <button class="warehouse-delete-material-btn" data-material-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
                         list.insertBefore(newRow, footer);
 
                         wireDeleteMaterialBtn(newRow.querySelector('.warehouse-delete-material-btn'));
