@@ -1,11 +1,129 @@
 ﻿@model ScrumExtreme.Domain.Entities.User
+@using ScrumExtreme.Domain.Entities
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+    var orders = (ViewBag.Orders as IEnumerable<Order> ?? Enumerable.Empty<Order>())
+                 .OrderByDescending(o => o.OrderDate)
+                 .ToList();
+}
 
-<h2>Kunddetaljer</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
 
-<p>@Model.FirstName @Model.LastName</p>
-<p>@Model.Email</p>
-<p>@Model.Address</p>
-<p>@Model.City</p>
-<p>@Model.Country</p>
-<p>@Model.PhoneNumber</p>
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <a asp-controller="AddCustomer" asp-action="Index" class="detail-back-link">← Alla kunder</a>
+        <h1 class="admin-page-title">@Model.FirstName @Model.LastName</h1>
+        <p class="admin-page-subtitle">Kundprofil · Registrerad @Model.CreatedAt.ToString("d MMMM yyyy", new
+                        System.Globalization.CultureInfo("sv-SE"))</p>
+        </div>
+
+        <div class="detail-layout">
+
+            <!-- Left: contact info -->
+            <div class="admin-panel">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title">
+                        <span class="admin-panel-dot"></span>Kontaktinformation
+                    </h2>
+                </div>
+                <div class="admin-panel-body">
+
+                    <div class="detail-field-group">
+                        <span class="detail-label">Namn</span>
+                        <span class="detail-value">@Model.FirstName @Model.LastName</span>
+                    </div>
+
+                    <div class="detail-field-group">
+                        <span class="detail-label">E-post</span>
+                        <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.Email) ? "—" : Model.Email)</span>
+                    </div>
+
+                    <div class="detail-field-group">
+                        <span class="detail-label">Telefonnummer</span>
+                        <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" :
+                                                    Model.PhoneNumber)</span>
+                        </div>
+
+                        <div class="detail-field-group">
+                            <span class="detail-label">Gatuadress</span>
+                            <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</span>
+                        </div>
+
+                        <div class="detail-field-group">
+                            <span class="detail-label">Postnummer &amp; Stad</span>
+                            <span class="detail-value">
+                                @if (!string.IsNullOrWhiteSpace(Model.PostalCode) || !string.IsNullOrWhiteSpace(Model.City))
+                                {
+                                    @($"{Model.PostalCode} {Model.City}".Trim())
+                                }
+                                else
+                                {
+                                    <span>—</span>
+                                }
+                            </span>
+                        </div>
+
+                        <div class="detail-field-group">
+                            <span class="detail-label">Land</span>
+                            <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.Country) ? "—" : Model.Country)</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right: orders -->
+                <div class="admin-panel">
+                    <div class="admin-panel-header">
+                        <h2 class="admin-panel-title">
+                            <span class="admin-panel-dot"></span>Ordrar
+                            <span class="admin-customer-count">@orders.Count</span>
+                        </h2>
+                        <a asp-controller="Orders" asp-action="Create" class="admin-panel-btn">Ny order →</a>
+                    </div>
+                    <div class="admin-panel-body">
+                        <div class="admin-customer-list">
+                            @if (orders.Count == 0)
+                            {
+                                <span class="admin-list-placeholder">Inga ordrar för denna kund.</span>
+                            }
+                            else
+                            {
+                                foreach (var order in orders)
+                                {
+                                    var statusClass = order.Status.ToString().ToLower();
+                                    var statusLabel = order.Status switch
+                                    {
+                                        OrderStatus.Pending => "Väntar",
+                                        OrderStatus.Processing => "Påbörjad",
+                                        OrderStatus.Printed => "Utskriven",
+                                        OrderStatus.Shipped => "Skickad",
+                                        OrderStatus.Delivered => "Levererad",
+                                        OrderStatus.Cancelled => "Avbruten",
+                                        _ => order.Status.ToString()
+                                    };
+
+                                    <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="detail-order-row">
+                                        <div class="detail-order-info">
+                                            <span class="detail-order-number">#@order.OrderNumber</span>
+                                            <span class="detail-order-date">@order.OrderDate.ToString("d MMM yyyy", new
+                                                                                System.Globalization.CultureInfo("sv-SE"))</span>
+                                            </div>
+                                            <div class="detail-order-right">
+                                                <span class="detail-order-amount">@order.TotalAmount.ToString("C", new
+                                                                                    System.Globalization.CultureInfo("sv-SE"))</span>
+                                                    <span class="detail-status-badge @statusClass">@statusLabel</span>
+                                                </div>
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
 

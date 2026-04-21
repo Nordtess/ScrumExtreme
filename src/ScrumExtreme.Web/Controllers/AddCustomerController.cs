@@ -7,10 +7,12 @@ using ScrumExtreme.Web.Models;
 public class AddCustomerController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IOrderService _orderService;
 
-    public AddCustomerController(IUserService userService)
+    public AddCustomerController(IUserService userService, IOrderService orderService)
     {
         _userService = userService;
+        _orderService = orderService;
     }
 
     [HttpGet("")]
@@ -64,6 +66,9 @@ public class AddCustomerController : Controller
 
         if (customer == null)
             return NotFound();
+
+        var orders = await _orderService.GetByUserIdAsync(id);
+        ViewBag.Orders = orders;
 
         return View(customer);
     }
