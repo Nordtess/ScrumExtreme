@@ -8,6 +8,7 @@ public enum OrderStatus
 {
     Pending,
     Processing,
+    Printed,
     Shipped,
     Delivered,
     Cancelled
@@ -23,12 +24,12 @@ public class Order : BaseEntity
     public DateTime OrderDate { get; set; }
 
     // Vi mappar databasens "customerId" till koden "UserId"
-    // VIKTIGT: Använd "customerId" i BsonElement så det matchar MongoDB Atlas!
+    // VIKTIGT: Anvï¿½nd "customerId" i BsonElement sï¿½ det matchar MongoDB Atlas!
     [BsonElement("customerId")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; set; } = string.Empty;
 
-    // Här fixar vi status-felet: Vi använder Enum men lagrar som sträng
+    // Hï¿½r fixar vi status-felet: Vi anvï¿½nder Enum men lagrar som strï¿½ng
     [BsonElement("status")]
     [BsonRepresentation(BsonType.String)]
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
