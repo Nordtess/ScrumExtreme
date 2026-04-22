@@ -12,11 +12,9 @@
 .login-logo {
   width: 100%;
   max-width: 420px;
-  height: 100px;
+  height: auto;
   margin-bottom: 1.75rem;
   display: block;
-  object-fit: cover;
-  object-position: center;
 }
 
 .login-card {
