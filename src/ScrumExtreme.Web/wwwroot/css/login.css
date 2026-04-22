@@ -9,6 +9,16 @@
   width: 100%;
 }
 
+.login-logo {
+  width: 100%;
+  max-width: 420px;
+  height: 100px;
+  margin-bottom: 1.75rem;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
 .login-card {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -140,6 +150,103 @@
 
 .login-btn:active {
   transform: translateY(0);
+}
+
+/* ── Show-password checkbox ── */
+.login-show-password {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  margin-top: 0.1rem;
+}
+
+.login-show-password input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.login-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  background: #fff;
+  flex-shrink: 0;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.login-show-password input[type="checkbox"]:checked + .login-checkbox-box {
+  background: #c9a84c;
+  border-color: #c9a84c;
+}
+
+.login-show-password
+  input[type="checkbox"]:checked
+  + .login-checkbox-box::after {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.login-show-password:hover .login-checkbox-box {
+  border-color: #c9a84c;
+}
+
+.login-checkbox-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Quick-fill buttons ── */
+.login-quickfill {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-quickfill-btn {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 7px;
+  color: #777;
+  font-size: 0.72rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.login-quickfill-btn:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+  background: rgba(201, 168, 76, 0.06);
 }
 
 /* ── Footer link ── */

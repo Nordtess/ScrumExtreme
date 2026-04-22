@@ -26,7 +26,7 @@ public class AddCustomerController : Controller
     public async Task<IActionResult> AllCustomers()
     {
         var users = await _userService.GetAllUsersAsync();
-        return View(users);
+        return View(users.Where(u => u.Role == "customer"));
     }
 
     [HttpPost("HamtaAllaKunder")]
