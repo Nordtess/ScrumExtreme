@@ -4,10 +4,22 @@ using ScrumExtreme.Application.Interfaces;
 using ScrumExtreme.Application.Services;
 using ScrumExtreme.Domain.Interfaces;
 using ScrumExtreme.Infrastructure.Repositories;
+using ScrumExtreme.Web.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(8);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AuthFilter>();
+});
 
 // Register MongoDB
 var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
@@ -39,12 +51,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSession();
 app.UseRouting();
 app.UseAuthorization();
 app.MapStaticAssets();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=AddCustomer}/{action=Index}/{id?}")
+    pattern: "{controller=Login}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 // Ping MongoDB on startup to confirm connection

@@ -15,7 +15,8 @@ public class User : BaseEntity
     [BsonElement("countryCode")] public string CountryCode { get; set; } = string.Empty;
     [BsonElement("country")] public string Country { get; set; } = string.Empty;
     [BsonElement("phonenumber")] public string PhoneNumber { get; set; } = string.Empty;
-    [BsonElement("isAdmin")] public bool IsAdmin { get; set; } = false;
-    [BsonElement("isEmployee")] public bool IsEmployee { get; set; } = false;
+    [BsonElement("username")] public string Username { get; set; } = string.Empty;
+    [BsonElement("passwordHash")] public string PasswordHash { get; set; } = string.Empty;
+    [BsonElement("role")] public string Role { get; set; } = "customer";
     [BsonElement("createdAt")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

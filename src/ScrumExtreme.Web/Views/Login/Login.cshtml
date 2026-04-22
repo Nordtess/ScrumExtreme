@@ -7,12 +7,12 @@
 }
 
 <div class="login-wrapper">
+    <img src="~/images/ottoshattshop2.png" class="login-logo" alt="Hattmakaren AB" />
     <div class="login-card">
 
         <div class="login-brand">
             <span class="login-brand-dot"></span>
             <h2 class="login-title">Logga in</h2>
-            <p class="login-subtitle">Hattmakaren AB</p>
         </div>
 
         <div class="login-divider"></div>
@@ -28,14 +28,43 @@
                 <input type="password" id="password" name="password" placeholder="Ditt lösenord" required
                        autocomplete="current-password">
             </div>
+            <label class="login-show-password">
+                <input type="checkbox" id="showPassword">
+                <span class="login-checkbox-box"></span>
+                <span class="login-checkbox-label">Visa lösenord</span>
+            </label>
             <button type="submit" class="login-btn" id="loginBtn">Logga in</button>
         </form>
 
         <p class="login-footer">Inget konto? Placera dig i kö hos SysAdmin.</p>
 
     </div>
+
+    <div class="login-quickfill">
+        <button type="button" class="login-quickfill-btn"
+                onclick="quickFill('anstallda1','password123')">Anställd</button>
+        <button type="button" class="login-quickfill-btn" onclick="quickFill('admin','letmeinordie')">Admin</button>
+    </div>
 </div>
 
 @section Scripts {
     <script src="~/js/login.js" asp-append-version="true"></script>
+    <script>
+        // Show/hide password toggle
+        document.getElementById('showPassword').addEventListener('change', function () {
+            document.getElementById('password').type = this.checked ? 'text' : 'password';
+        });
+
+        // Quick-fill credentials
+        function quickFill(user, pass) {
+            document.getElementById('username').value = user;
+            document.getElementById('password').value = pass;
+            // Uncheck show-password so it stays hidden after fill
+            var cb = document.getElementById('showPassword');
+            if (cb.checked) {
+                cb.checked = false;
+                document.getElementById('password').type = 'password';
+            }
+        }
+    </script>
 }

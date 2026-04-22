@@ -1,11 +1,27 @@
 ﻿@model ScrumExtreme.Web.Models.SpecialHatsViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Hatthantering";
     var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
+    var customersJson = JsonSerializer.Serialize(
+        customers?.Select(c => new
+        {
+            id = c.Id,
+            name = c.FirstName + " " + c.LastName,
+            email = c.Email,
+            address = c.Address,
+            city = c.City,
+            postalCode = c.PostalCode,
+            country = c.Country,
+            countryCode = c.CountryCode,
+            phone = c.PhoneNumber
+        }) ?? Enumerable.Empty<object>()
+    );
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
 }
 
 <div class="admin-wrapper">
@@ -20,65 +36,54 @@
         <p class="admin-page-subtitle">Lägg till och hantera hattar i systemet</p>
     </div>
 
-    <div class="admin-layout --single">
+    <form asp-action="CreateSpecial" method="post" id="createHatForm">
+        <div class="admin-layout">
 
-        <!-- Create hat form -->
-        
-        <div class="admin-panel">
-            <div class="admin-panel-header">
-                <h2 class="admin-panel-title">
-                    <span class="admin-panel-dot"></span>Lägg en beställning på en specialhatt
-                </h2>
-            </div>
-            <div class="admin-panel-body">
-                <form asp-action="CreateSpecial" method="post" class="admin-form" id="createHatForm">
-
-                    <div class="admin-field">
-                        <label asp-for="CustomerId">Kund</label>
-
-                        <select asp-for="CustomerId" class="form-control">
-                            <option value="">-- Välj kund --</option>
-
-                            @if (customers != null && customers.Any())
-                            {
-                                foreach (var customer in customers)
-                                {
-                                    <option value="@customer.Id">
-                                        @customer.FirstName @customer.LastName (@customer.Email)
-                                    </option>
-                                }
-                            }
-                            else
-                            {
-                                <option disabled>Inga kunder tillgängliga</option>
-                            }
-                        </select>
-
-                        <span class="admin-error" asp-validation-for="CustomerId"></span>
-                    </div>
+            <div class="admin-panel">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title">
+                        <span class="admin-panel-dot"></span>Lägg en beställning på en specialhatt
+                    </h2>
+                </div>
+                <div class="admin-panel-body admin-form">
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="Name">Namn</label>
-                            <input asp-for="Name" id="Name" placeholder="T.ex. Fedora" />
-                            <span class="admin-error" id="error-Name"></span>
+                            <label asp-for="CustomerId">Kund</label>
+                            <select asp-for="CustomerId" id="CustomerId">
+                                <option value="">-- Välj kund --</option>
+                                @if (customers != null && customers.Any())
+                                {
+                                    foreach (var customer in customers)
+                                    {
+                                        <option value="@customer.Id">
+                                            @customer.FirstName @customer.LastName (@customer.Email)
+                                        </option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option disabled>Inga kunder tillgängliga</option>
+                                }
+                            </select>
+                            <span class="admin-error" asp-validation-for="CustomerId"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label>Tillgängliga storlekar</label>
+                            <label>Storlek</label>
                             <div class="size-checkbox-group" id="sizesGroup">
                                 @foreach (var size in new[] { "XS", "S", "M", "L", "XL", "XXL", "One Size" })
                                 {
-                                    var isChecked = Model.Sizes != null && Model.Sizes.Contains(size);
+                                    var isChecked = Model.Size == size;
                                     <label class="size-checkbox-label">
-                                        <input type="checkbox" name="Sizes" value="@size" @(isChecked ? "checked" : "") />
+                                        <input type="radio" name="Size" value="@size" @(isChecked ? "checked" : "") />
                                         @size
                                     </label>
                                 }
                             </div>
-                            <span class="admin-error" id="error-Sizes"></span>
+                            <span class="admin-error" asp-validation-for="Size"></span>
                         </div>
                     </div>
 
@@ -86,40 +91,206 @@
                         <div class="admin-field">
                             <label asp-for="Price">Pris (SEK)</label>
                             <input asp-for="Price" id="Price" type="number" step="0.01" min="1" />
-                            <span class="admin-error" id="error-Price"></span>
+                            <span class="admin-error" asp-validation-for="Price"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="MaterialList">Materiallista</label>
-                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull" />
-                            <span class="admin-error" id="error-MaterialList"></span>
+                            <label>Material</label>
+                            @if (Model.AvailableMaterials != null && Model.AvailableMaterials.Any())
+                            {
+                                <div class="size-checkbox-group" id="materialsGroup">
+                                    @foreach (var mat in Model.AvailableMaterials)
+                                    {
+                                        var isChecked = Model.SelectedMaterials != null &&
+                                            Model.SelectedMaterials.Contains(mat.Name);
+                                        <label class="size-checkbox-label">
+                                            <input type="checkbox" name="SelectedMaterials" value="@mat.Name"
+                                                   data-price="@mat.Price" @(isChecked ? "checked" : "") />
+                                            @mat.Name
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="admin-field-hint">Inga material tillagda ännu. Lägg till material i Lagerstatus.
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
+                            <label>Tillbehör</label>
+                            @if (Model.AvailableItems != null && Model.AvailableItems.Any())
+                            {
+                                <div class="size-checkbox-group" id="itemsGroup">
+                                    @foreach (var item in Model.AvailableItems)
+                                    {
+                                        var isChecked = Model.SelectedItems != null &&
+                                            Model.SelectedItems.Contains(item.Name);
+                                        <label class="size-checkbox-label">
+                                            <input type="checkbox" name="SelectedItems" value="@item.Name"
+                                                   data-price="@item.Price" @(isChecked ? "checked" : "") />
+                                            @item.Name
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="admin-field-hint">Inga tillbehör tillagda ännu.</p>
+                            }
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="Description">Beskrivning</label>
-                            <textarea asp-for="Description" id="Description" placeholder="Beskriv specialhatten..."></textarea>
-                            <span class="admin-error" id="error-Description"></span>
+                            <textarea asp-for="Description" id="Description"
+                                      placeholder="Beskriv specialhatten..."></textarea>
+                            <span class="admin-error" asp-validation-for="Description"></span>
                         </div>
                     </div>
 
-                    <div class="admin-submit-area">
-                        <button type="submit" class="admin-btn-primary" id="hatSubmitBtn">Skapa hatt</button>
-                        <span class="admin-submit-error" id="hatSubmitError"></span>
-                    </div>
-
-                </form>
+                </div>
             </div>
-        </div>
 
-    </div>
+            <div class="admin-panel">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title">
+                        <span class="admin-panel-dot"></span>Orderinformation
+                    </h2>
+                </div>
+                <div class="admin-panel-body">
+                    <div id="customerInfoBlock">
+                        <span class="admin-list-placeholder">Välj en kund för att se information.</span>
+                    </div>
+                    <div id="specialHatBlock" style="display:none; margin-top: 1rem;"></div>
+                    <div class="order-panel-actions">
+                        <button type="submit" class="admin-btn-primary admin-btn-auto">Skapa order</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
     <script src="~/js/admin.js" asp-append-version="true"></script>
-    <script src="~/js/createhats.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var customersData = @Html.Raw(customersJson);
+            var customerSelect = document.getElementById('CustomerId');
+            var priceInput = document.getElementById('Price');
+            var customerInfoBlock = document.getElementById('customerInfoBlock');
+            var specialHatBlock = document.getElementById('specialHatBlock');
+
+            function esc(str) {
+                var d = document.createElement('div');
+                d.textContent = str != null ? String(str) : '';
+                return d.innerHTML;
+            }
+
+            function getSelectedSize() {
+                var r = document.querySelector('input[name="Size"]:checked');
+                return r ? r.value : null;
+            }
+
+            function getSelectedMaterials() {
+                return Array.from(document.querySelectorAll('input[name="SelectedMaterials"]:checked'))
+                    .map(function (cb) { return { name: cb.value, price: parseFloat(cb.dataset.price) || 0 }; });
+            }
+
+            function getSelectedItems() {
+                return Array.from(document.querySelectorAll('input[name="SelectedItems"]:checked'))
+                    .map(function (cb) { return { name: cb.value, price: parseFloat(cb.dataset.price) || 0 }; });
+            }
+
+            function getPrice() {
+                return parseFloat(priceInput.value) || 0;
+            }
+
+            function updateSummary() {
+                var customerId = customerSelect.value;
+                var customer = customersData.find(function (c) { return c.id === customerId; });
+
+                if (!customer) {
+                    customerInfoBlock.innerHTML = '<span class="admin-list-placeholder">Välj en kund för att se information.</span>';
+                    specialHatBlock.style.display = 'none';
+                    return;
+                }
+
+                customerInfoBlock.innerHTML =
+                    '<div class="order-customer-info">' +
+                    '<p class="info-label">Kund</p>' +
+                    '<p><strong>' + esc(customer.name) + '</strong></p>' +
+                    '<p>' + esc(customer.email) + '</p>' +
+                    '<p class="info-label">Leveransadress</p>' +
+                    '<p>' + esc(customer.address) + '</p>' +
+                    '<p>' + esc(customer.postalCode) + ' ' + esc(customer.city) + '</p>' +
+                    '<p>' + esc(customer.country) + ' (' + esc(customer.countryCode) + ')</p>' +
+                    '<p class="info-label">Telefon</p>' +
+                    '<p>' + esc(customer.phone) + '</p>' +
+                    '</div>';
+
+                var size = getSelectedSize();
+                var materials = getSelectedMaterials();
+                var items = getSelectedItems();
+                var basePrice = getPrice();
+                var total = basePrice;
+
+                var subRows = '';
+                if (size) subRows += '<div class="order-hat-sub"><span>Storlek</span><span>' + esc(size) + '</span></div>';
+                materials.forEach(function (m) {
+                    total += m.price;
+                    subRows += '<div class="order-hat-sub"><span>' + esc(m.name) + '</span>' +
+                        (m.price > 0 ? '<span class="order-hat-item-price">' + m.price.toFixed(2) + ' kr</span>' : '') + '</div>';
+                });
+                items.forEach(function (i) {
+                    total += i.price;
+                    subRows += '<div class="order-hat-sub"><span>' + esc(i.name) + '</span>' +
+                        (i.price > 0 ? '<span class="order-hat-item-price">' + i.price.toFixed(2) + ' kr</span>' : '') + '</div>';
+                });
+
+                specialHatBlock.innerHTML =
+                    '<p style="font-size:0.72rem;color:#777;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Specialhatt</p>' +
+                    '<ul class="order-hat-list">' +
+                    '<li class="order-hat-item --expanded">' +
+                    '<div class="order-hat-header">' +
+                    '<span class="order-hat-title">Specialbeställd hatt</span>' +
+                    (size ? '<span class="order-hat-size">(' + esc(size) + ')</span>' : '') +
+                    '</div>' +
+                    subRows +
+                    '<div class="order-hat-total-row">' +
+                    '<span>Baspris</span>' +
+                    '<span class="order-hat-item-price">' + basePrice.toFixed(2) + ' kr</span>' +
+                    '</div>' +
+                    '</li>' +
+                    '</ul>' +
+                    '<div class="order-total"><span>Totalt</span><span class="order-total-amount">' + total.toFixed(2) + ' kr</span></div>';
+
+                specialHatBlock.style.display = '';
+            }
+
+            customerSelect.addEventListener('change', updateSummary);
+            priceInput.addEventListener('input', updateSummary);
+            document.querySelectorAll('input[name="Size"]').forEach(function (r) {
+                r.addEventListener('change', updateSummary);
+            });
+            document.querySelectorAll('input[name="SelectedMaterials"]').forEach(function (cb) {
+                cb.addEventListener('change', updateSummary);
+            });
+            document.querySelectorAll('input[name="SelectedItems"]').forEach(function (cb) {
+                cb.addEventListener('change', updateSummary);
+            });
+
+            updateSummary();
+        })();
+    </script>
 }
 

@@ -21,8 +21,8 @@
 }
 
 .warehouse-card {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -31,7 +31,7 @@
 }
 
 .warehouse-card:hover {
-  border-color: #2e2e2e;
+  border-color: #1a1612;
 }
 
 /* ── Card header ── */
@@ -47,7 +47,7 @@
 .warehouse-card-name {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #e8e0d4;
+  color: #1a1612;
   margin: 0;
 }
 
@@ -173,7 +173,7 @@
 
 /* ── Empty state ── */
 .warehouse-empty {
-  color: #444;
+  color: #aaa;
   font-size: 0.85rem;
   font-style: italic;
   text-align: center;
@@ -211,7 +211,7 @@
 
 .warehouse-filter-label {
   font-size: 0.72rem;
-  color: #666;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
@@ -219,10 +219,10 @@
 }
 
 .warehouse-filter-select {
-  background: #111;
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.45rem 0.85rem;
   font-size: 0.85rem;
   font-family: "Roboto", sans-serif;
@@ -262,12 +262,12 @@
 
 .warehouse-section-count {
   font-size: 0.7rem;
-  color: #444;
+  color: #777;
 }
 
 .warehouse-section-note {
   font-size: 0.72rem;
-  color: #444;
+  color: #777;
   font-style: italic;
   margin: 0;
 }
@@ -275,7 +275,7 @@
 /* ── Section divider ── */
 .warehouse-divider {
   border: none;
-  border-top: 1px solid #1e1e1e;
+  border-top: 1px solid #d0ccc8;
   margin: 0.25rem 0;
 }
 
@@ -283,7 +283,7 @@
 .warehouse-list {
   display: flex;
   flex-direction: column;
-  border: 1px solid #1e1e1e;
+  border: 1px solid #2a2a2a;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -306,8 +306,8 @@
 }
 
 .warehouse-list-header {
-  background: #0d0d0d;
-  border-bottom: 1px solid #1e1e1e;
+  background: #f5f2ec;
+  border-bottom: 1px solid #2a2a2a;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -316,8 +316,8 @@
 }
 
 .warehouse-list-row {
-  background: #111;
-  border-bottom: 1px solid #181818;
+  background: #ffffff;
+  border-bottom: 1px solid #d0ccc8;
   transition: background 0.15s ease;
 }
 
@@ -326,12 +326,12 @@
 }
 
 .warehouse-list-row:hover {
-  background: #141414;
+  background: #f5f2ec;
 }
 
 .warehouse-list-name {
   font-size: 0.88rem;
-  color: #e8e0d4;
+  color: #1a1612;
   font-weight: 500;
 }
 
@@ -344,10 +344,10 @@
 
 .warehouse-price-input {
   width: 80px;
-  background: #0a0a0a;
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 6px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.35rem 0.45rem;
   font-size: 0.85rem;
   font-family: "Roboto", sans-serif;
@@ -376,8 +376,8 @@
   justify-content: flex-end;
   gap: 1rem;
   padding: 0.8rem 1.1rem;
-  background: #0d0d0d;
-  border-top: 1px solid #1e1e1e;
+  background: #f5f2ec;
+  border-top: 1px solid #2a2a2a;
 }
 
 /* ── Add-item row ───────────────────────────────────── */
@@ -389,10 +389,10 @@
 }
 
 .warehouse-text-input {
-  background: #0a0a0a;
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.42rem 0.75rem;
   font-size: 0.85rem;
   font-family: "Roboto", sans-serif;
@@ -402,7 +402,7 @@
 }
 
 .warehouse-text-input::placeholder {
-  color: #444;
+  color: #aaa;
 }
 
 .warehouse-text-input:focus {
@@ -470,8 +470,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #111;
-  border: 1px solid #1e1e1e;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-radius: 8px;
   padding: 0.6rem 0.9rem;
   gap: 0.75rem;
@@ -479,7 +479,7 @@
 
 .warehouse-simple-name {
   font-size: 0.85rem;
-  color: #e8e0d4;
+  color: #1a1612;
   font-weight: 500;
   flex: 1;
   min-width: 0;

@@ -21,33 +21,84 @@
 
 <body>
     <header class="site-header">
-        <nav class="navbar">
-            <ul class="navbar-links">
-                @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Onödig framsida</a></li>*@
-                @*<li><a asp-area="" asp-controller="MainPage" asp-action="Index">Huvudsida Test</a></li>*@
-                @*<li><a asp-area="" asp-controller="Login" asp-action="Index">Logga in</a></li>*@
-                <li><a asp-area="" asp-controller="AddCustomer" asp-action="Index">Lägg till Kund</a></li>
-                <li><a asp-area="" asp-controller="AddCustomer" asp-action="AllCustomers">Alla Kunder</a></li>
-                <li><a asp-area="" asp-controller="CreateHats" asp-action="Index">Lägg till Hatt</a></li>
-                <li><a asp-area="" asp-controller="MaterialSummary" asp-action="PrintMaterialSummary">Materialstatus</a></li>
-                <li><a asp-area="" asp-controller="Orders" asp-action="Create">Skapa Order</a></li>
-                <li><a asp-area="" asp-controller="Orders" asp-action="Index">Alla Ordrar</a></li>
-                <li><a asp-area="" asp-controller="Warehouse" asp-action="Index">Lagerstatus</a></li>
-                @*<li><a asp-area="" asp-controller="AddMaterial" asp-action="Index">Lägg till Material</a></li>*@
-                @*<li><a asp-area="" asp-controller="ShippingLabel" asp-action="Index">Fraktsedel Test</a></li>*@
-            </ul>
-        </nav>
-    </header>
+        @{
+            var userRole = Context.Session.GetString("UserRole");
+            var isLoginPage = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "")
+                              .Equals("Login", StringComparison.OrdinalIgnoreCase);
+        }
+        @if (!isLoginPage && !string.IsNullOrEmpty(userRole))
+        {
+            <nav class="navbar">
+                <button class="nav-hamburger" id="navHamburger" aria-label="Öppna meny" aria-expanded="false">
+                    <span class="ham-bar"></span>
+                    <span class="ham-bar"></span>
+                    <span class="ham-bar"></span>
+                </button>
+                <div class="navbar-links-wrapper" id="navLinksWrapper">
+                    <ul class="navbar-links">
+                        @if (userRole == "employee")
+                        {
+                            <li><a asp-area="" asp-controller="MainPage" asp-action="Index">Home</a></li>
+                            <li><a asp-area="" asp-controller="AddCustomer" asp-action="Index">Lägg till Kund</a></li>
+                            <li><a asp-area="" asp-controller="AddCustomer" asp-action="AllCustomers">Alla Kunder</a></li>
+                            <li><a asp-area="" asp-controller="CreateHats" asp-action="Index">Lägg till Hatt</a></li>
+                            <li><a asp-area="" asp-controller="MaterialSummary"
+                                       asp-action="PrintMaterialSummary">Materialstatus</a></li>
+                                <li><a asp-area="" asp-controller="Orders" asp-action="Create">Skapa Order</a></li>
+                                <li><a asp-area="" asp-controller="Orders" asp-action="Index">Alla Ordrar</a></li>
+                                <li><a asp-area="" asp-controller="Warehouse" asp-action="Index">Lagerstatus</a></li>
+                                <li><a asp-area="" asp-controller="ShippingLabel" asp-action="Index">Fraktsedel</a></li>
+                            }
+                        else if (userRole == "admin")
+                            {
+                                <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index">Lägg till Anställd</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <ul class="navbar-right">
+                        <li><a asp-area="" asp-controller="Login" asp-action="Logout">Logga ut</a></li>
+                    </ul>
+                </nav>
+            }
+        </header>
 
-    <main class="site-main">
-        @RenderBody()
-    </main>
+        <main class="site-main">
+            @RenderBody()
+        </main>
 
-    <footer class="site-footer">
-        <p>&copy; 2026 - ScrumExtreme</p>
-    </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+        <footer class="site-footer">
+            <p>&copy; 2026 - ScrumExtreme</p>
+        </footer>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script>
+            (function () {
+            var btn = document.getElementById('navHamburger');
+            var wrapper = document.getElementById('navLinksWrapper');
+            if (!btn || !wrapper) return;
+            // Restore persisted open state
+            if (localStorage.getItem('navOpen') === '1') {
+            btn.classList.add('open');
+            wrapper.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+            }
+            btn.addEventListener('click', function () {
+            var isOpen = btn.classList.toggle('open');
+            wrapper.classList.toggle('open', isOpen);
+            btn.setAttribute('aria-expanded', isOpen);
+            localStorage.setItem('navOpen', isOpen ? '1' : '0');
+            });
+            // Close on outside click
+            document.addEventListener('click', function (e) {
+            if (!btn.contains(e.target) && !wrapper.contains(e.target)) {
+            btn.classList.remove('open');
+            wrapper.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+            localStorage.setItem('navOpen', '0');
+            }
+            });
+            })();
+        </script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 
 </html>

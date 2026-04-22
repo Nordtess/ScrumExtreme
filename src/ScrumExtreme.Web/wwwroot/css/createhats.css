@@ -23,14 +23,14 @@
 .hat-page-title {
   font-size: 1.55rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.01em;
   margin: 0 0 0.22rem;
 }
 
 .hat-page-subtitle {
   font-size: 0.82rem;
-  color: #7a7068;
+  color: #555;
   margin: 0;
   letter-spacing: 0.02em;
 }
@@ -44,8 +44,8 @@
 
 /* ── Panels ── */
 .hat-panel {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
   transition: border-color 0.2s ease;
@@ -54,7 +54,7 @@
 }
 
 .hat-panel:hover {
-  border-color: #2e2e2e;
+  border-color: #1a1612;
 }
 
 .hat-panel-header {
@@ -62,14 +62,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.3rem;
-  border-bottom: 1px solid #1c1c1c;
+  border-bottom: 1px solid #2a2a2a;
   gap: 0.75rem;
 }
 
 .hat-panel-title {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #ccc;
+  color: #1a1612;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin: 0;
@@ -123,15 +123,16 @@
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #888;
+  color: #555;
   font-weight: 600;
 }
 
-.hat-field input, .hat-field textarea {
-  background: #0a0a0a;
+.hat-field input,
+.hat-field textarea {
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.6rem 0.85rem;
   font-size: 0.88rem;
   font-family: "Roboto", sans-serif;
@@ -143,20 +144,20 @@
   box-sizing: border-box;
 }
 
-  .hat-field input::placeholder,
-  .hat-field textarea::placeholder {
-        color: #333;
-    }
+.hat-field input::placeholder,
+.hat-field textarea::placeholder {
+  color: #aaa;
+}
 
-.hat-field input:focus{
+.hat-field input:focus {
   border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
 }
 .hat-field textarea:focus {
-        border: 1px solid #c9a84c !important;
-        box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
-        outline: none;
-    }
+  border: 1px solid #c9a84c !important;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+  outline: none;
+}
 
 .hat-field input.valid {
   border-color: #30d158;
@@ -266,7 +267,7 @@
 }
 
 .hat-list-placeholder {
-  color: #3a3030;
+  color: #aaa;
   font-size: 0.82rem;
   font-style: italic;
   text-align: center;
@@ -278,7 +279,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 0;
-  border-bottom: 1px solid #161616;
+  border-bottom: 1px solid #d0ccc8;
 }
 
 .hat-row:last-child {
@@ -287,7 +288,7 @@
 
 .hat-row-name {
   font-size: 0.88rem;
-  color: #d8d0c8;
+  color: #1a1612;
 }
 
 .hat-row-price {

@@ -5,19 +5,27 @@
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding-top: 7vh;
+  padding-top: 2vh;
   width: 100%;
 }
 
+.login-logo {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin-bottom: 1.75rem;
+  display: block;
+}
+
 .login-card {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-top: 3px solid #c9a84c;
   border-radius: 12px;
   padding: 2.5rem 2.75rem;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -43,7 +51,7 @@
 .login-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.04em;
   margin: 0;
   text-align: center;
@@ -51,7 +59,7 @@
 
 .login-subtitle {
   font-size: 0.72rem;
-  color: #605850;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-align: center;
@@ -61,7 +69,7 @@
 /* ── Divider ── */
 .login-divider {
   height: 1px;
-  background: #1c1c1c;
+  background: #d0ccc8;
   margin: 0;
 }
 
@@ -81,16 +89,16 @@
 .login-field label {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #888;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .login-field input {
-  background: #0a0a0a;
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   font-size: 0.88rem;
   font-family: "Roboto", sans-serif;
   padding: 0.65rem 0.9rem;
@@ -103,7 +111,7 @@
 }
 
 .login-field input::placeholder {
-  color: #3a3a3a;
+  color: #aaa;
 }
 
 .login-field input:focus {
@@ -140,6 +148,103 @@
 
 .login-btn:active {
   transform: translateY(0);
+}
+
+/* ── Show-password checkbox ── */
+.login-show-password {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  margin-top: 0.1rem;
+}
+
+.login-show-password input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.login-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  background: #fff;
+  flex-shrink: 0;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.login-show-password input[type="checkbox"]:checked + .login-checkbox-box {
+  background: #c9a84c;
+  border-color: #c9a84c;
+}
+
+.login-show-password
+  input[type="checkbox"]:checked
+  + .login-checkbox-box::after {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.login-show-password:hover .login-checkbox-box {
+  border-color: #c9a84c;
+}
+
+.login-checkbox-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Quick-fill buttons ── */
+.login-quickfill {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-quickfill-btn {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 7px;
+  color: #777;
+  font-size: 0.72rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.login-quickfill-btn:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+  background: rgba(201, 168, 76, 0.06);
 }
 
 /* ── Footer link ── */

@@ -9,7 +9,7 @@
   gap: 2rem;
   padding: 3rem 1rem;
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #faf8f4;
 }
 
 /* Picker area */
@@ -36,7 +36,7 @@
 }
 
 .sl-lang-hint strong {
-  color: #ccc;
+  color: #1a1612;
 }
 
 .sl-picker-wrap .country-picker {
@@ -183,9 +183,9 @@
 
 /* Print button */
 .sl-print-btn {
-  background: #1a1a1a;
-  color: #e8e8e8;
-  border: 1.5px solid #333;
+  background: #1a1612;
+  color: #faf8f4;
+  border: 1.5px solid #2a2a2a;
   border-radius: 8px;
   padding: 0.75rem 2rem;
   font-size: 0.9rem;
@@ -198,7 +198,7 @@
 }
 
 .sl-print-btn:hover {
-  background: #2a2a2a;
+  background: #2a2420;
   border-color: #4caf50;
   color: #fff;
 }

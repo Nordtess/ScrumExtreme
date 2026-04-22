@@ -23,14 +23,14 @@
 .admin-page-title {
   font-size: 1.55rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.01em;
   margin: 0 0 0.22rem;
 }
 
 .admin-page-subtitle {
   font-size: 0.82rem;
-  color: #7a7068;
+  color: #555;
   margin: 0;
   letter-spacing: 0.02em;
 }
@@ -42,6 +42,10 @@
   align-items: stretch;
 }
 
+.admin-layout.--single {
+  grid-template-columns: 1fr;
+}
+
 .admin-wrapper.--narrow {
   max-width: 760px;
   margin: 0 auto;
@@ -49,8 +53,8 @@
 
 /* ── Panels ── */
 .admin-panel {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
   transition: border-color 0.2s ease;
@@ -59,7 +63,7 @@
 }
 
 .admin-panel:hover {
-  border-color: #2e2e2e;
+  border-color: #1a1612;
 }
 
 .admin-panel-header {
@@ -67,14 +71,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.3rem;
-  border-bottom: 1px solid #1c1c1c;
+  border-bottom: 1px solid #2a2a2a;
   gap: 0.75rem;
 }
 
 .admin-panel-title {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #ccc;
+  color: #1a1612;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin: 0;
@@ -131,7 +135,7 @@
 .admin-section-label {
   font-size: 0.65rem;
   font-weight: 600;
-  color: #504840;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   margin: 0.5rem 0 0.75rem;
@@ -181,16 +185,17 @@
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #888;
+  color: #555;
   font-weight: 600;
 }
 
 .admin-field input,
-.admin-field textarea {
-  background: #0a0a0a;
+.admin-field textarea,
+.admin-field select {
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.6rem 0.85rem;
   font-size: 0.88rem;
   font-family: "Roboto", sans-serif;
@@ -203,12 +208,26 @@
 }
 
 .admin-field input::placeholder {
-  color: #333;
+  color: #aaa;
 }
 
-.admin-field input:focus {
+.admin-field input:focus,
+.admin-field textarea:focus,
+.admin-field select:focus {
   border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+/* ── Hide number input spinners ── */
+.admin-field input[type="number"]::-webkit-outer-spin-button,
+.admin-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.admin-field input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .admin-field input.valid {
@@ -244,12 +263,12 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background: #0a0a0a;
+  background: #f5f2ec;
   border: 1px solid #2a2a2a;
   border-radius: 6px;
   padding: 0.35rem 0.65rem;
   font-size: 0.82rem;
-  color: #e8e0d4;
+  color: #1a1612;
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -258,9 +277,13 @@
   border-color: #c9a84c;
 }
 
-.size-checkbox-label input[type="checkbox"] {
+.size-checkbox-label input[type="checkbox"],
+.size-checkbox-label input[type="radio"] {
   accent-color: #c9a84c;
-  width: auto;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
   cursor: pointer;
 }
 
@@ -303,6 +326,11 @@
   box-shadow: 0 0 10px rgba(255, 69, 58, 0.15);
 }
 
+.admin-btn-primary.admin-btn-auto {
+  width: auto;
+  padding: 0.7rem 2.5rem;
+}
+
 /* ── Customer sort bar ── */
 .customer-sort-bar {
   display: flex;
@@ -323,7 +351,7 @@
 }
 
 .customer-sort-pill {
-  background: #111;
+  background: #f5f2ec;
   border: 1px solid #2a2a2a;
   border-radius: 20px;
   color: #555;
@@ -389,7 +417,7 @@
 }
 
 .admin-list-placeholder {
-  color: #3a3030;
+  color: #aaa;
   font-size: 0.82rem;
   font-style: italic;
   text-align: center;
@@ -401,7 +429,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 0.5rem;
-  border-bottom: 1px solid #161616;
+  border-bottom: 1px solid #d0ccc8;
   text-decoration: none;
   border-radius: 6px;
   transition: background 0.15s ease;
@@ -412,7 +440,7 @@
 }
 
 .admin-customer-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .admin-customer-info {
@@ -423,12 +451,12 @@
 
 .admin-customer-name {
   font-size: 0.88rem;
-  color: #d8d0c8;
+  color: #1a1612;
 }
 
 .admin-customer-email {
   font-size: 0.72rem;
-  color: #4a4440;
+  color: #555;
   letter-spacing: 0.01em;
 }
 
@@ -446,7 +474,7 @@
 
 .admin-customer-arrow {
   font-size: 0.65rem;
-  color: #333;
+  color: #aaa;
   transition:
     color 0.15s ease,
     transform 0.15s ease;
@@ -461,7 +489,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: 5px;
-  color: #3a3a3a;
+  color: #aaa;
   font-size: 0.8rem;
   line-height: 1;
   padding: 0.22rem 0.42rem;
@@ -510,7 +538,7 @@
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.7rem 0;
-  border-bottom: 1px solid #141414;
+  border-bottom: 1px solid #d0ccc8;
 }
 
 .detail-field-group:last-child {
@@ -522,16 +550,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #4a4440;
+  color: #777;
 }
 
 .detail-value {
   font-size: 0.9rem;
-  color: #d8d0c8;
+  color: #1a1612;
 }
 
 .detail-value--muted {
-  color: #666;
+  color: #777;
   font-style: italic;
   font-size: 0.82rem;
 }
@@ -541,7 +569,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 0.5rem;
-  border-bottom: 1px solid #141414;
+  border-bottom: 1px solid #d0ccc8;
   text-decoration: none;
   border-radius: 6px;
   transition: background 0.15s ease;
@@ -552,7 +580,7 @@
 }
 
 .detail-order-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .detail-order-info {
@@ -563,13 +591,13 @@
 
 .detail-order-number {
   font-size: 0.85rem;
-  color: #d8d0c8;
+  color: #1a1612;
   font-weight: 500;
 }
 
 .detail-order-date {
   font-size: 0.71rem;
-  color: #4a4440;
+  color: #777;
 }
 
 .detail-order-right {
@@ -580,7 +608,7 @@
 
 .detail-order-amount {
   font-size: 0.82rem;
-  color: #888;
+  color: #555;
 }
 
 .detail-status-badge {

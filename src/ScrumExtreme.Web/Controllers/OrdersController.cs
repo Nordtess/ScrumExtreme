@@ -38,7 +38,7 @@ public class OrdersController : Controller
     public async Task<IActionResult> Create()
     {
         var users = await _userService.GetAllUsersAsync();
-        ViewBag.Customers = users.Where(u => !u.IsAdmin);
+        ViewBag.Customers = users.Where(u => u.Role == "customer");
 
         var hats = await _hatService.GetAllHatsAsync();
         ViewBag.Hats = hats;
