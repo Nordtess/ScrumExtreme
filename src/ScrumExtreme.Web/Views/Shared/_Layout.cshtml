@@ -38,6 +38,7 @@
                     <ul class="navbar-links">
                         @if (userRole == "employee")
                         {
+                            <li><a asp-area="" asp-controller="MainPage" asp-action="Index">Home</a></li>
                             <li><a asp-area="" asp-controller="AddCustomer" asp-action="Index">Lägg till Kund</a></li>
                             <li><a asp-area="" asp-controller="AddCustomer" asp-action="AllCustomers">Alla Kunder</a></li>
                             <li><a asp-area="" asp-controller="CreateHats" asp-action="Index">Lägg till Hatt</a></li>

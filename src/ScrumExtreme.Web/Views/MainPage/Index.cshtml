@@ -1,309 +1,140 @@
+@model IEnumerable<ScrumExtreme.Domain.Entities.Order>
+
+@using ScrumExtreme.Domain.Entities
 @{
-    ViewData["Title"] = "Huvudsida Test";
+    ViewData["Title"] = "Home";
+    var userLookup = ViewBag.UserLookup as Dictionary<string, ScrumExtreme.Domain.Entities.User>
+                     ?? new Dictionary<string, ScrumExtreme.Domain.Entities.User>();
 }
 
 @section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/mainpage.css" asp-append-version="true" />
 }
 
-<div class="mp-dashboard">
+<div class="admin-wrapper">
 
-    <!-- Page Header -->
-    <div class="mp-page-header">
-        <h1 class="mp-page-title">Produktionsöversikt</h1>
-        <p class="mp-page-subtitle">Realtidsöversikt för produktion, försäljning och lagerstatus</p>
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Hem</h1>
+        <p class="admin-page-subtitle">Välkommen till Hattmakaren AB</p>
     </div>
 
-    <!-- KPI Row -->
-    <div class="mp-kpi-row">
-        <div class="mp-kpi-card --neutral">
-            <div class="mp-kpi-icon">📋</div>
-            <div class="mp-kpi-value">24</div>
-            <div class="mp-kpi-label">Aktiva ordrar</div>
-        </div>
-        <div class="mp-kpi-card --alert">
-            <div class="mp-kpi-icon">⚠</div>
-            <div class="mp-kpi-value">3</div>
-            <div class="mp-kpi-label">Försenade ordrar</div>
-        </div>
-        <div class="mp-kpi-card --good">
-            <div class="mp-kpi-icon">kr</div>
-            <div class="mp-kpi-value">18 450</div>
-            <div class="mp-kpi-label">Dagens försäljning (kr)</div>
-        </div>
-        <div class="mp-kpi-card --warn">
-            <div class="mp-kpi-icon">⊘</div>
-            <div class="mp-kpi-value">5</div>
-            <div class="mp-kpi-label">Lågt lagersaldo</div>
-        </div>
-    </div>
+    <div class="home-grid">
 
-    <!-- 3-Panel Grid -->
-    <div class="mp-panels">
-
-        <!-- Left: Sales -->
-        <div class="mp-panel">
-            <div class="mp-panel-header">
-                <h2 class="mp-panel-title">
-                    <span class="mp-panel-dot"></span>Försäljning
-                </h2>
-                <a asp-controller="SalesStatistics" asp-action="Index" class="mp-panel-btn">Visa statistik →</a>
-            </div>
-            <div class="mp-panel-body">
-                <div class="mp-stat-grid">
-                    <div class="mp-stat-row">
-                        <span class="mp-stat-label">Idag</span>
-                        <span class="mp-stat-value">18 450 kr</span>
-                    </div>
-                    <div class="mp-stat-row">
-                        <span class="mp-stat-label">Denna vecka</span>
-                        <span class="mp-stat-value">97 200 kr</span>
-                    </div>
-                    <div class="mp-stat-row">
-                        <span class="mp-stat-label">Denna månad</span>
-                        <span class="mp-stat-value">412 800 kr</span>
-                    </div>
-                    <div class="mp-stat-row">
-                        <span class="mp-stat-label">Ordrar idag</span>
-                        <span class="mp-stat-value">6</span>
-                    </div>
-                </div>
-
-                <div class="mp-best-seller">
-                    <span class="mp-best-seller-label">Bästsäljare denna vecka</span>
-                    <span class="mp-best-seller-value">Fedora Classic</span>
-                </div>
-
-                <div class="mp-chart-section">
-                    <div class="mp-chart-label">Försäljning per dag (v. 15)</div>
-                    <div class="mp-chart">
-                        <div class="mp-bar" style="--h:55%"><span>Mån</span></div>
-                        <div class="mp-bar" style="--h:72%"><span>Tis</span></div>
-                        <div class="mp-bar" style="--h:40%"><span>Ons</span></div>
-                        <div class="mp-bar" style="--h:88%"><span>Tor</span></div>
-                        <div class="mp-bar" style="--h:63%"><span>Fre</span></div>
-                        <div class="mp-bar --today" style="--h:45%"><span>Lör</span></div>
-                        <div class="mp-bar" style="--h:0%"><span>Sön</span></div>
-                    </div>
-                </div>
+        <!-- ── Left: Calendar ── -->
+        <div class="home-col">
+            <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
+            <div class="home-calendar-card">
+                <img src="~/images/fredriksfinakalender.png" alt="Fredriks Fina Kalender" class="home-calendar-img" />
             </div>
         </div>
 
-        <!-- Center: Orders -->
-        <div class="mp-panel --center">
-            <div class="mp-panel-header">
-                <h2 class="mp-panel-title">
-                    <span class="mp-panel-dot"></span>Orderöversikt
-                </h2>
-                <a asp-controller="Orders" asp-action="Index" class="mp-panel-btn">Visa alla ordrar →</a>
-            </div>
-            <div class="mp-panel-body">
+        <!-- ── Right: Order summary ── -->
+        <div class="home-col">
 
-                <div class="mp-orders-toolbar">
-                    <select id="orderSort" class="mp-orders-sort">
-                        <option value="newest">Senast skapad</option>
+            <!-- Filter bar -->
+            <div class="order-filter-bar" style="margin-bottom:0.75rem;">
+                <div class="order-filter-group">
+                    <label class="order-filter-label" for="homeOrderSort">Sortera</label>
+                    <select id="homeOrderSort" class="order-filter-select">
+                        <option value="newest" selected>Senast skapad</option>
                         <option value="oldest">Tidigast skapad</option>
-                        <option value="status">Status (prioritet)</option>
                     </select>
-                    <label class="mp-filter-check">
-                        <input type="checkbox" id="filterUnassigned" />
-                        Ej tilldelade
-                    </label>
                 </div>
-
-                <div class="mp-orders-scroll">
-                    <table class="mp-orders-table">
-                        <thead>
-                            <tr>
-                                <th>Order</th>
-                                <th>Kund</th>
-                                <th>Modell</th>
-                                <th>Status</th>
-                                <th>Steg</th>
-                                <th>Deadline</th>
-                                <th>Medarbetare</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ordersBody">
-                            <tr data-num="1042" data-status="inprog" data-worker="assigned">
-                                <td><span class="mp-order-num">#1042</span></td>
-                                <td><span class="mp-order-customer">Eleonora Björk</span></td>
-                                <td><span class="mp-order-model">Fedora Classic</span></td>
-                                <td><span class="mp-badge --inprog">Pågår</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --active"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline --soon">12 apr</span></td>
-                                <td><span class="mp-worker">Lars H.</span></td>
-                            </tr>
-                            <tr data-num="1041" data-status="waiting" data-worker="unassigned">
-                                <td><span class="mp-order-num">#1041</span></td>
-                                <td><span class="mp-order-customer">Marcus Strand</span></td>
-                                <td><span class="mp-order-model">Top Hat Deluxe</span></td>
-                                <td><span class="mp-badge --waiting">Väntar material</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --active"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline">14 apr</span></td>
-                                <td><span class="mp-worker-empty">—</span></td>
-                            </tr>
-                            <tr data-num="1040" data-status="ready" data-worker="assigned">
-                                <td><span class="mp-order-num">#1040</span></td>
-                                <td><span class="mp-order-customer">Ingrid Lövgren</span></td>
-                                <td><span class="mp-order-model">Cappello Romano</span></td>
-                                <td><span class="mp-badge --ready">Redo för leverans</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --active"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline --soon">9 apr</span></td>
-                                <td><span class="mp-worker">Maja K.</span></td>
-                            </tr>
-                            <tr data-num="1039" data-status="produc" data-worker="assigned">
-                                <td><span class="mp-order-num">#1039</span></td>
-                                <td><span class="mp-order-customer">Thomas Wijk</span></td>
-                                <td><span class="mp-order-model">Homburg Wide</span></td>
-                                <td><span class="mp-badge --produc">I produktion</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --active"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline">11 apr</span></td>
-                                <td><span class="mp-worker">Erik S.</span></td>
-                            </tr>
-                            <tr class="--overdue" data-num="1038" data-status="delayed" data-worker="assigned">
-                                <td><span class="mp-order-num">#1038</span></td>
-                                <td><span class="mp-order-customer">Sofia Lindqvist</span></td>
-                                <td><span class="mp-order-model">Borsalino Elite</span></td>
-                                <td><span class="mp-badge --delayed">Försenad</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --late"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline --past">7 apr</span></td>
-                                <td><span class="mp-worker">Lars H.</span></td>
-                            </tr>
-                            <tr data-num="1037" data-status="delivered" data-worker="assigned">
-                                <td><span class="mp-order-num">#1037</span></td>
-                                <td><span class="mp-order-customer">Carl Heden</span></td>
-                                <td><span class="mp-order-model">Pork Pie Custom</span></td>
-                                <td><span class="mp-badge --delivered">Levererad</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline">5 apr</span></td>
-                                <td><span class="mp-worker">Maja K.</span></td>
-                            </tr>
-                            <tr data-num="1036" data-status="inprog" data-worker="assigned">
-                                <td><span class="mp-order-num">#1036</span></td>
-                                <td><span class="mp-order-customer">Anna Petersson</span></td>
-                                <td><span class="mp-order-model">Fedora Classic</span></td>
-                                <td><span class="mp-badge --inprog">Pågår</span></td>
-                                <td>
-                                    <div class="mp-pipeline">
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --done"></span>
-                                        <span class="mp-pip --active"></span>
-                                        <span class="mp-pip"></span>
-                                        <span class="mp-pip"></span>
-                                    </div>
-                                </td>
-                                <td><span class="mp-deadline">15 apr</span></td>
-                                <td><span class="mp-worker">Erik S.</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="order-filter-group">
+                    <span class="order-filter-label">Typ</span>
+                    <div class="order-type-pills">
+                        <button class="order-type-pill active" data-type="standard">Standard</button>
+                        <button class="order-type-pill active" data-type="modifierad">Modifierad</button>
+                        <button class="order-type-pill active" data-type="special">Special</button>
+                    </div>
                 </div>
-
+                <div class="order-filter-group">
+                    <label class="order-filter-label" for="homeOrderStatus">Status</label>
+                    <select id="homeOrderStatus" class="order-filter-select">
+                        <option value="all" selected>Visa alla</option>
+                        <option value="pending">Väntar</option>
+                        <option value="processing">Påbörjad</option>
+                        <option value="printed">Utskriven</option>
+                        <option value="shipped">Skickad</option>
+                        <option value="delivered">Levererad</option>
+                        <option value="cancelled">Avbruten</option>
+                    </select>
+                </div>
             </div>
+
+            <div class="admin-panel">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title">
+                        <span class="admin-panel-dot"></span>Orderöversikt
+                        @if (Model != null)
+                        {
+                            <span class="admin-customer-count">@Model.Count()</span>
+                        }
+                    </h2>
+                    <a asp-controller="Orders" asp-action="Create" class="admin-panel-btn">Skapa ny order →</a>
+                </div>
+                <div class="admin-panel-body home-orders-body">
+                    <div class="admin-customer-list" id="homeOrderList">
+                        @if (Model == null || !Model.Any())
+                        {
+                            <span class="admin-list-placeholder">Inga ordrar hittades.</span>
+                        }
+                        else
+                        {
+                            foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                            {
+                                string orderTypClass;
+                                string orderTypLabel;
+                                if (order.Items != null && order.Items.Any(i => i.SpecialHats != null))
+                                {
+                                    orderTypClass = "order-type-badge order-type-special";
+                                    orderTypLabel = "Special";
+                                }
+                                else if (order.Items != null && order.Items.Any(i => i.IsModified))
+                                {
+                                    orderTypClass = "order-type-badge order-type-modified";
+                                    orderTypLabel = "Modifierad";
+                                }
+                                else
+                                {
+                                    orderTypClass = "order-type-badge order-type-standard";
+                                    orderTypLabel = "Standard";
+                                }
+                                var hasUser = userLookup.TryGetValue(order.UserId, out var u);
+                                string fullName = hasUser ? $"{u!.FirstName} {u!.LastName}" : "–";
+                                string statusKey = order.Status.ToString().ToLower();
+                                string statusLabel = order.Status switch
+                                {
+                                    OrderStatus.Pending => "Väntar",
+                                    OrderStatus.Processing => "Påbörjad",
+                                    OrderStatus.Printed => "Utskriven",
+                                    OrderStatus.Shipped => "Skickad",
+                                    OrderStatus.Delivered => "Levererad",
+                                    OrderStatus.Cancelled => "Avbruten",
+                                    _ => order.Status.ToString()
+                                };
+                                string typeKey = orderTypLabel.ToLower();
+                                <div class="admin-customer-row home-order-row"
+                                     data-date="@order.OrderDate.ToUniversalTime().Ticks" data-type="@typeKey"
+                                     data-status="@statusKey">
+                                    <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id"
+                                       class="admin-customer-name">@order.OrderNumber</a>
+                                    <span class="@orderTypClass">@orderTypLabel</span>
+                                    <span class="order-col-name">@fullName</span>
+                                    <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
+                                    <span class="home-order-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                                    <span class="home-order-total">@order.TotalAmount.ToString("0.00") kr</span>
+                                    <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- Right: Inventory -->
-        <div class="mp-panel">
-            <div class="mp-panel-header">
-                <h2 class="mp-panel-title">
-                    <span class="mp-panel-dot"></span>Lagerstatus
-                </h2>
-                <a asp-controller="Warehouse" asp-action="Index" class="mp-panel-btn">Hantera lager →</a>
-            </div>
-            <div class="mp-panel-body">
-                <div class="mp-inv-list">
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Ulltyg (beige)</span>
-                        <span class="mp-inv-qty">42 m</span>
-                        <span class="mp-inv-status --ok">OK</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Silkefoder</span>
-                        <span class="mp-inv-qty">8 m</span>
-                        <span class="mp-inv-status --low">Lågt</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Hattstomme (svart)</span>
-                        <span class="mp-inv-qty">3 st</span>
-                        <span class="mp-inv-status --critical">Kritiskt</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Läderband</span>
-                        <span class="mp-inv-qty">0 m</span>
-                        <span class="mp-inv-status --out">Slut</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Bomullstyg</span>
-                        <span class="mp-inv-qty">67 m</span>
-                        <span class="mp-inv-status --ok">OK</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Filtmaterial</span>
-                        <span class="mp-inv-qty">12 m</span>
-                        <span class="mp-inv-status --low">Lågt</span>
-                    </div>
-                    <div class="mp-inv-item">
-                        <span class="mp-inv-name">Färdiga hattar (lager)</span>
-                        <span class="mp-inv-qty">19 st</span>
-                        <span class="mp-inv-status --ok">OK</span>
-                    </div>
-                </div>
-                <div class="mp-delivery-note">
-                    <span>🚚</span>
-                    <span>Nästa leverans: <strong>10 april 2026</strong></span>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 </div>
@@ -311,37 +142,58 @@
 @section Scripts {
     <script>
         (function () {
-            var sort = document.getElementById('orderSort');
-            var chk = document.getElementById('filterUnassigned');
-            var body = document.getElementById('ordersBody');
-            if (!sort || !body) return;
+            var sortSelect = document.getElementById('homeOrderSort');
+            var statusSelect = document.getElementById('homeOrderStatus');
+            var list = document.getElementById('homeOrderList');
+            if (!sortSelect || !statusSelect || !list) return;
 
-            var STATUS_PRI = { delayed: 1, waiting: 2, inprog: 3, produc: 4, ready: 5, delivered: 6 };
-
-            function refresh() {
-                var rows = Array.from(body.querySelectorAll('tr'));
-                var onlyUnassigned = chk && chk.checked;
-
-                rows.forEach(function (r) {
-                    r.style.display = (onlyUnassigned && r.dataset.worker !== 'unassigned') ? 'none' : '';
+            document.querySelectorAll('.order-type-pill').forEach(function (pill) {
+                pill.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    applyFilters();
                 });
+            });
 
-                var visible = rows.filter(function (r) { return r.style.display !== 'none'; });
-                var hidden = rows.filter(function (r) { return r.style.display === 'none'; });
+            function applyFilters() {
+                var rows = Array.from(list.querySelectorAll('.home-order-row'));
+                var activePills = new Set(
+                    Array.from(document.querySelectorAll('.order-type-pill.active')).map(function (p) { return p.dataset.type; })
+                );
+                var statusVal = statusSelect.value;
+                var newest = sortSelect.value === 'newest';
 
-                visible.sort(function (a, b) {
-                    var mode = sort.value;
-                    if (mode === 'newest') return +b.dataset.num - +a.dataset.num;
-                    if (mode === 'oldest') return +a.dataset.num - +b.dataset.num;
-                    if (mode === 'status') return (STATUS_PRI[a.dataset.status] || 9) - (STATUS_PRI[b.dataset.status] || 9);
-                    return 0;
+                rows.sort(function (a, b) {
+                    var da = BigInt(a.dataset.date);
+                    var db = BigInt(b.dataset.date);
+                    return newest ? (db > da ? 1 : db < da ? -1 : 0)
+                        : (da > db ? 1 : da < db ? -1 : 0);
                 });
+                rows.forEach(function (r) { list.appendChild(r); });
 
-                visible.concat(hidden).forEach(function (r) { body.appendChild(r); });
+                rows.forEach(function (row) {
+                    var typeMatch = activePills.has(row.dataset.type);
+                    var statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
+                    row.style.display = (typeMatch && statusMatch) ? '' : 'none';
+                });
             }
 
-            sort.addEventListener('change', refresh);
-            if (chk) chk.addEventListener('change', refresh);
+            sortSelect.addEventListener('change', applyFilters);
+            statusSelect.addEventListener('change', applyFilters);
+
+            list.querySelectorAll('.order-delete-btn').forEach(function (btn) {
+                btn.addEventListener('click', async function () {
+                    var id = this.dataset.id;
+                    if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
+                    var res = await fetch('/Orders/Delete/' + id, { method: 'POST' });
+                    if (res.ok) {
+                        this.closest('.home-order-row').remove();
+                        var countEl = document.querySelector('.admin-customer-count');
+                        if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+                    } else {
+                        alert('Något gick fel. Försök igen.');
+                    }
+                });
+            });
         })();
     </script>
 }
