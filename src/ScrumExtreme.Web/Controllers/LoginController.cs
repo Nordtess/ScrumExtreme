@@ -21,7 +21,7 @@ public class LoginController : Controller
         if (!string.IsNullOrEmpty(role))
             return role == "admin"
                 ? RedirectToAction("Index", "AddEmployee")
-                : RedirectToAction("Index", "AddCustomer");
+                : RedirectToAction("Index", "MainPage");
 
         return View("Login");
     }
@@ -49,7 +49,7 @@ public class LoginController : Controller
 
         return user.Role == "admin"
             ? RedirectToAction("Index", "AddEmployee")
-            : RedirectToAction("Index", "AddCustomer");
+            : RedirectToAction("Index", "MainPage");
     }
 
     [HttpGet("Logout")]

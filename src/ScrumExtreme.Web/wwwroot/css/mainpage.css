@@ -5,80 +5,83 @@
 
 /* ── Two-column grid ── */
 .home-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 1.5rem;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 /* ── Each column ── */
 .home-col {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Calendar title ── */
 .home-calendar-title {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #000;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0 0 0.55rem 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.55rem 0;
 }
 
 /* ── Calendar card ── */
 .home-calendar-card {
-    border: 2px solid #000;
-    border-radius: 12px;
-    overflow: hidden;
-    line-height: 0;
+  border: 2px solid #000;
+  border-radius: 12px;
+  overflow: hidden;
+  line-height: 0;
 }
 
 .home-calendar-img {
-    width: 100%;
-    display: block;
-    object-fit: cover;
+  width: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 /* ── Order panel body scroll ── */
 .home-orders-body {
-    max-height: calc(100vh - 260px);
-    overflow-y: auto;
-    padding: 0;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  padding: 0;
 }
 
 /* ── Compact row layout for home panel ── */
 .home-orders-body .admin-customer-row {
-    display: grid;
-    grid-template-columns: minmax(100px, 1.2fr) 80px minmax(90px, 1fr) 80px 110px 90px 30px;
-    align-items: center;
-    gap: 0.6rem;
+  display: grid;
+  grid-template-columns: minmax(100px, 1.2fr) minmax(80px, auto) minmax(
+      90px,
+      1fr
+    ) 80px 110px 90px 30px;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 /* ── Date / total helper classes ── */
 .home-order-date {
-    font-size: 0.78rem;
-    color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-size: 0.78rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .home-order-total {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #c9a84c;
-    white-space: nowrap;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #c9a84c;
+  white-space: nowrap;
 }
 
 /* ── Responsive: stack columns on narrow screens ── */
 @media (max-width: 900px) {
-    .home-grid {
-        grid-template-columns: 1fr;
-    }
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .home-orders-body {
-        max-height: 60vh;
-    }
+  .home-orders-body {
+    max-height: 60vh;
+  }
 }
