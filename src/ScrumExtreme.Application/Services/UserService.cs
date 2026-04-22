@@ -24,4 +24,10 @@ public class UserService : IUserService
 
     public async Task DeleteUserAsync(string id) =>
         await _repository.DeleteAsync(id);
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        var all = await _repository.GetAllAsync();
+        return all.FirstOrDefault(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase));
+    }
 }

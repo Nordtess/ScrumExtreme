@@ -18,23 +18,23 @@ namespace ScrumExtreme.Web.Controllers
         }
 
         [HttpGet]
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var users = await _userService.GetAllUsersAsync();
 
-            ViewBag.Customers = users.Where(u => !u.IsAdmin).ToList();
+            ViewBag.Customers = users.Where(u => u.Role == "customer").ToList();
 
             return View(new SpecialHatsViewModel());
         }
-    
 
-    [HttpPost("Special")]
+
+        [HttpPost("Special")]
         public async Task<IActionResult> CreateSpecial(SpecialHatsViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 var users = await _userService.GetAllUsersAsync();
-                ViewBag.Customers = users.Where(u => !u.IsAdmin).ToList();
+                ViewBag.Customers = users.Where(u => u.Role == "customer").ToList();
                 return View(model);
             }
 

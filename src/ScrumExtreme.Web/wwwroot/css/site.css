@@ -30,7 +30,7 @@ body {
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 60px;
 }
 
@@ -54,6 +54,37 @@ body {
   gap: 1.75rem;
   margin: 0;
   padding: 0;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar-right {
+  list-style: none;
+  display: flex;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.navbar-right a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.navbar-right a:hover {
+  color: #c9a84c;
+  border-bottom-color: rgba(201, 168, 76, 0.5);
 }
 
 .navbar-links a {
