@@ -10,14 +10,14 @@
 }
 
 .login-card {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-top: 3px solid #c9a84c;
   border-radius: 12px;
   padding: 2.5rem 2.75rem;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -43,7 +43,7 @@
 .login-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.04em;
   margin: 0;
   text-align: center;
@@ -51,7 +51,7 @@
 
 .login-subtitle {
   font-size: 0.72rem;
-  color: #605850;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-align: center;
@@ -61,7 +61,7 @@
 /* ── Divider ── */
 .login-divider {
   height: 1px;
-  background: #1c1c1c;
+  background: #d0ccc8;
   margin: 0;
 }
 
@@ -81,16 +81,16 @@
 .login-field label {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #888;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .login-field input {
-  background: #0a0a0a;
+  background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   font-size: 0.88rem;
   font-family: "Roboto", sans-serif;
   padding: 0.65rem 0.9rem;
@@ -103,7 +103,7 @@
 }
 
 .login-field input::placeholder {
-  color: #3a3a3a;
+  color: #aaa;
 }
 
 .login-field input:focus {

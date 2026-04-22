@@ -22,7 +22,7 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.04em;
   margin: 0 0 0.3rem;
 }
@@ -30,14 +30,14 @@
 .mp-page-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   letter-spacing: 0.04em;
   margin: 0 0 0.3rem;
 }
 
 .mp-page-subtitle {
   font-size: 0.8rem;
-  color: #605850;
+  color: #555;
   margin: 0;
   letter-spacing: 0.03em;
 }
@@ -50,9 +50,9 @@
 }
 
 .mp-kpi-card {
-  background: #111;
-  border: 1px solid #222;
-  border-left: 3px solid #333;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-left: 3px solid #2a2a2a;
   border-radius: 10px;
   padding: 1.1rem 1.3rem;
   display: flex;
@@ -90,7 +90,7 @@
 .mp-kpi-value {
   font-size: 1.85rem;
   font-weight: 700;
-  color: #e8e0d4;
+  color: #1a1612;
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -104,7 +104,7 @@
 
 .mp-kpi-label {
   font-size: 0.68rem;
-  color: #686060;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   font-weight: 500;
@@ -121,24 +121,24 @@
 
 /* ── Panel base ── */
 .mp-panel {
-  background: #111;
-  border: 1px solid #222;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
 
 .mp-panel:hover {
-  border-color: #2e2e2e;
+  border-color: #1a1612;
 }
 
 .mp-panel.--center {
-  border-color: #252525;
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+  border-color: #2a2a2a;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
 }
 
 .mp-panel.--center:hover {
-  border-color: #333;
+  border-color: #1a1612;
 }
 
 .mp-panel-header {
@@ -146,14 +146,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.3rem;
-  border-bottom: 1px solid #1c1c1c;
+  border-bottom: 1px solid #2a2a2a;
   gap: 0.75rem;
 }
 
 .mp-panel-title {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #ccc;
+  color: #1a1612;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin: 0;
@@ -204,17 +204,17 @@
 
 .mp-orders-table th {
   font-size: 0.62rem;
-  color: #484848;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 600;
   padding: 0 0.55rem 0.7rem;
-  border-bottom: 1px solid #1c1c1c;
+  border-bottom: 1px solid #2a2a2a;
   text-align: left;
   white-space: nowrap;
   position: sticky;
   top: 0;
-  background: #111;
+  background: #ffffff;
   z-index: 1;
 }
 
@@ -228,8 +228,8 @@
 .mp-orders-table td {
   padding: 0.85rem 0.55rem;
   font-size: 0.78rem;
-  color: #b8b0a8;
-  border-bottom: 1px solid #181818;
+  color: #1a1612;
+  border-bottom: 1px solid #d0ccc8;
   vertical-align: middle;
 }
 
@@ -245,7 +245,7 @@
 }
 
 .mp-orders-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .mp-orders-table tbody tr.--overdue td {
@@ -254,19 +254,19 @@
 
 .mp-order-num {
   font-size: 0.72rem;
-  color: #585050;
+  color: #777;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
 .mp-order-customer {
   font-weight: 500;
-  color: #e0d8d0;
+  color: #1a1612;
   white-space: nowrap;
 }
 
 .mp-order-model {
-  color: #888;
+  color: #555;
   font-size: 0.73rem;
   white-space: nowrap;
 }
@@ -347,7 +347,7 @@
 
 .mp-deadline {
   font-size: 0.73rem;
-  color: #686060;
+  color: #555;
   white-space: nowrap;
 }
 
@@ -361,13 +361,13 @@
 
 .mp-worker {
   font-size: 0.73rem;
-  color: #787070;
+  color: #555;
   white-space: nowrap;
 }
 
 .mp-worker-empty {
   font-size: 0.73rem;
-  color: #333;
+  color: #aaa;
 }
 
 /* ── Orders Toolbar + Scroll ── */
@@ -382,12 +382,12 @@
 .mp-orders-sort {
   appearance: none;
   -webkit-appearance: none;
-  background: #0d0d0d
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%23484848'/%3E%3C/svg%3E")
+  background: #ffffff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%232a2a2a'/%3E%3C/svg%3E")
     no-repeat right 0.55rem center;
   border: 1px solid #2a2a2a;
   border-radius: 5px;
-  color: #686060;
+  color: #555;
   font-size: 0.68rem;
   font-family: "Roboto", sans-serif;
   padding: 0.28rem 1.6rem 0.28rem 0.6rem;
@@ -401,8 +401,8 @@
 
 .mp-orders-sort:hover,
 .mp-orders-sort:focus {
-  border-color: #3a3a3a;
-  color: #aaa;
+  border-color: #1a1612;
+  color: #1a1612;
 }
 
 .mp-filter-check {
@@ -410,7 +410,7 @@
   align-items: center;
   gap: 0.38rem;
   cursor: pointer;
-  color: #686060;
+  color: #555;
   font-size: 0.68rem;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -419,7 +419,7 @@
 }
 
 .mp-filter-check:hover {
-  color: #a0a0a0;
+  color: #1a1612;
 }
 
 .mp-filter-check input[type="checkbox"] {
@@ -427,9 +427,9 @@
   -webkit-appearance: none;
   width: 13px;
   height: 13px;
-  border: 1px solid #333;
+  border: 1px solid #2a2a2a;
   border-radius: 3px;
-  background: #0d0d0d;
+  background: #ffffff;
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
@@ -491,7 +491,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 0.6rem 0;
-  border-bottom: 1px solid #191919;
+  border-bottom: 1px solid #d0ccc8;
 }
 
 .mp-stat-row:last-of-type {
@@ -500,13 +500,13 @@
 
 .mp-stat-label {
   font-size: 0.73rem;
-  color: #686060;
+  color: #555;
 }
 
 .mp-stat-value {
   font-size: 0.88rem;
   font-weight: 600;
-  color: #e0d8d0;
+  color: #1a1612;
   letter-spacing: -0.01em;
 }
 
@@ -531,7 +531,7 @@
 .mp-best-seller-value {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #e0d8d0;
+  color: #1a1612;
 }
 
 /* Bar chart */
@@ -541,7 +541,7 @@
 
 .mp-chart-label {
   font-size: 0.6rem;
-  color: #484848;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   margin-bottom: 0.55rem;
@@ -583,7 +583,7 @@
 
 .mp-bar span {
   font-size: 0.56rem;
-  color: #484848;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -604,7 +604,7 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.6rem 0;
-  border-bottom: 1px solid #191919;
+  border-bottom: 1px solid #d0ccc8;
 }
 
 .mp-inv-item:last-of-type {
@@ -613,12 +613,12 @@
 
 .mp-inv-name {
   font-size: 0.75rem;
-  color: #b0a8a0;
+  color: #1a1612;
 }
 
 .mp-inv-qty {
   font-size: 0.72rem;
-  color: #585050;
+  color: #555;
   white-space: nowrap;
   text-align: right;
 }
@@ -654,15 +654,15 @@
 .mp-delivery-note {
   margin-top: 0.9rem;
   padding: 0.6rem 0.75rem;
-  background: #161616;
+  background: #f5f2ec;
   border-radius: 6px;
   font-size: 0.7rem;
-  color: #585050;
+  color: #777;
   display: flex;
   align-items: center;
   gap: 0.45rem;
 }
 
 .mp-delivery-note strong {
-  color: #b0a8a0;
+  color: #1a1612;
 }
