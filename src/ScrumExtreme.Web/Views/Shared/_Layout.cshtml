@@ -36,7 +36,7 @@
                 </button>
                 <div class="navbar-links-wrapper" id="navLinksWrapper">
                     <ul class="navbar-links">
-                        @if (userRole == "employee")
+                        @if (userRole == "employee" || userRole == "admin")
                         {
                             <li><a asp-area="" asp-controller="MainPage" asp-action="Index">Home</a></li>
                             <li><a asp-area="" asp-controller="AddCustomer" asp-action="Index">Lägg till Kund</a></li>
@@ -48,10 +48,10 @@
                                 <li><a asp-area="" asp-controller="Orders" asp-action="Index">Alla Ordrar</a></li>
                                 <li><a asp-area="" asp-controller="Warehouse" asp-action="Index">Lagerstatus</a></li>
                                 <li><a asp-area="" asp-controller="ShippingLabel" asp-action="Index">Fraktsedel</a></li>
-                            }
-                        else if (userRole == "admin")
-                            {
-                                <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index">Lägg till Anställd</a></li>
+                                @if (userRole == "admin")
+                                {
+                                    <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index">Lägg till Anställd</a></li>
+                                }
                             }
                         </ul>
                     </div>
@@ -71,32 +71,32 @@
         </footer>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script>
-            (function () {
-            var btn = document.getElementById('navHamburger');
-            var wrapper = document.getElementById('navLinksWrapper');
-            if (!btn || !wrapper) return;
-            // Restore persisted open state
-            if (localStorage.getItem('navOpen') === '1') {
-            btn.classList.add('open');
-            wrapper.classList.add('open');
-            btn.setAttribute('aria-expanded', 'true');
-            }
-            btn.addEventListener('click', function () {
-            var isOpen = btn.classList.toggle('open');
-            wrapper.classList.toggle('open', isOpen);
-            btn.setAttribute('aria-expanded', isOpen);
-            localStorage.setItem('navOpen', isOpen ? '1' : '0');
-            });
-            // Close on outside click
-            document.addEventListener('click', function (e) {
-            if (!btn.contains(e.target) && !wrapper.contains(e.target)) {
-            btn.classList.remove('open');
-            wrapper.classList.remove('open');
-            btn.setAttribute('aria-expanded', 'false');
-            localStorage.setItem('navOpen', '0');
-            }
-            });
-            })();
+                (function () {
+                    var btn = document.getElementById('navHamburger');
+                    var wrapper = document.getElementById('navLinksWrapper');
+                    if (!btn || !wrapper) return;
+                    // Restore persisted open state
+                    if (localStorage.getItem('navOpen') === '1') {
+                        btn.classList.add('open');
+                        wrapper.classList.add('open');
+                        btn.setAttribute('aria-expanded', 'true');
+                    }
+                    btn.addEventListener('click', function () {
+                        var isOpen = btn.classList.toggle('open');
+                        wrapper.classList.toggle('open', isOpen);
+                        btn.setAttribute('aria-expanded', isOpen);
+                        localStorage.setItem('navOpen', isOpen ? '1' : '0');
+                    });
+                    // Close on outside click
+                    document.addEventListener('click', function (e) {
+                        if (!btn.contains(e.target) && !wrapper.contains(e.target)) {
+                            btn.classList.remove('open');
+                            wrapper.classList.remove('open');
+                            btn.setAttribute('aria-expanded', 'false');
+                            localStorage.setItem('navOpen', '0');
+                        }
+                    });
+                })();
         </script>
         @await RenderSectionAsync("Scripts", required: false)
     </body>

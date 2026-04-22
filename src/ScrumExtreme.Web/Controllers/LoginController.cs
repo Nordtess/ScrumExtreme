@@ -19,9 +19,7 @@ public class LoginController : Controller
         // Already logged in → redirect based on role
         var role = HttpContext.Session.GetString("UserRole");
         if (!string.IsNullOrEmpty(role))
-            return role == "admin"
-                ? RedirectToAction("Index", "AddEmployee")
-                : RedirectToAction("Index", "MainPage");
+            return RedirectToAction("Index", "MainPage");
 
         return View("Login");
     }
@@ -47,9 +45,7 @@ public class LoginController : Controller
         HttpContext.Session.SetString("UserRole", user.Role);
         HttpContext.Session.SetString("UserFullName", $"{user.FirstName} {user.LastName}");
 
-        return user.Role == "admin"
-            ? RedirectToAction("Index", "AddEmployee")
-            : RedirectToAction("Index", "MainPage");
+        return RedirectToAction("Index", "MainPage");
     }
 
     [HttpGet("Logout")]
