@@ -510,7 +510,7 @@
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.7rem 0;
-  border-bottom: 1px solid #141414;
+  border-bottom: 1px solid #d0ccc8;
 }
 
 .detail-field-group:last-child {
@@ -522,16 +522,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #4a4440;
+  color: #777;
 }
 
 .detail-value {
   font-size: 0.9rem;
-  color: #d8d0c8;
+  color: #1a1612;
 }
 
 .detail-value--muted {
-  color: #666;
+  color: #777;
   font-style: italic;
   font-size: 0.82rem;
 }
@@ -541,7 +541,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 0.5rem;
-  border-bottom: 1px solid #141414;
+  border-bottom: 1px solid #d0ccc8;
   text-decoration: none;
   border-radius: 6px;
   transition: background 0.15s ease;
@@ -552,7 +552,7 @@
 }
 
 .detail-order-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .detail-order-info {
@@ -563,13 +563,13 @@
 
 .detail-order-number {
   font-size: 0.85rem;
-  color: #d8d0c8;
+  color: #1a1612;
   font-weight: 500;
 }
 
 .detail-order-date {
   font-size: 0.71rem;
-  color: #4a4440;
+  color: #777;
 }
 
 .detail-order-right {
@@ -580,7 +580,7 @@
 
 .detail-order-amount {
   font-size: 0.82rem;
-  color: #888;
+  color: #555;
 }
 
 .detail-status-badge {
