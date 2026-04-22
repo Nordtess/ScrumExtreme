@@ -74,10 +74,17 @@
             var btn = document.getElementById('navHamburger');
             var wrapper = document.getElementById('navLinksWrapper');
             if (!btn || !wrapper) return;
+            // Restore persisted open state
+            if (localStorage.getItem('navOpen') === '1') {
+            btn.classList.add('open');
+            wrapper.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+            }
             btn.addEventListener('click', function () {
             var isOpen = btn.classList.toggle('open');
             wrapper.classList.toggle('open', isOpen);
             btn.setAttribute('aria-expanded', isOpen);
+            localStorage.setItem('navOpen', isOpen ? '1' : '0');
             });
             // Close on outside click
             document.addEventListener('click', function (e) {
@@ -85,6 +92,7 @@
             btn.classList.remove('open');
             wrapper.classList.remove('open');
             btn.setAttribute('aria-expanded', 'false');
+            localStorage.setItem('navOpen', '0');
             }
             });
             })();
