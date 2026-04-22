@@ -22,8 +22,6 @@
 
     <div class="admin-layout --single">
 
-        <!-- Create hat form -->
-        
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
@@ -33,52 +31,43 @@
             <div class="admin-panel-body">
                 <form asp-action="CreateSpecial" method="post" class="admin-form" id="createHatForm">
 
-                    <div class="admin-field">
-                        <label asp-for="CustomerId">Kund</label>
-
-                        <select asp-for="CustomerId" class="form-control">
-                            <option value="">-- Välj kund --</option>
-
-                            @if (customers != null && customers.Any())
-                            {
-                                foreach (var customer in customers)
-                                {
-                                    <option value="@customer.Id">
-                                        @customer.FirstName @customer.LastName (@customer.Email)
-                                    </option>
-                                }
-                            }
-                            else
-                            {
-                                <option disabled>Inga kunder tillgängliga</option>
-                            }
-                        </select>
-
-                        <span class="admin-error" asp-validation-for="CustomerId"></span>
-                    </div>
-
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="Name">Namn</label>
-                            <input asp-for="Name" id="Name" placeholder="T.ex. Fedora" />
-                            <span class="admin-error" id="error-Name"></span>
+                            <label asp-for="CustomerId">Kund</label>
+                            <select asp-for="CustomerId">
+                                <option value="">-- Välj kund --</option>
+                                @if (customers != null && customers.Any())
+                                {
+                                    foreach (var customer in customers)
+                                    {
+                                        <option value="@customer.Id">
+                                            @customer.FirstName @customer.LastName (@customer.Email)
+                                        </option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option disabled>Inga kunder tillgängliga</option>
+                                }
+                            </select>
+                            <span class="admin-error" asp-validation-for="CustomerId"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label>Tillgängliga storlekar</label>
+                            <label>Storlek</label>
                             <div class="size-checkbox-group" id="sizesGroup">
                                 @foreach (var size in new[] { "XS", "S", "M", "L", "XL", "XXL", "One Size" })
                                 {
-                                    var isChecked = Model.Sizes != null && Model.Sizes.Contains(size);
+                                    var isChecked = Model.Size == size;
                                     <label class="size-checkbox-label">
-                                        <input type="checkbox" name="Sizes" value="@size" @(isChecked ? "checked" : "") />
+                                        <input type="radio" name="Size" value="@size" @(isChecked ? "checked" : "") />
                                         @size
                                     </label>
                                 }
                             </div>
-                            <span class="admin-error" id="error-Sizes"></span>
+                            <span class="admin-error" asp-validation-for="Size"></span>
                         </div>
                     </div>
 
@@ -86,29 +75,71 @@
                         <div class="admin-field">
                             <label asp-for="Price">Pris (SEK)</label>
                             <input asp-for="Price" id="Price" type="number" step="0.01" min="1" />
-                            <span class="admin-error" id="error-Price"></span>
+                            <span class="admin-error" asp-validation-for="Price"></span>
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
-                            <label asp-for="MaterialList">Materiallista</label>
-                            <input asp-for="MaterialList" id="MaterialList" placeholder="T.ex. Ull, Bomull" />
-                            <span class="admin-error" id="error-MaterialList"></span>
+                            <label>Material</label>
+                            @if (Model.AvailableMaterials != null && Model.AvailableMaterials.Any())
+                            {
+                                <div class="size-checkbox-group" id="materialsGroup">
+                                    @foreach (var mat in Model.AvailableMaterials)
+                                    {
+                                        var isChecked = Model.SelectedMaterials != null &&
+                                Model.SelectedMaterials.Contains(mat.Name);
+                                        <label class="size-checkbox-label">
+                                            <input type="checkbox" name="SelectedMaterials" value="@mat.Name" @(isChecked ?
+                                                                                                                                                            "checked" : "") />
+                                            @mat.Name
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="admin-field-hint">Inga material tillagda ännu. Lägg till material i Lagerstatus.
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
+                            <label>Tillbehör</label>
+                            @if (Model.AvailableItems != null && Model.AvailableItems.Any())
+                            {
+                                <div class="size-checkbox-group" id="itemsGroup">
+                                    @foreach (var item in Model.AvailableItems)
+                                    {
+                                        var isChecked = Model.SelectedItems != null && Model.SelectedItems.Contains(item.Name);
+                                        <label class="size-checkbox-label">
+                                            <input type="checkbox" name="SelectedItems" value="@item.Name" @(isChecked ?
+                                                                                                                                                                     "checked" : "") />
+                                            @item.Name
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="admin-field-hint">Inga tillbehör tillagda ännu.</p>
+                            }
                         </div>
                     </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="Description">Beskrivning</label>
-                            <textarea asp-for="Description" id="Description" placeholder="Beskriv specialhatten..."></textarea>
-                            <span class="admin-error" id="error-Description"></span>
+                            <textarea asp-for="Description" id="Description"
+                                      placeholder="Beskriv specialhatten..."></textarea>
+                            <span class="admin-error" asp-validation-for="Description"></span>
                         </div>
                     </div>
 
                     <div class="admin-submit-area">
                         <button type="submit" class="admin-btn-primary" id="hatSubmitBtn">Skapa hatt</button>
-                        <span class="admin-submit-error" id="hatSubmitError"></span>
                     </div>
 
                 </form>
@@ -117,6 +148,7 @@
 
     </div>
 </div>
+
 
 @section Scripts {
     <script src="~/js/admin.js" asp-append-version="true"></script>

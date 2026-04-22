@@ -5,13 +5,13 @@
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding-top: 7vh;
+  padding-top: 2vh;
   width: 100%;
 }
 
 .login-logo {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   height: auto;
   margin-bottom: 1.75rem;
   display: block;

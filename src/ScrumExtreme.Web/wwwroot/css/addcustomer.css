@@ -186,7 +186,8 @@
 }
 
 .admin-field input,
-.admin-field textarea {
+.admin-field textarea,
+.admin-field select {
   background: #ffffff;
   border: 1px solid #2a2a2a;
   border-radius: 7px;
@@ -206,9 +207,23 @@
   color: #aaa;
 }
 
-.admin-field input:focus {
+.admin-field input:focus,
+.admin-field textarea:focus,
+.admin-field select:focus {
   border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+/* ── Hide number input spinners ── */
+.admin-field input[type="number"]::-webkit-outer-spin-button,
+.admin-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.admin-field input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .admin-field input.valid {
@@ -258,9 +273,13 @@
   border-color: #c9a84c;
 }
 
-.size-checkbox-label input[type="checkbox"] {
+.size-checkbox-label input[type="checkbox"],
+.size-checkbox-label input[type="radio"] {
   accent-color: #c9a84c;
-  width: auto;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
   cursor: pointer;
 }
 
