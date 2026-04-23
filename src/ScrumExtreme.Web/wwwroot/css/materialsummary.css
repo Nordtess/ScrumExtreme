@@ -265,9 +265,11 @@
 
 /* ── Print button: black → champagne hover with animated underline ── */
 .ms-print-btn {
-  display: inline-block;
-  background: #1a1612;
-  color: #f7e6ca;
+  display: block;
+  width: fit-content;
+  margin: 0 auto 1.5rem;
+  background: #f7e6ca;
+  color: #1a1612;
   border: 1.5px solid #1a1612;
   border-radius: 8px;
   padding: 0.72rem 1.6rem;
@@ -283,7 +285,6 @@
     background 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
-  margin-bottom: 1.5rem;
 }
 
 .ms-print-btn::after {
@@ -300,8 +301,8 @@
 }
 
 .ms-print-btn:hover {
-  background: #f7e6ca;
-  color: #1a1612;
+  background: #1a1612;
+  color: #f7e6ca;
   box-shadow: 0 0 0 2px #1a1612;
 }
 
