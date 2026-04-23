@@ -113,12 +113,14 @@
 /* ── Filter bar scoped to home page right column ── */
 .home-col .order-filter-bar {
   justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0.65rem 1rem;
+  gap: 0.65rem 1.25rem;
   margin-bottom: 0.75rem;
 }
 
 .home-col .order-filter-group {
+  align-items: center;
   gap: 0.4rem;
 }
 
@@ -135,6 +137,31 @@
 .home-col .order-type-pill {
   font-size: 0.7rem;
   padding: 0.25rem 0.6rem;
+  background: #f5f2ec;
+  color: #aaa;
+  border-color: #ccc;
+}
+
+/* Per-type active colors matching the order-type badges */
+.home-col .order-type-pill[data-type="standard"].active {
+  background: rgba(0, 0, 0, 0.09);
+  color: #222;
+  border-color: #1a1612;
+  font-weight: 700;
+}
+
+.home-col .order-type-pill[data-type="modifierad"].active {
+  background: rgba(201, 168, 76, 0.22);
+  color: #a8820a;
+  border-color: #1a1612;
+  font-weight: 700;
+}
+
+.home-col .order-type-pill[data-type="special"].active {
+  background: rgba(155, 80, 255, 0.18);
+  color: #9032e6;
+  border-color: #1a1612;
+  font-weight: 700;
 }
 
 /* ── Responsive: stack columns on narrow screens ── */
