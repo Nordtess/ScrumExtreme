@@ -46,7 +46,7 @@
                 @foreach (var hat in hatList)
                 {
                     var savedTotal = hat.Stock.Values.Sum();
-                    <div class="warehouse-card" data-saved-total="@savedTotal">
+                    <div class="warehouse-card" data-saved-total="@savedTotal" data-hat-price="@hat.Price">
                         <div class="warehouse-card-header">
                             <h2 class="warehouse-card-name">@hat.Name</h2>
                             <span class="warehouse-card-price">@hat.Price kr</span>
@@ -80,6 +80,10 @@
                         </div>
                     </div>
                 }
+            </div>
+            <div class="warehouse-hat-footer">
+                <span class="warehouse-footer-label">Totalt hattvärde:</span>
+                <span class="warehouse-footer-total" id="hat-grand-total">0 kr</span>
             </div>
         }
     </section>
@@ -127,7 +131,7 @@
                 </div>
             }
             <div class="warehouse-list-footer">
-                <span class="warehouse-footer-label">Totalt lagervärde:</span>
+                <span class="warehouse-footer-label">Totalt materialvärde:</span>
                 <span class="warehouse-footer-total" id="material-grand-total">0 kr</span>
                 <button class="warehouse-save-btn --small" id="material-save-btn">Spara alla</button>
                 <span class="warehouse-status" id="material-status"></span>
@@ -177,7 +181,7 @@
                 </div>
             }
             <div class="warehouse-list-footer">
-                <span class="warehouse-footer-label">Totalt lagervärde:</span>
+                <span class="warehouse-footer-label">Totalt tillbehörsvärde:</span>
                 <span class="warehouse-footer-total" id="tillbehor-grand-total">0 kr</span>
                 <button class="warehouse-save-btn --small" id="tillbehor-save-btn">Spara alla</button>
                 <span class="warehouse-status" id="tillbehor-status"></span>
@@ -185,10 +189,28 @@
         </div>
     </section>
 
+    <!-- ── Bottom summary ── -->
+    <div class="warehouse-summary-strip" id="warehouse-summary">
+        <div class="warehouse-summary-item">
+            <span class="warehouse-summary-label">Totalt lagervärde</span>
+            <span class="warehouse-summary-value" id="summary-stock-value">0 kr</span>
+        </div>
+        <div class="warehouse-summary-item">
+            <span class="warehouse-summary-label">Totalt kapital</span>
+            <span class="warehouse-summary-value" id="summary-capital">@((long)(Model?.CapitalSEK ?? 0)) kr</span>
+        </div>
+        <div class="warehouse-summary-item">
+            <span class="warehouse-summary-label">Totalt bolagsvärde</span>
+            <span class="warehouse-summary-value" id="summary-company-value">0 kr</span>
+        </div>
+    </div>
+
 </div>
 
 @section Scripts {
     <script>
+        window.warehouseCapital = @((long)(Model?.CapitalSEK ?? 0));
+
         // ── Section filter ──────────────────────────────────────────────────
         const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ\s\-]+$/;
 
@@ -288,6 +310,41 @@
                 row.querySelector('.warehouse-list-total').textContent = total.toLocaleString('sv-SE') + ' kr';
             });
             list.querySelector('.warehouse-footer-total').textContent = grand.toLocaleString('sv-SE') + ' kr';
+            updateSummaryStrip();
+        }
+
+        // ── Hat section total ──────────────────────────────────────────────
+        function updateHatTotal() {
+            let hatTotal = 0;
+            document.querySelectorAll('.warehouse-card').forEach(card => {
+                const price = parseInt(card.dataset.hatPrice, 10) || 0;
+                let cardStock = 0;
+                card.querySelectorAll('.warehouse-size-input').forEach(input => {
+                    cardStock += parseInt(input.value, 10) || 0;
+                });
+                hatTotal += price * cardStock;
+            });
+            const el = document.getElementById('hat-grand-total');
+            if (el) el.textContent = hatTotal.toLocaleString('sv-SE') + ' kr';
+            updateSummaryStrip();
+        }
+
+        // ── Bottom summary strip ───────────────────────────────────────────
+        function updateSummaryStrip() {
+            function parseKr(elId) {
+                const el = document.getElementById(elId);
+                if (!el) return 0;
+                return parseInt(el.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+            }
+            const stockVal = parseKr('hat-grand-total') + parseKr('material-grand-total') + parseKr('tillbehor-grand-total');
+            const capital = window.warehouseCapital || 0;
+            const companyVal = stockVal + capital;
+            const stockEl = document.getElementById('summary-stock-value');
+            const capEl = document.getElementById('summary-capital');
+            const compEl = document.getElementById('summary-company-value');
+            if (stockEl) stockEl.textContent = stockVal.toLocaleString('sv-SE') + ' kr';
+            if (capEl) capEl.textContent = capital.toLocaleString('sv-SE') + ' kr';
+            if (compEl) compEl.textContent = companyVal.toLocaleString('sv-SE') + ' kr';
         }
 
         document.querySelectorAll('.warehouse-list').forEach(list => {
@@ -307,6 +364,18 @@
             // Calculate totals from server-rendered values on page load
             updateListTotals(list);
         });
+
+        // ── Hat size input listeners (live hat total) ───────────────────────
+        document.querySelectorAll('.warehouse-size-input').forEach(input => {
+            input.addEventListener('input', () => {
+                sanitiseInput(input);
+                updateHatTotal();
+            });
+            input.addEventListener('blur', () => {
+                if (input.value === '') { input.value = '0'; updateHatTotal(); }
+            });
+        });
+        updateHatTotal();
 
         // ── Save hat stock ──────────────────────────────────────────────────
         document.querySelectorAll('.warehouse-save-btn:not([disabled])').forEach(btn => {
@@ -508,13 +577,13 @@
                         newRow.className = 'warehouse-list-row';
                         newRow.dataset.itemId = data.id;
                         newRow.innerHTML = `
-                                        <span class="warehouse-list-name">${data.name}</span>
-                                        <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
-                                               inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
-                                        <input class="warehouse-price-input" type="number" min="0" step="1"
-                                               inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
-                                        <span class="warehouse-list-total">${stock * price} kr</span>
-                                        <button class="warehouse-delete-btn" data-item-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
+                                            <span class="warehouse-list-name">${data.name}</span>
+                                            <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                                                   inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
+                                            <input class="warehouse-price-input" type="number" min="0" step="1"
+                                                   inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
+                                            <span class="warehouse-list-total">${stock * price} kr</span>
+                                            <button class="warehouse-delete-btn" data-item-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
                         list.insertBefore(newRow, footer);
 
                         wireDeleteBtn(newRow.querySelector('.warehouse-delete-btn'));
@@ -674,13 +743,13 @@
                         newRow.className = 'warehouse-list-row';
                         newRow.dataset.materialId = data.id;
                         newRow.innerHTML = `
-                                <span class="warehouse-list-name">${data.name}</span>
-                                <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
-                                       inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
-                                <input class="warehouse-price-input" type="number" min="0" step="1"
-                                       inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
-                                <span class="warehouse-list-total">${stock * price} kr</span>
-                                <button class="warehouse-delete-material-btn" data-material-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
+                                    <span class="warehouse-list-name">${data.name}</span>
+                                    <input class="warehouse-simple-input warehouse-qty-input" type="number" min="0" step="1"
+                                           inputmode="numeric" pattern="[0-9]*" value="${stock}" aria-label="Antal ${data.name}" />
+                                    <input class="warehouse-price-input" type="number" min="0" step="1"
+                                           inputmode="numeric" pattern="[0-9]*" value="${price}" aria-label="Pris ${data.name}" />
+                                    <span class="warehouse-list-total">${stock * price} kr</span>
+                                    <button class="warehouse-delete-material-btn" data-material-id="${data.id}" title="Ta bort ${data.name}">✕</button>`;
                         list.insertBefore(newRow, footer);
 
                         wireDeleteMaterialBtn(newRow.querySelector('.warehouse-delete-material-btn'));

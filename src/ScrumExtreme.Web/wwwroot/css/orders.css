@@ -167,11 +167,30 @@
     background 0.2s ease,
     color 0.2s ease;
   margin-top: 0.5rem;
+  position: relative;
+}
+
+.admin-btn-secondary::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .admin-btn-secondary:hover {
   background: #1a1612;
   color: #f7e6ca;
+}
+
+.admin-btn-secondary:hover::after {
+  left: 0.9rem;
+  right: 0.9rem;
 }
 
 /* Hat list in the right panel */
@@ -330,9 +349,9 @@
 }
 
 .order-delete-btn:hover {
-  background: rgba(210, 55, 45, 0.12);
-  border-color: #1a1612;
-  color: #1a1612;
+  background: rgba(220, 38, 38, 0.14);
+  border-color: #dc2626;
+  color: #dc2626;
 }
 
 /* ── Order details page action buttons ── */
@@ -340,12 +359,34 @@
   font-size: 0.82rem;
   padding: 0.5rem 1.1rem;
   border: 1.5px solid #1a1612;
-  color: #c9a84c;
+  background: #f7e6ca;
+  color: #1a1612;
+  position: relative;
+}
+
+.order-details-actions .admin-panel-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .order-details-actions .admin-panel-btn:hover {
-  background: rgba(201, 168, 76, 0.1);
+  background: #1a1612;
+  color: #f7e6ca;
   border-color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.order-details-actions .admin-panel-btn:hover::after {
+  left: 1.1rem;
+  right: 1.1rem;
 }
 
 /* Override row layout for the orders history list */

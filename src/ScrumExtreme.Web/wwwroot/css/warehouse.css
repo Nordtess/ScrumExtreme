@@ -158,12 +158,36 @@
     background 0.18s ease,
     color 0.18s ease;
   flex-shrink: 0;
+  position: relative;
+}
+
+.warehouse-save-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .warehouse-save-btn:hover {
   background: #1a1612;
   color: #f7e6ca;
   border-color: #1a1612;
+}
+
+.warehouse-save-btn:hover::after {
+  left: 1rem;
+  right: 1rem;
+}
+
+.warehouse-save-btn.--small:hover::after {
+  left: 0.65rem;
+  right: 0.65rem;
 }
 
 .warehouse-save-btn:disabled {
@@ -455,9 +479,9 @@
 .warehouse-delete-btn:hover,
 .warehouse-delete-material-btn:hover,
 .warehouse-delete-hat-btn:hover {
-  background: rgba(210, 55, 45, 0.12);
-  color: #1a1612;
-  border-color: #1a1612;
+  background: rgba(220, 38, 38, 0.14);
+  color: #dc2626;
+  border-color: #dc2626;
 }
 
 .warehouse-footer-label {
@@ -553,4 +577,52 @@
   background: #e8e0d4;
   color: #888;
   border-color: #aaa;
+}
+
+/* ── Hat section value footer ── */
+.warehouse-hat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.8rem 1.1rem;
+  background: #f5f2ec;
+  border: 1px solid #2a2a2a;
+  border-radius: 0 0 10px 10px;
+  border-top: none;
+  margin-top: -2px;
+}
+
+/* ── Bottom warehouse summary strip ── */
+.warehouse-summary-strip {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.4rem;
+  background: #1a1612;
+  border-radius: 10px;
+  border: 1.5px solid #1a1612;
+  margin-top: 0.5rem;
+}
+
+.warehouse-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.warehouse-summary-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #c9a84c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.warehouse-summary-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f7e6ca;
 }
