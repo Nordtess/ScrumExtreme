@@ -58,6 +58,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return checked;
     }
 
+    function validateMaterials() {
+        const checked = form.querySelectorAll('input[name="SelectedMaterials"]:checked').length > 0;
+        const errorEl = document.getElementById('error-Materials');
+        if (errorEl) errorEl.textContent = checked ? '' : 'Minst ett material måste väljas.';
+        const group = document.getElementById('materialsGroup');
+        if (group) {
+            group.style.outline = checked ? '' : '1px solid #ff453a';
+            group.style.borderRadius = '6px';
+        }
+        return checked;
+    }
+
     // ── Attach blur + input listeners ─────────────────────────────────────
     Object.keys(fieldRules).forEach(function (id) {
         const input = document.getElementById(id);
@@ -82,17 +94,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    form.querySelectorAll('input[name="SelectedMaterials"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            validateMaterials();
+        });
+    });
+
     // ── Submit button state ───────────────────────────────────────────────
     function isFormValid() {
-        const textOk  = Object.keys(fieldRules).every(function (id) {
+        const textOk      = Object.keys(fieldRules).every(function (id) {
             const input = document.getElementById(id);
             return input && input.classList.contains('valid');
         });
-        const sizesOk = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
-        return textOk && sizesOk;
+        const sizesOk     = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
+        const materialsOk = form.querySelectorAll('input[name="SelectedMaterials"]:checked').length > 0;
+        return textOk && sizesOk && materialsOk;
     }
 
-    // Only update classes when hovered — same pattern as login/addcustomer
+    
     if (submitBtn) {
         submitBtn.addEventListener('mouseenter', function () {
             submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
@@ -109,9 +128,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const input = document.getElementById(id);
             if (input) input.dataset.touched = '1';
         });
-        const textValid  = Object.keys(fieldRules).map(validateTextField).every(Boolean);
-        const sizesValid = validateSizes();
-        if (!textValid || !sizesValid) {
+        const textValid      = Object.keys(fieldRules).map(validateTextField).every(Boolean);
+        const sizesValid     = validateSizes();
+        const materialsValid = validateMaterials();
+        if (!textValid || !sizesValid || !materialsValid) {
             e.preventDefault();
             submitError.textContent = 'Rätta felen ovan innan du skickar.';
         } else {

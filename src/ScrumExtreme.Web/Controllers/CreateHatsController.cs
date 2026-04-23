@@ -32,7 +32,9 @@ namespace ScrumExtreme.Web.Controllers
             if (model.Sizes == null || !model.Sizes.Any())
                 ModelState.AddModelError(nameof(model.Sizes), "Minst en storlek måste väljas.");
 
-            // Remove server-side Required on MaterialList — it is now optional (hat may have no material)
+            if (model.SelectedMaterials == null || !model.SelectedMaterials.Any())
+                ModelState.AddModelError(nameof(model.SelectedMaterials), "Minst ett material måste väljas.");
+
             ModelState.Remove(nameof(model.AvailableMaterials));
 
             if (!ModelState.IsValid)
