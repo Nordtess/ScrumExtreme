@@ -423,7 +423,11 @@
                         items: selectedItems, // full objects: { id, name, price }
                         isModified: isModifiedInput.checked,
                         modificationDescription: modificationDescriptionInput.value.trim(),
-                        itemIds: selectedItems.map(i => i.id)
+                        itemIds: selectedItems.map(i => i.id),
+
+                        isRushOrder: false,
+                        discountPercent: 0,
+                        manualPrice: null
                     });
 
                     // Nollställ modifieringsfält
@@ -445,22 +449,45 @@
                     hatListBlock.style.display = 'block';
                     let total = 0;
                     cart.forEach(h => {
-                        const lineTotal = h.unitPrice * h.quantity;
+                        const unitPrice = calculateUnitPrice(h);
+                        //Om manuellt pris finns använd det som total, annars räkna som vanligt:
+                        const lineTotal = (h.manualPrice !== null && !isNaN(h.manualPrice))
+                        ? h.manualPrice
+                        : unitPrice * h.quantity;
                         total += lineTotal;
 
                         const li = document.createElement('li');
                         li.className = 'order-hat-item --expanded';
 
-                        // Header row: hat name + remove button
+                        // Header row: hat name + remove button 
                         let html = `
                             <div class="order-hat-row order-hat-header">
-                                <span class="order-hat-title">${esc(h.name)} <span class="order-hat-size">(${esc(h.size)}) × ${h.quantity}</span></span>
+                                <span class="order-hat-title">${esc(h.name)} <span class="order-hat-size">(${esc(h.size)}) × ${h.quantity}</span>
                                 <button class="order-hat-remove" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" title="Ta bort">✕</button>
                             </div>
                             <div class="order-hat-row order-hat-sub">
                                 <span>Hatt</span>
-                                <span class="order-hat-item-price">${Math.round(h.hatBasePrice)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(unitPrice)} kr</span>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    <input type="checkbox" class="rush-order-toggle" data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"${h.isRushOrder ? 'checked' : ' '} />
+                                    Snabb order (+20%)
+                                </label>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    Rabatt (%):
+                                    <input type="number"class="discount-input"data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"value="${h.discountPercent}"min="0"max="100"/>
+                                </label>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    Manuellt pris:
+                                    <input type="number"class="manual-price-input"data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"value="${h.manualPrice ?? ''}"min="0"/>
+                                </label>
                             </div>`;
+                            
 
                         // Each accessory
                         (h.items || []).forEach(acc => {
@@ -492,6 +519,42 @@
                             updateCreateBtn();
                         });
                     });
+                    //Uppdaterar snabborder-status och räknar om priset 
+                    hatList.querySelectorAll('.rush-order-toggle').forEach(cb => {
+                        cb.addEventListener('change', () => {
+                            const hat = cart.find(h => h.hatId === cb.dataset.id && h.size === cb.dataset.size);
+                            if (hat) {
+                                hat.isRushOrder = cb.checked;
+                                renderCart();
+                            }
+                        });
+                    });
+                    //Uppdaterar rabatt i % och räknar om priset
+                    hatList.querySelectorAll('.discount-input').forEach(input => {
+                        input.addEventListener('change', () => {
+                            const hat = cart.find(h => h.hatId === input.dataset.id && h.size === input.dataset.size);
+                            if (hat) {
+                                hat.discountPercent = parseFloat(input.value) || 0;
+                                renderCart();
+                            }
+                        });
+                    });
+                    //Uppdaterar manuellt pris (override) och räknar om priset
+                    hatList.querySelectorAll('.manual-price-input').forEach(input => {
+                        input.addEventListener('change', () => {
+                            const hat = cart.find(h => h.hatId === input.dataset.id && h.size === input.dataset.size);
+                            if (hat) {
+                                const value =parseFloat(input.value);
+
+                                if (!isNaN(value)) {
+                                    hat.manualPrice = value;
+                                } else {
+                                    hat.manualPrice = null;
+                                }
+                                renderCart();
+                            }
+                        });
+                    });
                 }
 
                 function updateCreateBtn() {
@@ -508,7 +571,9 @@
                     try {
                         const payload = {
                             customerId: customerSelect.value,
-                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.unitPrice,
+                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.manualPrice !== null && !isNaN(h.manualPrice)
+                                ? h.manualPrice
+                                : calculateUnitPrice(h),
                              isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds,
                              addedMaterialCost: 0
                             }))
@@ -533,6 +598,25 @@
                 function esc(str) {
                     if (!str) return '';
                     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                }
+
+                function calculateUnitPrice(h) {
+                    //Manuellt satt pris overridear all annan prissättning. 
+                    if (h.manualPrice !==null && !isNaN(h.manualPrice)){
+                        return h.manualPrice;
+                    }
+
+                    let price = h.hatBasePrice + h.itemCost;
+
+                    if (h.isRushOrder) {
+                        price = price *1.20;
+                    }
+
+                    if (h.discountPercent >0) {
+                        price = price *(1 - h.discountPercent / 100);
+                    }
+
+                    return price;
                 }
             </script>
         }
