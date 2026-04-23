@@ -1,4 +1,4 @@
-﻿@model List<ScrumExtreme.Web.Models.MaterialSummaryViewModel>
+﻿@model ScrumExtreme.Web.Models.MaterialSummaryPageViewModel
 
 @{
 	ViewData["Title"] = "Materialöversikt";
@@ -18,96 +18,137 @@
 	<div class="admin-page-header">
 		<h1 class="admin-page-title">Materialöversikt</h1>
 		<p class="admin-page-subtitle">
-			Översikt av material som krävs för ordrar som väntar på utskrift
+			Översikt av material och tillbehör som krävs för ordrar som väntar på utskrift
 		</p>
 	</div>
 
 	<div class="admin-layout">
 
-		<div class="admin-panel">
+		<div class="admin-panel-stack">
 
-			<div class="admin-panel-header">
-				<h2 class="admin-panel-title">
-					<span class="admin-panel-dot"></span>
-					Material i behov
+			<!-- Materials panel -->
+			<div class="admin-panel">
 
-					@if (Model != null)
-					{
-						<span class="admin-customer-count">@Model.Count()</span>
-					}
-				</h2>
-			</div>
+				<div class="admin-panel-header">
+					<h2 class="admin-panel-title">
+						<span class="admin-panel-dot"></span>
+						Material i behov
 
-			<div class="admin-panel-body">
-
-				@if (Model == null || !Model.Any())
-				{
-					<span class="admin-list-placeholder">
-						Inga material hittades för väntande ordrar.
-					</span>
-				}
-				else
-				{
-					<div class="admin-customer-list">
-
-						<div class="material-summary-header">
-							<span>Material</span>
-							<span>Antal</span>
-							<span>Pris per styck</span>
-							<span>Totalt pris</span>
-						</div>
-
-						@foreach (var item in Model)
+						@if (Model?.Materials != null)
 						{
-							<div class="admin-customer-row">
-
-								<span class="admin-customer-name">
-									@item.MaterialName
-								</span>
-
-								<span class="admin-customer-count material-col-qty">
-									@item.TotalQuantity
-								</span>
-
-								<span class="material-col-price">
-									@item.PricePerUnit.ToString("0.00") kr
-								</span>
-
-								<span class="material-col-total">
-									@item.TotalPrice.ToString("0.00") kr
-								</span>
-
-							</div>
+							<span class="admin-customer-count">@Model.Materials.Count</span>
 						}
+					</h2>
+				</div>
 
-					</div>
-				}
+				<div class="admin-panel-body">
 
+					@if (Model?.Materials == null || !Model.Materials.Any())
+					{
+						<span class="admin-list-placeholder">
+							Inga material hittades för väntande ordrar.
+						</span>
+					}
+					else
+					{
+						<div class="admin-customer-list">
+
+							<div class="material-summary-header">
+								<span>Material</span>
+								<span>Antal</span>
+								<span>Pris per styck</span>
+								<span>Totalt pris</span>
+							</div>
+
+							@foreach (var mat in Model.Materials)
+							{
+								<div class="admin-customer-row">
+									<span class="admin-customer-name">@mat.MaterialName</span>
+									<span class="admin-customer-count material-col-qty">@mat.TotalQuantity</span>
+									<span class="material-col-price">@mat.PricePerUnit.ToString("0.00") kr</span>
+									<span class="material-col-total">@mat.TotalPrice.ToString("0.00") kr</span>
+								</div>
+							}
+
+						</div>
+					}
+
+				</div>
 			</div>
+
+			<!-- Items / Tillbehör panel -->
+			<div class="admin-panel">
+
+				<div class="admin-panel-header">
+					<h2 class="admin-panel-title">
+						<span class="admin-panel-dot"></span>
+						Tillbehör i behov
+
+						@if (Model?.Items != null)
+						{
+							<span class="admin-customer-count">@Model.Items.Count</span>
+						}
+					</h2>
+				</div>
+
+				<div class="admin-panel-body">
+
+					@if (Model?.Items == null || !Model.Items.Any())
+					{
+						<span class="admin-list-placeholder">
+							Inga tillbehör hittades för väntande ordrar.
+						</span>
+					}
+					else
+					{
+						<div class="admin-customer-list">
+
+							<div class="material-summary-header">
+								<span>Tillbehör</span>
+								<span>Antal</span>
+								<span>Pris per styck</span>
+								<span>Totalt pris</span>
+							</div>
+
+							@foreach (var item in Model.Items)
+							{
+								<div class="admin-customer-row">
+									<span class="admin-customer-name">@item.ItemName</span>
+									<span class="admin-customer-count material-col-qty">@item.TotalQuantity</span>
+									<span class="material-col-price">@item.PricePerUnit.ToString("0.00") kr</span>
+									<span class="material-col-total">@item.TotalPrice.ToString("0.00") kr</span>
+								</div>
+							}
+
+						</div>
+					}
+
+				</div>
+			</div>
+
 		</div>
 
+		<!-- Right: action panel -->
 		<div class="admin-panel">
 
 			<div class="admin-panel-header">
 				<h2 class="admin-panel-title">
 					<span class="admin-panel-dot"></span>
-					Bekräftelse
+					Beställning
 				</h2>
 			</div>
 
 			<div class="admin-panel-body">
 
 				<p class="admin-field-hint">
-					Säkerställ att du har skrivit ut materiallistan, sedan bekräftar du genom knappen nedan
+					Skriv ut en materialbeställning för att sammanställa allt material och tillbehör
+					som behöver beställas. När du bekräftar beställningen uppdateras lagersaldot automatiskt.
 				</p>
 
-				<form asp-action="ConfirmPrinted" method="post" class="admin-submit-area">
-
-					<button type="submit" class="admin-btn-primary">
-						Markera som utskriven
-					</button>
-
-				</form>
+				<a href="@Url.Action("PrintOrder", "MaterialSummary")" class="admin-btn-primary"
+					   style="display:block; text-align:center; text-decoration:none;">
+					Skriv ut materialbeställning
+				</a>
 
 			</div>
 
