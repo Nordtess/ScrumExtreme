@@ -62,12 +62,12 @@ body {
 }
 
 .nav-hamburger:hover .ham-bar {
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
 .nav-hamburger.open .ham-bar:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
 .nav-hamburger.open .ham-bar:nth-child(2) {
@@ -77,7 +77,7 @@ body {
 
 .nav-hamburger.open .ham-bar:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
 /* ── Sliding links ── */
@@ -132,8 +132,17 @@ body {
 
 .navbar-right a:hover,
 .navbar-links a:hover {
-  color: #c9a84c;
-  border-bottom-color: rgba(201, 168, 76, 0.5);
+  color: #1a1612;
+  background: #f7e6ca;
+  border-bottom-color: #1a1612;
+}
+
+.navbar-right a.active,
+.navbar-links a.active {
+  color: #1a1612;
+  background: #f7e6ca;
+  border-bottom-color: #1a1612;
+  font-weight: 700;
 }
 
 /* ── Main content ── */
