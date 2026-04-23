@@ -365,11 +365,28 @@
 }
 
 .order-col-country {
-  font-size: 0.8rem;
-  color: #777;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1612;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.order-col-date {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-col-amount {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c9a84c;
+  white-space: nowrap;
 }
 
 /* Customer info block */

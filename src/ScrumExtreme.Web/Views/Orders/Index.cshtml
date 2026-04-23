@@ -96,6 +96,9 @@
                         string lastName = hasUser ? u!.LastName : "";
                         string email = hasUser ? u!.Email : "–";
                         string country = hasUser ? u!.Country : "–";
+                        string countryCode = hasUser ? u!.CountryCode : "";
+                        string flagEmoji = string.IsNullOrEmpty(countryCode) ? "" :
+                            string.Concat(countryCode.ToUpper().Select(ch => char.ConvertFromUtf32(0x1F1A5 + (int)ch)));
                         string statusKey = order.Status.ToString().ToLower();
                         string statusLabel = order.Status switch
                         {
@@ -115,78 +118,77 @@
                             <span class="order-col-name">@firstName</span>
                             <span class="order-col-name">@lastName</span>
                             <span class="order-col-email">@email</span>
-                            <span class="order-col-country">@country</span>
+                            <span class="order-col-country">@flagEmoji @country</span>
                             <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
-                            <span style="color:#666;font-size:0.8rem;">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
-                            <span style="color:#c9a84c;font-size:0.85rem;font-weight:600;">@order.TotalAmount.ToString("0.00")
-                                kr</span>
-                                <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
-                            </div>
-                        }
+                            <span class="order-col-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                            <span class="order-col-amount">@order.TotalAmount.ToString("0.00") kr</span>
+                            <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
+                        </div>
                     }
-                </div>
+                }
             </div>
         </div>
-
     </div>
 
-    @section Scripts {
-        <script>
-            const sortSelect = document.getElementById('orderSortFilter');
-            const statusSelect = document.getElementById('orderStatusFilter');
-            const list = document.querySelector('.admin-customer-list');
+</div>
 
-            // ── Type pills toggle ──
-            document.querySelectorAll('.order-type-pill').forEach(pill => {
-                pill.addEventListener('click', function () {
-                    this.classList.toggle('active');
-                    applyFilters();
-                });
+@section Scripts {
+    <script>
+        const sortSelect = document.getElementById('orderSortFilter');
+        const statusSelect = document.getElementById('orderStatusFilter');
+        const list = document.querySelector('.admin-customer-list');
+
+        // ── Type pills toggle ──
+        document.querySelectorAll('.order-type-pill').forEach(pill => {
+            pill.addEventListener('click', function () {
+                this.classList.toggle('active');
+                applyFilters();
             });
+        });
 
-            // ── Combined filter + sort ──
-            function applyFilters() {
-                const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
-                const activePills = new Set(
-                    Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
-                );
-                const statusVal = statusSelect.value;
-                const newest = sortSelect.value === 'newest';
+        // ── Combined filter + sort ──
+        function applyFilters() {
+            const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
+            const activePills = new Set(
+                Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
+            );
+            const statusVal = statusSelect.value;
+            const newest = sortSelect.value === 'newest';
 
-                // Sort
-                rows.sort((a, b) => {
-                    const da = BigInt(a.dataset.date);
-                    const db = BigInt(b.dataset.date);
-                    return newest ? (db > da ? 1 : db < da ? -1 : 0)
-                        : (da > db ? 1 : da < db ? -1 : 0);
-                });
-                rows.forEach(r => list.appendChild(r));
-
-                // Show/hide
-                rows.forEach(row => {
-                    const typeMatch = activePills.has(row.dataset.type);
-                    const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
-                    row.style.display = (typeMatch && statusMatch) ? '' : 'none';
-                });
-            }
-
-            sortSelect.addEventListener('change', applyFilters);
-            statusSelect.addEventListener('change', applyFilters);
-
-            // ── Ta bort order ──
-            document.querySelectorAll('.order-delete-btn').forEach(btn => {
-                btn.addEventListener('click', async function () {
-                    const id = this.dataset.id;
-                    if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
-                    const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
-                    if (res.ok) {
-                        this.closest('.admin-customer-row').remove();
-                        const countEl = document.querySelector('.admin-customer-count');
-                        if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
-                    } else {
-                        alert('Något gick fel. Försök igen.');
-                    }
-                });
+            // Sort
+            rows.sort((a, b) => {
+                const da = BigInt(a.dataset.date);
+                const db = BigInt(b.dataset.date);
+                return newest ? (db > da ? 1 : db < da ? -1 : 0)
+                    : (da > db ? 1 : da < db ? -1 : 0);
             });
-        </script>
-    }
+            rows.forEach(r => list.appendChild(r));
+
+            // Show/hide
+            rows.forEach(row => {
+                const typeMatch = activePills.has(row.dataset.type);
+                const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
+                row.style.display = (typeMatch && statusMatch) ? '' : 'none';
+            });
+        }
+
+        sortSelect.addEventListener('change', applyFilters);
+        statusSelect.addEventListener('change', applyFilters);
+
+        // ── Ta bort order ──
+        document.querySelectorAll('.order-delete-btn').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = this.dataset.id;
+                if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
+                const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
+                if (res.ok) {
+                    this.closest('.admin-customer-row').remove();
+                    const countEl = document.querySelector('.admin-customer-count');
+                    if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+                } else {
+                    alert('Något gick fel. Försök igen.');
+                }
+            });
+        });
+    </script>
+}

@@ -90,6 +90,33 @@
   color: #1a1612;
 }
 
+/* ── Filter bar scoped to home page right column ── */
+.home-col .order-filter-bar {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-col .order-filter-group {
+  gap: 0.4rem;
+}
+
+.home-col .order-filter-label {
+  font-size: 0.68rem;
+}
+
+.home-col .order-filter-select {
+  min-width: 120px;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.home-col .order-type-pill {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+}
+
 /* ── Responsive: stack columns on narrow screens ── */
 @media (max-width: 900px) {
   .home-grid {
