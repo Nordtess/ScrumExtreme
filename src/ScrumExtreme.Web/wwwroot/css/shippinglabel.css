@@ -102,18 +102,27 @@
 /* Pushes divider + barcode to the bottom with lots of space */
 .sl-barcode-spacer {
   flex: 1;
-  min-height: 4rem;
+  min-height: 6rem;
 }
 
 .sl-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.35rem;
   margin-bottom: 0.8rem;
 }
 
+.sl-card-banner {
+  max-height: 64px;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 0.15rem;
+}
+
 .sl-card-logo {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #111;
@@ -246,5 +255,13 @@
 
   .sl-barcode {
     color: #000;
+  }
+
+  .sl-card-banner {
+    max-height: 64px;
+    max-width: 200px;
+    object-fit: contain;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
