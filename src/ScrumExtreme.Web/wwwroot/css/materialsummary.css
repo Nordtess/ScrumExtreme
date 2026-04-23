@@ -279,7 +279,6 @@
   cursor: pointer;
   font-family: "Roboto", sans-serif;
   position: relative;
-  overflow: hidden;
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -290,10 +289,10 @@
 .ms-print-btn::after {
   content: "";
   position: absolute;
-  bottom: 6px;
+  bottom: -7px;
   left: 50%;
   right: 50%;
-  height: 1px;
+  height: 2px;
   background: #1a1612;
   transition:
     left 0.25s ease,

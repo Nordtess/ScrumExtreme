@@ -211,10 +211,10 @@
 .sl-print-btn::after {
   content: "";
   position: absolute;
-  bottom: 8px;
+  bottom: -7px;
   left: 50%;
   right: 50%;
-  height: 1px;
+  height: 2px;
   background: #1a1612;
   transition:
     left 0.25s ease,
