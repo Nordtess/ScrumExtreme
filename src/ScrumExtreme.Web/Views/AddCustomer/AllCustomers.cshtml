@@ -33,7 +33,8 @@
                 <span class="customer-sort-label">Sortera:</span>
                 <button class="customer-sort-pill active" data-sort="newest">Senast skapad</button>
                 <button class="customer-sort-pill" data-sort="oldest">Tidigast skapad</button>
-                <button class="customer-sort-pill" data-sort="name">Namn A–Ö</button>
+                <button class="customer-sort-pill" data-sort="name-asc">Namn A–Ö</button>
+                <button class="customer-sort-pill" data-sort="name-desc">Namn Ö–A</button>
             </div>
             <div class="admin-customer-list">
                 @if (list.Count == 0)
@@ -45,90 +46,94 @@
                     foreach (var c in list)
                     {
                         <a asp-controller="AddCustomer" asp-action="Details" asp-route-id="@c.Id" class="admin-customer-row"
-                               data-created="@c.CreatedAt.ToString("o")" data-name="@c.LastName @c.FirstName">
+                               data-created="@c.CreatedAt.ToString("o")" data-name="@c.FirstName @c.LastName">
                             <div class="admin-customer-info">
                                 <span class="admin-customer-name">@c.FirstName @c.LastName</span>
                                 <span class="admin-customer-email">@c.Email</span>
                             </div>
                             <div class="admin-customer-meta">
-                                <span class="admin-customer-country">@c.Country</span>
-                                <span class="admin-customer-arrow">›</span>
-                                <button class="customer-delete-btn" data-customer-id="@c.Id"
-                                        data-customer-name="@c.FirstName @c.LastName"
-                                        title="Ta bort @c.FirstName @c.LastName">✕</button>
-                            </div>
-                        </a>
+                                <span class="admin-customer-country">@(string.IsNullOrEmpty(c.CountryCode) ? "" :
+                                                                string.Concat(c.CountryCode.ToUpper().Select(ch => char.ConvertFromUtf32(0x1F1A5 +
+                                                                (int)ch)))) @c.Country</span>
+                                    <span class="admin-customer-arrow">›</span>
+                                    <button class="customer-delete-btn" data-customer-id="@c.Id"
+                                            data-customer-name="@c.FirstName @c.LastName"
+                                            title="Ta bort @c.FirstName @c.LastName">✕</button>
+                                </div>
+                            </a>
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
+
     </div>
 
-</div>
+    @section Scripts {
+        <script>
+            (function () {
+                const pills = document.querySelectorAll('.customer-sort-pill');
+                const list = document.querySelector('.admin-customer-list');
 
-@section Scripts {
-    <script>
-        (function () {
-            const pills = document.querySelectorAll('.customer-sort-pill');
-            const list = document.querySelector('.admin-customer-list');
-
-            function sortRows(mode) {
-                const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
-                rows.sort((a, b) => {
-                    if (mode === 'newest') {
-                        return new Date(b.dataset.created) - new Date(a.dataset.created);
-                    } else if (mode === 'oldest') {
-                        return new Date(a.dataset.created) - new Date(b.dataset.created);
-                    } else {
-                        return a.dataset.name.localeCompare(b.dataset.name, 'sv');
-                    }
-                });
-                rows.forEach(r => list.appendChild(r));
-            }
-
-            pills.forEach(pill => {
-                pill.addEventListener('click', () => {
-                    pills.forEach(p => p.classList.remove('active'));
-                    pill.classList.add('active');
-                    sortRows(pill.dataset.sort);
-                });
-            });
-
-            sortRows('newest');
-        })();
-    </script>
-
-    <script>
-        // ── Kunder: delete
-        document.querySelector('.admin-customer-list').addEventListener('click', async function (e) {
-            const btn = e.target.closest('.customer-delete-btn');
-            if (!btn) return;
-            e.preventDefault();
-            e.stopPropagation();
-
-            const id = btn.dataset.customerId;
-            const name = btn.dataset.customerName;
-
-            if (!confirm(`Ta bort kunden "${name}"? Åtgärden kan inte ångras.`)) return;
-
-            try {
-                const res = await fetch(`/AddCustomer/DeleteCustomer/${id}`, { method: 'DELETE' });
-                if (!res.ok) throw new Error();
-
-                const row = btn.closest('.admin-customer-row');
-                row.remove();
-
-                const remaining = document.querySelectorAll('.admin-customer-row').length;
-                const badge = document.querySelector('.admin-customer-count');
-                if (badge) badge.textContent = remaining;
-
-                if (remaining === 0) {
-                    document.querySelector('.admin-customer-list')
-                        .innerHTML = '<span class="admin-list-placeholder">Inga kunder hittades.</span>';
+                function sortRows(mode) {
+                    const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
+                    rows.sort((a, b) => {
+                        if (mode === 'newest') {
+                            return new Date(b.dataset.created) - new Date(a.dataset.created);
+                        } else if (mode === 'oldest') {
+                            return new Date(a.dataset.created) - new Date(b.dataset.created);
+                        } else if (mode === 'name-asc') {
+                            return a.dataset.name.localeCompare(b.dataset.name, 'sv');
+                        } else {
+                            return b.dataset.name.localeCompare(a.dataset.name, 'sv');
+                        }
+                    });
+                    rows.forEach(r => list.appendChild(r));
                 }
-            } catch {
-                alert('Kunde inte ta bort kunden. Försök igen.');
-            }
-        });
-    </script>
-}
+
+                pills.forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        pills.forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        sortRows(pill.dataset.sort);
+                    });
+                });
+
+                sortRows('newest');
+            })();
+        </script>
+
+        <script>
+            // ── Kunder: delete
+            document.querySelector('.admin-customer-list').addEventListener('click', async function (e) {
+                const btn = e.target.closest('.customer-delete-btn');
+                if (!btn) return;
+                e.preventDefault();
+                e.stopPropagation();
+
+                const id = btn.dataset.customerId;
+                const name = btn.dataset.customerName;
+
+                if (!confirm(`Ta bort kunden "${name}"? Åtgärden kan inte ångras.`)) return;
+
+                try {
+                    const res = await fetch(`/AddCustomer/DeleteCustomer/${id}`, { method: 'DELETE' });
+                    if (!res.ok) throw new Error();
+
+                    const row = btn.closest('.admin-customer-row');
+                    row.remove();
+
+                    const remaining = document.querySelectorAll('.admin-customer-row').length;
+                    const badge = document.querySelector('.admin-customer-count');
+                    if (badge) badge.textContent = remaining;
+
+                    if (remaining === 0) {
+                        document.querySelector('.admin-customer-list')
+                            .innerHTML = '<span class="admin-list-placeholder">Inga kunder hittades.</span>';
+                    }
+                } catch {
+                    alert('Kunde inte ta bort kunden. Försök igen.');
+                }
+            });
+        </script>
+    }

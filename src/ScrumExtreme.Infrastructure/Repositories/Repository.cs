@@ -19,7 +19,6 @@ public class Repository<T> : IRepository<T> where T : class
         _collection = database.GetCollection<T>(collectionName);
     }
 
-    // MongoDB stores _id as ObjectId; we must parse the string to ObjectId when filtering.
     private static FilterDefinition<T> ById(string id)
     {
         if (ObjectId.TryParse(id, out var oid))

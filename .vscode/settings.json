@@ -1,3 +1,13 @@
 {
-  "github.copilot.editor.enableAutoCompletions": true
+  "github.copilot.editor.enableAutoCompletions": true,
+  "chat.tools.terminal.autoApprove": {
+    "/^python3 /tmp/strip_comments\\.py 2>&1$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "/^python3 -c \"import os; p='/Users/nordtess/\\\\u00d6rebro Universitet/VT26/Systemutvecklingsprojekt med Scrum och Extreme Programming/ScrumExtreme/src'; print\\(os\\.path\\.exists\\(p\\)\\); print\\(os\\.listdir\\(p\\)\\)\"$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
 }

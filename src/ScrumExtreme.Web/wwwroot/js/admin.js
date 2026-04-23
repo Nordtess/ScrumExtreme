@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitBtn  = document.getElementById('submitBtn');
     const submitError = document.getElementById('submitError');
 
-    // ── Country picker ───────────────────────────────────────────────────
     let countries         = [];
     let selectedCountry   = null;   // { name, iso, dial, lang }
     let currentMatches    = [];
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentDialPrefix      = '';
         countryHidden.value    = '';
         if (countryCodeHidden) countryCodeHidden.value = '';
-        // Re-lock phone when country is cleared
         const phone = document.getElementById('PhoneNumber');
         if (phone) { phone.disabled = true; phone.value = ''; }
         if (!q) { closeDropdown(); return; }
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (countryCodeHidden) countryCodeHidden.value = c.iso;
         closeDropdown();
 
-        // Unlock and lock phone field to country dial code prefix
         const phone = document.getElementById('PhoneNumber');
         if (phone) {
             currentDialPrefix  = c.dial;
@@ -128,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
     }
 
-    // ── Normalizers ───────────────────────────────────────────────────────
     function toTitleCase(s) {
         return s.trim().toLowerCase().replace(/(?:^|\s)\S/g, function (ch) {
             return ch.toUpperCase();
@@ -139,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return s.trim().toLowerCase();
     }
 
-    // ── Regular field rules ──────────────────────────────────────────────
     const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ\s\-]+$/;
 
     const fieldRules = [
@@ -211,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     ];
 
-    // Attach blur and input listeners
     fieldRules.forEach(function (rule) {
         const input = document.getElementById(rule.id);
         if (!input) return;
@@ -225,10 +219,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ── Phone prefix enforcement ────────────────────────────────────────────
     const phoneInput = document.getElementById('PhoneNumber');
     if (phoneInput) {
-        // Block backspace/delete into the locked prefix
         phoneInput.addEventListener('keydown', function (e) {
             if (!currentDialPrefix) return;
             const pos = this.selectionStart;
@@ -239,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (e.key === 'Delete' && pos < currentDialPrefix.length) {
                 e.preventDefault();
             }
-            // Only allow digits, navigation keys and standard shortcuts after prefix
             const nav = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Tab','Home','End','Enter'];
             if (e.ctrlKey || e.metaKey || nav.includes(e.key)) return;
             if (e.key === 'Backspace' || e.key === 'Delete') return;
@@ -247,12 +238,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
                 return;
             }
-            // Enforce max 8 digits
             const digits = this.value.slice(currentDialPrefix.length).replace(/\D/g, '');
             if (digits.length >= 8 && pos === sel) e.preventDefault();
         });
 
-        // Sanitise on paste / autofill / any other input path
         phoneInput.addEventListener('input', function () {
             if (!currentDialPrefix) return;
             let val = this.value;
@@ -263,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Button hover
     submitBtn.addEventListener('mouseenter', function () {
         if (isFormValid()) {
             submitBtn.classList.add('btn-hover-valid');
@@ -281,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
         submitError.textContent = '';
     });
 
-    // Form submit
     form.addEventListener('submit', function (e) {
         let hasError = false;
         fieldRules.forEach(function (rule) {
@@ -297,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Returns true if field has an error
     function runRuleValidation(rule) {
         const input = document.getElementById(rule.id);
         if (!input) return false;
@@ -308,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return !!err;
     }
 
-    // ── Phone helpers (prefix-locked, digits only) ──────────────────────
     function normalizePhone(value) {
         if (!currentDialPrefix) return value.trim();
         const digits = value.slice(currentDialPrefix.length).replace(/\D/g, '').slice(0, 8);
@@ -325,7 +310,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
-    // ── Helpers ──────────────────────────────────────────────
     function isFormValid() {
         const rulesOk = fieldRules.every(function (r) {
             return r.validate(document.getElementById(r.id).value) === null;

@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Data ─────────────────────────────────────────────────────────────
     let countries  = [];
     let labels     = {};   // { sv: { type, recipient, name, address, … }, … }
 
-    // Swedish names for each language code (shown in the hint text)
     const langDisplayNames = {
         sv: 'Svenska',      no: 'Norska',         da: 'Danska',
         fi: 'Finska',       de: 'Tyska',          fr: 'Franska',
@@ -26,26 +24,31 @@ document.addEventListener('DOMContentLoaded', function () {
         af: 'Afrikaans',    sw: 'Swahili'
     };
 
-    // Fetch both JSON files in parallel
     Promise.all([
         fetch('/js/countries.json').then(function (r) { return r.json(); }),
         fetch('/js/shipping-labels.json').then(function (r) { return r.json(); })
     ]).then(function (results) {
         countries = results[0];
         labels    = results[1];
-        // Show Swedish labels by default
+
+        var autoCode = (window.slCountryCode || '').toUpperCase();
+        if (autoCode) {
+            var match = countries.find(function (c) { return (c.iso || '').toUpperCase() === autoCode; });
+            if (match) {
+                if (searchInput) searchInput.value = match.name;
+                applyLabels(match.lang || 'en');
+                return;
+            }
+        }
         applyLabels('sv');
     }).catch(function (e) {
         console.warn('[shippinglabel] Failed to load JSON files', e);
     });
 
-    // ── Label swap ───────────────────────────────────────────────────────
     function applyLabels(lang) {
         const set = labels[lang] || labels['en'];
         const en  = labels['en'];
 
-        // Swedish and English get single-language labels.
-        // All other languages get "English / Local" bilingual labels.
         function lbl(enVal, localVal) {
             if (lang === 'sv' || lang === 'en') return localVal;
             return enVal + ' / ' + localVal;
@@ -64,14 +67,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (display) display.textContent = langDisplayNames[lang] || lang;
     }
 
-    // ── Country picker ───────────────────────────────────────────────────
     let currentMatches = [];
     let highlightedIdx = -1;
 
     const searchInput = document.getElementById('slCountrySearch');
     const dropdown    = document.getElementById('slCountryDropdown');
 
-    searchInput.addEventListener('input', function () {
+    if (searchInput) searchInput.addEventListener('input', function () {
         const q = this.value.trim().toLowerCase();
         if (!q) { closeDropdown(); return; }
 
@@ -80,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderDropdown(starts.concat(contains).slice(0, 8));
     });
 
-    searchInput.addEventListener('keydown', function (e) {
+    if (searchInput) searchInput.addEventListener('keydown', function (e) {
         if (dropdown.classList.contains('country-dropdown--hidden')) return;
         if (e.key === 'ArrowDown') {
             e.preventDefault();
@@ -98,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    searchInput.addEventListener('blur', function () {
+    if (searchInput) searchInput.addEventListener('blur', function () {
         setTimeout(closeDropdown, 160);
     });
 
@@ -135,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdown.classList.add('country-dropdown--hidden');
     }
 
-    // ── Print ────────────────────────────────────────────────────────────
     const printBtn = document.getElementById('printBtn');
     if (printBtn) {
         printBtn.addEventListener('click', function () {
