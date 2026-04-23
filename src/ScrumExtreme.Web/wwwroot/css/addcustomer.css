@@ -427,12 +427,12 @@
 
 .admin-customer-count {
   font-size: 0.68rem;
-  font-weight: 600;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.09);
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
   border: 1.5px solid #1a1612;
   border-radius: 20px;
-  padding: 0.12rem 0.48rem;
+  padding: 0.12rem 0.55rem;
   letter-spacing: 0.04em;
   font-family: "Roboto", sans-serif;
   line-height: 1;

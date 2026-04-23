@@ -50,6 +50,13 @@
 				{
 					<div class="admin-customer-list">
 
+						<div class="material-summary-header">
+							<span>Material</span>
+							<span>Antal</span>
+							<span>Pris per styck</span>
+							<span>Totalt pris</span>
+						</div>
+
 						@foreach (var item in Model)
 						{
 							<div class="admin-customer-row">
@@ -58,8 +65,16 @@
 									@item.MaterialName
 								</span>
 
-								<span class="admin-customer-count">
+								<span class="admin-customer-count material-col-qty">
 									@item.TotalQuantity
+								</span>
+
+								<span class="material-col-price">
+									@item.PricePerUnit.ToString("0.00") kr
+								</span>
+
+								<span class="material-col-total">
+									@item.TotalPrice.ToString("0.00") kr
 								</span>
 
 							</div>

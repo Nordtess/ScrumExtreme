@@ -138,20 +138,68 @@
 
 .admin-customer-name {
   font-size: 0.9rem;
+  font-weight: 700;
   color: #1a1612;
   letter-spacing: 0.02em;
 }
 
-.admin-customer-count {
-  font-size: 0.72rem;
+/* ── Material summary row grid ── */
+.material-summary-header {
+  display: grid;
+  grid-template-columns: 1fr 80px 120px 120px;
+  gap: 1rem;
+  padding: 0.4rem 0 0.55rem;
+  border-bottom: 1.5px solid #1a1612;
+  margin-bottom: 0.25rem;
+}
+
+.material-summary-header span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.material-summary-header span:not(:first-child) {
+  text-align: right;
+}
+
+.admin-customer-list .admin-customer-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 120px 120px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.material-col-qty {
+  text-align: right;
+}
+
+.material-col-price {
+  font-size: 0.85rem;
+  color: #555;
+  text-align: right;
+}
+
+.material-col-total {
+  font-size: 0.85rem;
   font-weight: 700;
   color: #c9a84c;
-  background: rgba(201, 168, 76, 0.08);
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  text-align: right;
+}
+
+.admin-customer-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
-  padding: 0.15rem 0.6rem;
+  padding: 0.12rem 0.55rem;
   letter-spacing: 0.04em;
   font-family: "Roboto", sans-serif;
+  line-height: 1;
 }
 
 .admin-list-placeholder {

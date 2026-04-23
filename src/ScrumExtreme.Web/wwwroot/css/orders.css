@@ -342,12 +342,20 @@
 /* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
-  grid-template-columns: 150px 110px minmax(150px, 1fr) minmax(
-      120px,
-      1.2fr
-    ) 115px 100px 140px 82px 28px;
+  grid-template-columns:
+    150px 110px minmax(150px, 1fr) minmax(120px, 1.2fr)
+    115px 105px 140px 82px 28px;
   align-items: center;
   gap: 0.65rem;
+}
+
+/* Center badges within their grid column */
+.admin-panel .admin-customer-row .order-type-badge {
+  justify-self: center;
+}
+
+.admin-panel .admin-customer-row .order-status-badge {
+  justify-self: center;
 }
 
 .order-col-person {

@@ -9,21 +9,26 @@ namespace ScrumExtreme.Web.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IHatService _hatService;
+        private readonly IMaterialService _materialService;
 
         public MaterialSummaryController(
             IOrderService orderService,
-            IHatService hatService)
+            IHatService hatService,
+            IMaterialService materialService)
         {
             _orderService = orderService;
             _hatService = hatService;
+            _materialService = materialService;
         }
 
         public async Task<IActionResult> PrintMaterialSummary()
         {
             var orders = await _orderService.GetPendingOrdersAsync();
             var hats = await _hatService.GetAllHatsAsync();
+            var materials = await _materialService.GetMaterialsAsync();
 
             var hatLookup = hats.ToDictionary(h => h.Name, h => h.MaterialList);
+            var priceLookup = materials.ToDictionary(m => m.Name, m => m.Price, StringComparer.OrdinalIgnoreCase);
 
             var summary = new Dictionary<string, int>();
 
@@ -34,11 +39,11 @@ namespace ScrumExtreme.Web.Controllers
                     if (!hatLookup.ContainsKey(item.Name))
                         continue;
 
-                    var materials = hatLookup[item.Name]
+                    var materialNames = hatLookup[item.Name]
                         .Split(',')
                         .Select(m => m.Trim());
 
-                    foreach (var material in materials)
+                    foreach (var material in materialNames)
                     {
                         if (!summary.ContainsKey(material))
                             summary[material] = 0;
@@ -51,7 +56,8 @@ namespace ScrumExtreme.Web.Controllers
             var model = summary.Select(x => new MaterialSummaryViewModel
             {
                 MaterialName = x.Key,
-                TotalQuantity = x.Value
+                TotalQuantity = x.Value,
+                PricePerUnit = priceLookup.TryGetValue(x.Key, out var price) ? price : 0m
             }).ToList();
 
             return View(model);
