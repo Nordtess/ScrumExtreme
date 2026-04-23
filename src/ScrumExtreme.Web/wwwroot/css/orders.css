@@ -318,6 +318,19 @@
   background: rgba(255, 69, 58, 0.08);
 }
 
+/* ── Order details page action buttons ── */
+.order-details-actions .admin-panel-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid #1a1612;
+  color: #c9a84c;
+}
+
+.order-details-actions .admin-panel-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: #1a1612;
+}
+
 /* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
