@@ -119,6 +119,18 @@
   border-color: #c9a84c;
 }
 
+/* Bigger black-border button for panel headers (AllCustomers, Details) */
+.admin-panel-header .admin-panel-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid #1a1612;
+}
+
+.admin-panel-header .admin-panel-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: #1a1612;
+}
+
 .admin-panel-body {
   padding: 1.3rem;
   flex: 1;
@@ -451,6 +463,7 @@
 
 .admin-customer-name {
   font-size: 0.88rem;
+  font-weight: 600;
   color: #1a1612;
 }
 
@@ -469,6 +482,7 @@
 .admin-customer-country {
   font-size: 0.75rem;
   color: #555;
+  font-weight: 600;
   letter-spacing: 0.04em;
 }
 

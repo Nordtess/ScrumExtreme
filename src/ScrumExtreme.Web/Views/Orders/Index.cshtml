@@ -49,8 +49,6 @@
                 <option value="processing">Påbörjad</option>
                 <option value="printed">Utskriven</option>
                 <option value="shipped">Skickad</option>
-                <option value="delivered">Levererad</option>
-                <option value="cancelled">Avbruten</option>
             </select>
         </div>
     </div>
@@ -105,8 +103,6 @@
                             OrderStatus.Processing => "Påbörjad",
                             OrderStatus.Printed => "Utskriven",
                             OrderStatus.Shipped => "Skickad",
-                            OrderStatus.Delivered => "Levererad",
-                            OrderStatus.Cancelled => "Avbruten",
                             _ => order.Status.ToString()
                         };
                         string typeKey = orderTypLabel.ToLower();

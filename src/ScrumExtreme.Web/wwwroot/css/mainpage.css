@@ -51,10 +51,9 @@
 /* ── Compact row layout for home panel ── */
 .home-orders-body .admin-customer-row {
   display: grid;
-  grid-template-columns: minmax(100px, 1.2fr) minmax(80px, auto) minmax(
-      90px,
-      1fr
-    ) 80px 110px 90px 30px;
+  grid-template-columns:
+    minmax(100px, 1.2fr) minmax(80px, auto) minmax(90px, 1fr)
+    100px 110px 90px 30px;
   align-items: center;
   gap: 0.6rem;
 }
@@ -62,7 +61,8 @@
 /* ── Date / total helper classes ── */
 .home-order-date {
   font-size: 0.78rem;
-  color: #666;
+  font-weight: 600;
+  color: #444;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,6 +73,20 @@
   font-weight: 600;
   color: #c9a84c;
   white-space: nowrap;
+}
+
+/* ── Skapa ny order button override ── */
+.home-orders-header .admin-panel-btn,
+.home-orders-body ~ .admin-panel-header .admin-panel-btn,
+.home-col .admin-panel-header .admin-panel-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid #1a1612;
+}
+
+.home-col .admin-panel-header .admin-panel-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: #1a1612;
 }
 
 /* ── Responsive: stack columns on narrow screens ── */

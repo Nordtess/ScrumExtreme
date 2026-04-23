@@ -55,7 +55,7 @@
 
 .order-type-pill {
   background: #f5f2ec;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
   color: #555;
   padding: 0.3rem 0.75rem;
@@ -72,7 +72,7 @@
 }
 
 .order-type-pill.active {
-  border-color: #c9a84c;
+  border-color: #1a1612;
   color: #c9a84c;
   background: rgba(201, 168, 76, 0.08);
 }
@@ -81,11 +81,16 @@
 .order-status-badge {
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.2rem 0.55rem;
+  padding: 0 0.65rem;
+  height: 24px;
   border-radius: 4px;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  border: 1.5px solid #1a1612;
 }
 
 .order-status-pending {
@@ -264,35 +269,37 @@
 
 /* Order type badge */
 .order-type-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
   font-size: 0.72rem;
   font-family: "Roboto", sans-serif;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   font-weight: 600;
-  padding: 0.18rem 0.55rem;
+  padding: 0 0.55rem;
   border-radius: 4px;
   white-space: nowrap;
   min-width: 100px;
-  text-align: center;
 }
 
 .order-type-standard {
   background: rgba(0, 0, 0, 0.04);
   color: #555;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
 }
 
 .order-type-modified {
   background: rgba(201, 168, 76, 0.12);
   color: #c9a84c;
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  border: 1.5px solid #1a1612;
 }
 
 .order-type-special {
   background: rgba(180, 130, 255, 0.12);
   color: #b482ff;
-  border: 1px solid rgba(180, 130, 255, 0.3);
+  border: 1.5px solid #1a1612;
 }
 
 /* Delete button on order rows */
@@ -334,13 +341,14 @@
 /* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
-  grid-template-columns: 160px 115px 90px 100px 1fr 80px 80px 140px 90px 32px;
+  grid-template-columns: 160px 115px 90px 100px 1fr 100px 80px 140px 90px 32px;
   align-items: center;
   gap: 0.75rem;
 }
 
 .order-col-name {
   font-size: 0.85rem;
+  font-weight: 600;
   color: #1a1612;
   white-space: nowrap;
   overflow: hidden;
