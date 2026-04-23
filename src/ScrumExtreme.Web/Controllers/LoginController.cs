@@ -16,7 +16,6 @@ public class LoginController : Controller
     [HttpGet("")]
     public IActionResult Index()
     {
-        // Already logged in → redirect based on role
         var role = HttpContext.Session.GetString("UserRole");
         if (!string.IsNullOrEmpty(role))
             return RedirectToAction("Index", "MainPage");

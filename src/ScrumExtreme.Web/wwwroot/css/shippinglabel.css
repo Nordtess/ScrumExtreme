@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
-   Shipping Label Test Page
-   ═══════════════════════════════════════════════════════════════ */
+
 
 .sl-page {
   display: flex;
@@ -12,7 +10,6 @@
   background: #faf8f4;
 }
 
-/* Picker area */
 .sl-picker-wrap {
   display: flex;
   flex-direction: column;
@@ -43,7 +40,6 @@
   width: 100%;
 }
 
-/* Apple-style overrides for the shipping label country picker */
 .sl-picker-wrap .country-picker input[type="text"] {
   background: #ffffff;
   border: 1px solid #c7c7cc;
@@ -83,7 +79,6 @@
   background: #f0f0f5;
 }
 
-/* Label card — white paper document */
 .sl-card {
   background: #fff;
   color: #111;
@@ -99,7 +94,6 @@
   flex-direction: column;
 }
 
-/* Pushes divider + barcode to the bottom with lots of space */
 .sl-barcode-spacer {
   flex: 1;
   min-height: 6rem;
@@ -190,7 +184,6 @@
   margin-top: 0.2rem;
 }
 
-/* Print button */
 .sl-print-btn {
   background: #1a1612;
   color: #faf8f4;
@@ -232,7 +225,6 @@
   right: 2rem;
 }
 
-/* ── Print media ───────────────────────────────────────────── */
 @media print {
   .site-header,
   .site-footer,
@@ -286,7 +278,6 @@
   }
 }
 
-/* ── Confirm modal ────────────────────────────────────────── */
 .sl-modal-overlay {
   display: none;
   position: fixed;

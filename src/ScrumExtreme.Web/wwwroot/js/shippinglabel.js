@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Data ─────────────────────────────────────────────────────────────
     let countries  = [];
     let labels     = {};   // { sv: { type, recipient, name, address, … }, … }
 
-    // Swedish names for each language code (shown in the hint text)
     const langDisplayNames = {
         sv: 'Svenska',      no: 'Norska',         da: 'Danska',
         fi: 'Finska',       de: 'Tyska',          fr: 'Franska',
@@ -26,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         af: 'Afrikaans',    sw: 'Swahili'
     };
 
-    // Fetch both JSON files in parallel
     Promise.all([
         fetch('/js/countries.json').then(function (r) { return r.json(); }),
         fetch('/js/shipping-labels.json').then(function (r) { return r.json(); })
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
         countries = results[0];
         labels    = results[1];
 
-        // Auto-select language from server-provided country code (e.g. "SE", "US")
         var autoCode = (window.slCountryCode || '').toUpperCase();
         if (autoCode) {
             var match = countries.find(function (c) { return (c.iso || '').toUpperCase() === autoCode; });
@@ -44,19 +40,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
         }
-        // Fallback to Swedish labels
         applyLabels('sv');
     }).catch(function (e) {
         console.warn('[shippinglabel] Failed to load JSON files', e);
     });
 
-    // ── Label swap ───────────────────────────────────────────────────────
     function applyLabels(lang) {
         const set = labels[lang] || labels['en'];
         const en  = labels['en'];
 
-        // Swedish and English get single-language labels.
-        // All other languages get "English / Local" bilingual labels.
         function lbl(enVal, localVal) {
             if (lang === 'sv' || lang === 'en') return localVal;
             return enVal + ' / ' + localVal;
@@ -75,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (display) display.textContent = langDisplayNames[lang] || lang;
     }
 
-    // ── Country picker ───────────────────────────────────────────────────
     let currentMatches = [];
     let highlightedIdx = -1;
 
@@ -146,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdown.classList.add('country-dropdown--hidden');
     }
 
-    // ── Print ────────────────────────────────────────────────────────────
     const printBtn = document.getElementById('printBtn');
     if (printBtn) {
         printBtn.addEventListener('click', function () {

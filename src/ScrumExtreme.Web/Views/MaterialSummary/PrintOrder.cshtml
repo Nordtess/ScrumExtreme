@@ -17,7 +17,7 @@
 
     <div class="mo-card">
 
-        <!-- Header with company banner -->
+        
         <div class="mo-card-header">
             <img src="~/images/ottoshattshop2.png" class="mo-card-banner" alt="Ottos Hattshop" />
             <span class="mo-card-type">Materialbeställning</span>
@@ -25,7 +25,7 @@
 
         <div class="mo-divider"></div>
 
-        <!-- Order meta -->
+        
         <div class="mo-meta-row">
             <span class="mo-meta-label">Referens</span>
             <span class="mo-meta-value">@orderRef</span>
@@ -38,7 +38,7 @@
 
             <div class="mo-divider"></div>
 
-            <!-- Materials section -->
+            
             <div class="mo-section-title">Material</div>
 
             @if (Model?.Materials == null || !Model.Materials.Any())
@@ -68,7 +68,7 @@
                 </div>
             }
 
-            <!-- Items / Tillbehör section -->
+            
             @if (Model?.Items != null && Model.Items.Any())
             {
                 <div class="mo-divider"></div>
@@ -98,7 +98,7 @@
 
             <div class="mo-divider"></div>
 
-            <!-- Grand total -->
+            
             <div class="mo-grand-total">
                 <span>Totalt att beställa</span>
                 <span>@grandTotal.ToString("0.00") kr</span>
@@ -106,12 +106,12 @@
 
         </div>
 
-        <!-- Print button (hidden when printing) -->
+        
         <button class="mo-print-btn" id="printBtn">Skriv ut materialbeställning</button>
 
     </div>
 
-    <!-- Confirm modal: shown after print dialog closes -->
+    
     <div class="mo-modal-overlay" id="orderModal">
         <div class="mo-modal">
             <p class="mo-modal-title">Materialbeställning klar</p>

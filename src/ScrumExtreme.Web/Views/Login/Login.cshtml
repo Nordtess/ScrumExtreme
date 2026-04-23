@@ -51,7 +51,19 @@
 
 @section Scripts {
     <script src="~/js/login.js" asp-append-version="true"></script>
-    <script>     // Show/hide password toggle     document.getElementById('showPassword').addEventListener('change', function () {         document.getElementById('password').type = this.checked ? 'text' : 'password';     });
-         // Quick-fill credentials     function quickFill(user, pass) {         document.getElementById('username').value = user;         document.getElementById('password').value = pass;         // Uncheck show-password so it stays hidden after fill         var cb = document.getElementById('showPassword');         if (cb.checked) {             cb.checked = false;             document.getElementById('password').type = 'password';         }     }
+    <script>
+        document.getElementById('showPassword').addEventListener('change', function () {
+            document.getElementById('password').type = this.checked ? 'text' : 'password';
+        });
+
+        function quickFill(user, pass) {
+            document.getElementById('username').value = user;
+            document.getElementById('password').value = pass;
+            var cb = document.getElementById('showPassword');
+            if (cb.checked) {
+                cb.checked = false;
+                document.getElementById('password').type = 'password';
+            }
+        }
     </script>
 }

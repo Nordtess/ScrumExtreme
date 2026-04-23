@@ -16,7 +16,7 @@ p[0].ToString().ToUpper() : ""))}-{DateTime.UtcNow.Year}"
 
 <div class="sl-page">
 
-    <!-- Shipping label card -->
+    
     <div class="sl-card">
         <div class="sl-card-header">
             <img src="~/images/ottoshattshop2.png" class="sl-card-banner" alt="Ottos Hattshop" />
@@ -62,14 +62,14 @@ p[0].ToString().ToUpper() : ""))}-{DateTime.UtcNow.Year}"
         <div class="sl-barcode-num">@barcodeRef</div>
     </div>
 
-    <!-- Print button (hidden when printing) -->
+    
     <button class="sl-print-btn" id="printBtn">Skriv ut fraktsedel</button>
 
 </div>
 
 @if (Model.HasOrder)
 {
-    <!-- Confirm modal: shown after print dialog closes -->
+    
     <div class="sl-modal-overlay" id="shippedModal">
         <div class="sl-modal">
             <p class="sl-modal-title">Fraktsedeln är utskriven</p>

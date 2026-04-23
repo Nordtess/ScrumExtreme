@@ -83,7 +83,6 @@ public class OrdersController : Controller
         if (customer == null)
             return BadRequest(new { error = "Kunden hittades inte." });
 
-        // Validate hat stock before creating the order
         foreach (var item in model.Items)
         {
             if (item.Quantity < 1)
@@ -100,7 +99,6 @@ public class OrdersController : Controller
             }
         }
 
-        // Validate accessory (item) stock
         foreach (var hatItem in model.Items.Where(i => i.IsModified && i.ItemIds.Any()))
         {
             foreach (var accessoryId in hatItem.ItemIds)
@@ -149,10 +147,8 @@ public class OrdersController : Controller
 
         await _orderService.CreateOrderAsync(order);
 
-        // Add order revenue to company capital
         await _companySettingsService.AddCapitalAsync((decimal)order.TotalAmount);
 
-        // Decrement hat stock
         foreach (var item in order.Items)
         {
             var hat = await _hatService.GetByIdAsync(item.ProductId);
@@ -164,7 +160,6 @@ public class OrdersController : Controller
             }
         }
 
-        // Decrement accessory (item) stock
         foreach (var hatItem in order.Items.Where(i => i.IsModified && i.ItemIds.Any()))
         {
             foreach (var accessoryId in hatItem.ItemIds)

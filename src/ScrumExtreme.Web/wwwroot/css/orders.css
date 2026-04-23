@@ -1,4 +1,4 @@
-/* ── Order filter bar ── */
+
 .order-filter-bar {
   display: flex;
   align-items: center;
@@ -47,7 +47,6 @@
   color: #1a1612;
 }
 
-/* ── Type toggle pills ── */
 .order-type-pills {
   display: flex;
   gap: 0.4rem;
@@ -78,7 +77,6 @@
   font-weight: 700;
 }
 
-/* ── Status badges ── */
 .order-status-badge {
   font-size: 0.75rem;
   font-weight: 600;
@@ -119,7 +117,6 @@
   color: #f87171;
 }
 
-/* Selects styled to match .admin-field input in addcustomer.css */
 .admin-field select {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -149,7 +146,6 @@
   color: #1a1612;
 }
 
-/* Secondary button – warehouse style */
 .admin-btn-secondary {
   background: #f7e6ca;
   border: 1.5px solid #1a1612;
@@ -193,7 +189,6 @@
   right: 0.9rem;
 }
 
-/* Hat list in the right panel */
 .order-hat-list {
   list-style: none;
   margin: 0.5rem 0;
@@ -290,7 +285,6 @@
   line-height: 1;
 }
 
-/* Order type badge */
 .order-type-badge {
   display: inline-flex;
   align-items: center;
@@ -325,7 +319,6 @@
   border: 1.5px solid #1a1612;
 }
 
-/* Delete button on order rows */
 .order-delete-btn {
   display: flex;
   align-items: center;
@@ -354,7 +347,6 @@
   color: #dc2626;
 }
 
-/* ── Order details page action buttons ── */
 .order-details-actions .admin-panel-btn {
   font-size: 0.82rem;
   padding: 0.5rem 1.1rem;
@@ -389,7 +381,6 @@
   right: 1.1rem;
 }
 
-/* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
   grid-template-columns:
@@ -399,7 +390,6 @@
   gap: 0.65rem;
 }
 
-/* Center badges within their grid column */
 .admin-panel .admin-customer-row .order-type-badge {
   justify-self: center;
 }
@@ -469,7 +459,6 @@
   white-space: nowrap;
 }
 
-/* Customer info block */
 .order-customer-info {
   display: flex;
   flex-direction: column;
@@ -518,7 +507,6 @@
   min-height: 1rem;
 }
 
-/* ── Quantity input ── */
 #quantityInput {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -535,7 +523,6 @@
     box-shadow 0.2s ease;
 }
 
-/* Remove spinner arrows */
 #quantityInput::-webkit-outer-spin-button,
 #quantityInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -561,7 +548,6 @@
   box-shadow: 0 0 0 3px rgba(255, 69, 58, 0.1);
 }
 
-/* Add-hat button state feedback */
 .admin-btn-secondary.--valid:hover {
   background: rgba(76, 175, 125, 0.15);
   border-color: #4caf7d;
@@ -574,7 +560,6 @@
   color: #ff453a;
 }
 
-/* Modified hat fields */
 .inline-checkbox {
   display: inline-flex;
   align-items: center;
@@ -593,7 +578,6 @@
   margin-left: 8px;
 }
 
-/* Hint shown when qty > 1 and modification is enabled */
 .order-modify-hint {
   margin: 0.3rem 0 0;
   font-size: 0.75rem;
@@ -602,7 +586,6 @@
   line-height: 1.4;
 }
 
-/* ── Toggle switch for "Modifiera hatt" ──────────────────────────────── */
 .order-toggle-wrap {
   display: flex;
   align-items: center;
@@ -669,7 +652,6 @@
   background: #c9a84c;
 }
 
-/* ── Order items checkbox table (tillbehör selection) ─────────────────── */
 .order-items-list {
   margin-top: 0.5rem;
   border: 1px solid #2a2a2a;
@@ -719,7 +701,6 @@
   cursor: pointer;
 }
 
-/* Custom checkbox styled in gold */
 .order-item-cb {
   appearance: none;
   -webkit-appearance: none;
@@ -788,7 +769,6 @@
   text-align: center;
 }
 
-/* Accessories badge in cart row */
 .order-hat-item-accessories {
   font-size: 0.75rem;
   color: #c9a84c;

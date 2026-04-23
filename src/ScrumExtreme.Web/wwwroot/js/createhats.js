@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ,\s\-]+$/;
 
-    // ── Text field rules ─────────────────────────────────────────────────
     const fieldRules = {
         Name: {
             validate: function (v) {
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // ── Helpers ───────────────────────────────────────────────────────────
     function setError(id, msg) {
         const el = document.getElementById('error-' + id);
         if (el) el.textContent = msg || '';
@@ -70,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return checked;
     }
 
-    // ── Attach blur + input listeners ─────────────────────────────────────
     Object.keys(fieldRules).forEach(function (id) {
         const input = document.getElementById(id);
         if (!input) return;
@@ -100,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ── Submit button state ───────────────────────────────────────────────
     function isFormValid() {
         const textOk      = Object.keys(fieldRules).every(function (id) {
             const input = document.getElementById(id);
@@ -122,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Form submit ───────────────────────────────────────────────────────
     form.addEventListener('submit', function (e) {
         Object.keys(fieldRules).forEach(function (id) {
             const input = document.getElementById(id);

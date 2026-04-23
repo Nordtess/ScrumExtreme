@@ -1,4 +1,4 @@
-/* ── Admin page ── */
+
 .site-main:has(.admin-wrapper) {
   align-items: stretch;
   text-align: left;
@@ -51,7 +51,6 @@
   margin: 0 auto;
 }
 
-/* ── Panels ── */
 .admin-panel {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -119,7 +118,6 @@
   border-color: #c9a84c;
 }
 
-/* Bigger black-border button for panel headers (AllCustomers, Details) */
 .admin-panel-header .admin-panel-btn {
   font-size: 0.82rem;
   padding: 0.5rem 1.1rem;
@@ -166,7 +164,6 @@
   margin: 0;
 }
 
-/* ── Form sections ── */
 .admin-section-label {
   font-size: 0.65rem;
   font-weight: 600;
@@ -209,7 +206,6 @@
   cursor: not-allowed;
 }
 
-/* ── Fields ── */
 .admin-field {
   display: flex;
   flex-direction: column;
@@ -253,7 +249,6 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
 }
 
-/* ── Hide number input spinners ── */
 .admin-field input[type="number"]::-webkit-outer-spin-button,
 .admin-field input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -286,7 +281,6 @@
   margin: 0.25rem 0 0;
 }
 
-/* ── Size checkboxes ── */
 .size-checkbox-group {
   display: flex;
   flex-wrap: wrap;
@@ -331,7 +325,6 @@
   cursor: pointer;
 }
 
-/* ── Buttons ── */
 .admin-btn-primary {
   width: auto;
   padding: 0.7rem 2.8rem;
@@ -352,7 +345,6 @@
 }
 
 .admin-btn-primary:hover {
-  /* handled by btn-hover-valid / btn-hover-invalid via JS */
 }
 
 .admin-btn-primary.btn-hover-valid {
@@ -403,7 +395,6 @@
   right: 2.5rem;
 }
 
-/* ── Customer sort bar ── */
 .customer-sort-bar {
   display: flex;
   align-items: center;
@@ -447,7 +438,6 @@
   font-weight: 700;
 }
 
-/* ── Customer list ── */
 .admin-customer-list {
   display: flex;
   flex-direction: column;
@@ -582,7 +572,6 @@
   background: rgba(255, 69, 58, 0.14);
 }
 
-/* ── Customer details page ── */
 .detail-back-link {
   display: inline-flex;
   align-items: center;
@@ -727,7 +716,6 @@
   border-color: rgba(255, 69, 58, 0.25);
 }
 
-/* ── Submit area ── */
 .admin-submit-area {
   display: flex;
   flex-direction: column;
@@ -743,7 +731,6 @@
   min-height: 1rem;
 }
 
-/* ── Toast ── */
 .admin-toast {
   background: rgba(48, 209, 88, 0.07);
   border: 1px solid rgba(48, 209, 88, 0.2);

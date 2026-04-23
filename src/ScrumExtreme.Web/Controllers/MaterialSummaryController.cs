@@ -45,7 +45,6 @@ namespace ScrumExtreme.Web.Controllers
             {
                 foreach (var orderItem in order.Items)
                 {
-                    // Materials from hat's MaterialList
                     if (hatLookup.TryGetValue(orderItem.Name, out var materialList))
                     {
                         foreach (var name in materialList
@@ -59,7 +58,6 @@ namespace ScrumExtreme.Web.Controllers
                         }
                     }
 
-                    // Items/accessories from OrderItem.ItemIds
                     foreach (var itemId in orderItem.ItemIds)
                     {
                         if (!itemLookup.TryGetValue(itemId, out var item)) continue;
@@ -151,7 +149,6 @@ namespace ScrumExtreme.Web.Controllers
                 await _orderService.UpdateAsync(order);
             }
 
-            // Restock materials
             decimal totalCost = 0m;
             foreach (var (name, qty) in materialQty)
             {
@@ -163,7 +160,6 @@ namespace ScrumExtreme.Web.Controllers
                 }
             }
 
-            // Restock items
             foreach (var (id, qty) in itemQty)
             {
                 if (itemLookup.TryGetValue(id, out var item))
@@ -174,7 +170,6 @@ namespace ScrumExtreme.Web.Controllers
                 }
             }
 
-            // Deduct material order cost from company capital
             await _companySettingsService.DeductCapitalAsync(totalCost);
 
             TempData["Success"] = "Materialbeställning bekräftad. Lagersaldo har uppdaterats.";

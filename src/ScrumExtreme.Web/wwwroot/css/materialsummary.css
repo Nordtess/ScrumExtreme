@@ -42,7 +42,6 @@
   align-items: stretch;
 }
 
-/* Stack for the two left panels */
 .admin-panel-stack {
   display: flex;
   flex-direction: column;
@@ -150,7 +149,6 @@
   letter-spacing: 0.02em;
 }
 
-/* ── Material summary row grid ── */
 .material-summary-header {
   display: grid;
   grid-template-columns: 1fr 80px 120px 120px;
@@ -183,7 +181,6 @@
   justify-self: end;
 }
 
-/* Compact square chip for qty — override the pill shape */
 .admin-customer-count.material-col-qty {
   min-width: 1.9rem;
   height: 1.9rem;
@@ -263,7 +260,6 @@
   border-color: #aaa;
 }
 
-/* ── Print button: black → champagne hover with animated underline ── */
 .ms-print-btn {
   display: block;
   width: fit-content;
@@ -311,7 +307,6 @@
   right: 1.6rem;
 }
 
-/* ── Capital summary strip ── */
 .ms-capital-strip {
   display: flex;
   flex-direction: column;

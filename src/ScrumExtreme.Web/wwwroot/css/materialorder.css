@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
-   Material Order Print Document
-   ═══════════════════════════════════════════════════════════════ */
+
 
 .mo-page {
   display: flex;
@@ -12,7 +10,6 @@
   background: #faf8f4;
 }
 
-/* Document card */
 .mo-card {
   background: #fff;
   color: #111;
@@ -26,7 +23,6 @@
   flex-direction: column;
 }
 
-/* Header */
 .mo-card-header {
   display: flex;
   flex-direction: column;
@@ -50,14 +46,12 @@
   color: #888;
 }
 
-/* Divider */
 .mo-divider {
   border: none;
   border-top: 1px solid #ddd;
   margin: 0.85rem 0;
 }
 
-/* Meta rows */
 .mo-meta-row {
   display: flex;
   justify-content: space-between;
@@ -77,7 +71,6 @@
   color: #1a1612;
 }
 
-/* Section title */
 .mo-section-title {
   font-size: 0.65rem;
   letter-spacing: 0.14em;
@@ -87,7 +80,6 @@
   margin-top: 0.2rem;
 }
 
-/* Table header */
 .mo-table-header {
   display: grid;
   grid-template-columns: 1fr 52px 100px 100px;
@@ -109,7 +101,6 @@
   text-align: right;
 }
 
-/* Table row */
 .mo-table-row {
   display: grid;
   grid-template-columns: 1fr 52px 100px 100px;
@@ -146,7 +137,6 @@
   text-align: right;
 }
 
-/* Empty message */
 .mo-empty {
   font-size: 0.8rem;
   color: #aaa;
@@ -154,7 +144,6 @@
   margin: 0.5rem 0;
 }
 
-/* Subtotal row */
 .mo-subtotal {
   display: flex;
   justify-content: space-between;
@@ -163,7 +152,6 @@
   color: #888;
 }
 
-/* Grand total */
 .mo-grand-total {
   display: flex;
   justify-content: space-between;
@@ -173,7 +161,6 @@
   padding-top: 0.3rem;
 }
 
-/* Print button */
 .mo-print-btn {
   background: #f7e6ca;
   color: #1a1612;
@@ -217,7 +204,6 @@
   right: 2rem;
 }
 
-/* ── Confirm modal ── */
 .mo-modal-overlay {
   display: none;
   position: fixed;
@@ -332,7 +318,6 @@
   right: 1.3rem;
 }
 
-/* ── Print media ── */
 @media print {
   .mo-print-btn,
   .mo-modal-overlay,

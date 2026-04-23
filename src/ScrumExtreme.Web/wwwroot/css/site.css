@@ -15,7 +15,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-/* ── Navbar ── */
 .site-header {
   position: fixed;
   top: 0;
@@ -34,7 +33,6 @@ body {
   gap: 0;
 }
 
-/* ── Hamburger button ── */
 .nav-hamburger {
   background: none;
   border: none;
@@ -80,7 +78,6 @@ body {
   background-color: #f7e6ca;
 }
 
-/* ── Sliding links ── */
 .navbar-links-wrapper {
   overflow: hidden;
   max-width: 0;
@@ -160,7 +157,6 @@ body {
   right: 0;
 }
 
-/* ── Main content ── */
 .site-main {
   flex: 1;
   padding: 2rem;
@@ -174,7 +170,6 @@ body {
   text-align: center;
 }
 
-/* ── Footer ── */
 .site-footer {
   background-color: #111;
   text-align: center;
@@ -190,7 +185,6 @@ body {
   }
 }
 
-/* ── Login / CreateAccount ── */
 .login-wrapper {
   display: flex;
   justify-content: center;
@@ -299,7 +293,6 @@ body {
   border-bottom-color: #1a1612;
 }
 
-/* ── Country picker ── */
 .country-picker {
   position: relative;
 }

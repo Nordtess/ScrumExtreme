@@ -47,7 +47,6 @@
   color: #1a1612;
 }
 
-/* ── Carousel ── */
 .carousel {
   position: relative;
   width: 100%;
@@ -183,7 +182,6 @@
   font-family: "Playwrite IE", cursive;
 }
 
-/* Scroll-triggered animations */
 .scroll-animate {
   opacity: 0;
   transform: translateY(30px);

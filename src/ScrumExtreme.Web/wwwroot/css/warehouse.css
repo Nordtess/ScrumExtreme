@@ -1,4 +1,4 @@
-/* ── Warehouse page ── */
+
 .site-main:has(.warehouse-wrapper) {
   align-items: stretch;
   text-align: left;
@@ -13,7 +13,6 @@
   width: 100%;
 }
 
-/* ── Hat card grid ── */
 .warehouse-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -34,7 +33,6 @@
   border-color: #1a1612;
 }
 
-/* ── Card header ── */
 .warehouse-card-header {
   display: flex;
   align-items: baseline;
@@ -62,7 +60,6 @@
   flex-shrink: 0;
 }
 
-/* ── Card body ── */
 .warehouse-card-body {
   padding: 1rem 1.3rem;
   flex: 1;
@@ -78,7 +75,6 @@
   margin: 0;
 }
 
-/* ── Stock grid (size blocks) ── */
 .warehouse-stock-grid {
   display: flex;
   flex-wrap: wrap;
@@ -122,14 +118,12 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
 }
 
-/* low stock indicator */
 .warehouse-size-input.--low {
   border-color: #c0392b;
   background: rgba(192, 57, 43, 0.12);
   color: #c0392b;
 }
 
-/* ── Card footer ── */
 .warehouse-card-footer {
   display: flex;
   align-items: center;
@@ -205,7 +199,6 @@
   color: #ff453a;
 }
 
-/* ── Empty state ── */
 .warehouse-empty {
   color: #aaa;
   font-size: 0.85rem;
@@ -214,7 +207,6 @@
   padding: 3rem 0;
 }
 
-/* ── Remove browser spinner arrows from number inputs ── */
 .warehouse-size-input::-webkit-outer-spin-button,
 .warehouse-size-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -226,7 +218,6 @@
   appearance: textfield;
 }
 
-/* ── Material usage hint ── */
 .warehouse-material-hint {
   font-size: 0.7rem;
   color: #8a7a50;
@@ -236,7 +227,6 @@
   text-align: right;
 }
 
-/* ── Filter bar ── */
 .warehouse-filter-bar {
   display: flex;
   align-items: center;
@@ -272,7 +262,6 @@
   border-color: #c9a84c;
 }
 
-/* ── Section ── */
 .warehouse-section {
   display: flex;
   flex-direction: column;
@@ -311,14 +300,12 @@
   margin: 0;
 }
 
-/* ── Section divider ── */
 .warehouse-divider {
   border: none;
   border-top: 1px solid #d0ccc8;
   margin: 0.25rem 0;
 }
 
-/* ── List (material & tillbehör) ── */
 .warehouse-list {
   display: flex;
   flex-direction: column;
@@ -336,7 +323,6 @@
   padding: 0.65rem 1.1rem;
 }
 
-/* tillbehör and material rows have an extra delete column */
 #tillbehor-list .warehouse-list-header,
 #tillbehor-list .warehouse-list-row,
 #material-list .warehouse-list-header,
@@ -421,7 +407,6 @@
   border-top: 1px solid #2a2a2a;
 }
 
-/* ── Add-item row ───────────────────────────────────── */
 .warehouse-add-row {
   display: flex;
   align-items: center;
@@ -451,7 +436,6 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
 }
 
-/* ── Delete button ───────────────────────────────────────── */
 .warehouse-delete-btn,
 .warehouse-delete-material-btn,
 .warehouse-delete-hat-btn {
@@ -500,7 +484,6 @@
   text-align: right;
 }
 
-/* ── Simple grid (material & tillbehör) ── */
 .warehouse-simple-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -565,7 +548,6 @@
   appearance: textfield;
 }
 
-/* ── Small save button variant ── */
 .warehouse-save-btn.--small {
   font-size: 0.65rem;
   padding: 0.3rem 0.65rem;
@@ -579,7 +561,6 @@
   border-color: #aaa;
 }
 
-/* ── Hat section value footer ── */
 .warehouse-hat-footer {
   display: flex;
   align-items: center;
@@ -593,7 +574,6 @@
   margin-top: -2px;
 }
 
-/* ── Bottom warehouse summary strip ── */
 .warehouse-summary-strip {
   display: flex;
   justify-content: flex-end;

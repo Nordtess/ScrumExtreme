@@ -44,7 +44,6 @@ namespace ScrumExtreme.Web.Controllers
                 return View("Index", model);
             }
 
-            // Duplicate name check
             var existing = await _hatService.GetAllHatsAsync();
             if (existing.Any(h => h.Name.Equals(model.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
             {
@@ -69,6 +68,5 @@ namespace ScrumExtreme.Web.Controllers
         }
 
     }
-
 
 }
