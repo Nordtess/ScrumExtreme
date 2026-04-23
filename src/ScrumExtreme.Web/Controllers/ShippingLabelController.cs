@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ScrumExtreme.Application.Interfaces;
+using ScrumExtreme.Domain.Entities;
 using ScrumExtreme.Web.Models;
 
 namespace ScrumExtreme.Web.Controllers;
@@ -28,6 +29,7 @@ public class ShippingLabelController : Controller
         var model = new ShippingLabelViewModel
         {
             HasOrder = true,
+            OrderId = order.Id,
             FullName = addr.FullName,
             Address = addr.Address,
             PostalCode = addr.PostalCode,
@@ -39,5 +41,21 @@ public class ShippingLabelController : Controller
         };
 
         return View(model);
+    }
+
+    [HttpPost("MarkAsShipped")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkAsShipped(string orderId)
+    {
+        if (!string.IsNullOrEmpty(orderId))
+        {
+            var order = await _orderService.GetByIdAsync(orderId);
+            if (order != null)
+            {
+                order.Status = OrderStatus.Shipped;
+                await _orderService.UpdateAsync(order);
+            }
+        }
+        return RedirectToAction("Index", "Orders");
     }
 }

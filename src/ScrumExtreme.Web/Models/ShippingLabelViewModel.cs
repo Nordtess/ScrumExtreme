@@ -11,4 +11,5 @@ public class ShippingLabelViewModel
     public string CountryCode { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string OrderNumber { get; set; } = string.Empty;
+    public string OrderId { get; set; } = string.Empty;
 }

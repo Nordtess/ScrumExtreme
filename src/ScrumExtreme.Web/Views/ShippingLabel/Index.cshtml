@@ -67,10 +67,48 @@ p[0].ToString().ToUpper() : ""))}-{DateTime.UtcNow.Year}"
 
 </div>
 
-@section Scripts {
-    <script>
-        // Pass server-side country code to JS for auto language selection
-        window.slCountryCode = "@Model.CountryCode";
-    </script>
-    <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
-}
+@if (Model.HasOrder)
+{
+    <!-- Confirm modal: shown after print dialog closes -->
+    <div class="sl-modal-overlay" id="shippedModal">
+        <div class="sl-modal">
+            <p class="sl-modal-title">Fraktsedeln är utskriven</p>
+            <p class="sl-modal-msg">Vill du markera ordern <strong>#@Model.OrderNumber</strong> som
+                <strong>Skickad</strong>?</p>
+                <div class="sl-modal-actions">
+                    <form method="post" asp-action="MarkAsShipped" asp-controller="ShippingLabel">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="orderId" value="@Model.OrderId" />
+                        <button type="submit" class="sl-modal-btn sl-modal-btn--confirm">Ja, markera som Skickad</button>
+                    </form>
+                    <button type="button" class="sl-modal-btn sl-modal-btn--cancel" id="modalCancelBtn">Avbryt</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @section Scripts {
+        <script>
+            // Pass server-side country code to JS for auto language selection
+            window.slCountryCode = "@Model.CountryCode";
+        </script>
+        <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
+        <script>
+            (function () {
+                var modal = document.getElementById('shippedModal');
+                var cancelBtn = document.getElementById('modalCancelBtn');
+
+                if (modal) {
+                    window.addEventListener('afterprint', function () {
+                        modal.classList.add('sl-modal-overlay--visible');
+                    });
+                }
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function () {
+                        modal.classList.remove('sl-modal-overlay--visible');
+                    });
+                }
+            })();
+        </script>
+    }

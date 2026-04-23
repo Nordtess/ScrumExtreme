@@ -273,7 +273,7 @@
   padding: 0.18rem 0.55rem;
   border-radius: 4px;
   white-space: nowrap;
-  min-width: 88px;
+  min-width: 100px;
   text-align: center;
 }
 
@@ -334,7 +334,7 @@
 /* Override row layout for the orders history list */
 .admin-panel .admin-customer-row {
   display: grid;
-  grid-template-columns: 160px 90px 90px 100px 1fr 80px 80px 140px 90px 32px;
+  grid-template-columns: 160px 115px 90px 100px 1fr 80px 80px 140px 90px 32px;
   align-items: center;
   gap: 0.75rem;
 }
