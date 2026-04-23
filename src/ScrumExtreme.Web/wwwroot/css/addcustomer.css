@@ -127,8 +127,9 @@
 }
 
 .admin-panel-header .admin-panel-btn:hover {
-  background: rgba(201, 168, 76, 0.1);
+  background: #f7e6ca;
   border-color: #1a1612;
+  color: #1a1612;
 }
 
 .admin-panel-body {
@@ -301,11 +302,11 @@
 
 /* ── Buttons ── */
 .admin-btn-primary {
-  width: 100%;
-  padding: 0.7rem 1rem;
+  width: auto;
+  padding: 0.7rem 2.8rem;
   background: transparent;
   color: #c9a84c;
-  border: 1px solid rgba(201, 168, 76, 0.45);
+  border: 1.5px solid #1a1612;
   border-radius: 7px;
   font-size: 0.78rem;
   font-family: "Roboto", sans-serif;
@@ -320,21 +321,20 @@
 }
 
 .admin-btn-primary:hover {
-  background: rgba(201, 168, 76, 0.08);
-  border-color: #c9a84c;
+  /* handled by btn-hover-valid / btn-hover-invalid via JS */
 }
 
 .admin-btn-primary.btn-hover-valid {
   background: transparent;
   color: #30d158;
-  border: 1px solid #30d158;
+  border: 1.5px solid #30d158;
   box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);
 }
 
 .admin-btn-primary.btn-hover-invalid {
   background: transparent;
   color: #ff453a;
-  border: 1px solid #ff453a;
+  border: 1.5px solid #ff453a;
   box-shadow: 0 0 10px rgba(255, 69, 58, 0.15);
 }
 
@@ -364,7 +364,7 @@
 
 .customer-sort-pill {
   background: #f5f2ec;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
   color: #555;
   padding: 0.28rem 0.75rem;
@@ -381,9 +381,10 @@
 }
 
 .customer-sort-pill.active {
-  border-color: #c9a84c;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.08);
+  border-color: #1a1612;
+  color: #1a1612;
+  background: #f7e6ca;
+  font-weight: 700;
 }
 
 /* ── Customer list ── */
@@ -420,7 +421,7 @@
   font-weight: 600;
   color: #c9a84c;
   background: rgba(201, 168, 76, 0.09);
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
   padding: 0.12rem 0.48rem;
   letter-spacing: 0.04em;
@@ -670,6 +671,7 @@
 .admin-submit-area {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 1.2rem;
 }
