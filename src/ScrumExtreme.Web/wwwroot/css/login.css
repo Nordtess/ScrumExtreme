@@ -15,6 +15,7 @@
   height: auto;
   margin-bottom: 1.75rem;
   display: block;
+  animation: login-fade-in 0.65s ease-out both;
 }
 
 .login-card {
@@ -292,4 +293,96 @@
   border-radius: 6px;
   padding: 0.55rem 0.8rem;
   text-align: center;
+}
+
+/* ── Logo shimmer ── */
+.login-logo-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 1.75rem;
+}
+
+.login-logo-wrap .login-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 0;
+}
+
+@keyframes logo-shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(560%) skewX(-18deg);
+  }
+}
+
+.login-logo-wrap::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 245, 210, 0.15) 30%,
+    rgba(201, 168, 76, 0.72) 50%,
+    rgba(255, 245, 210, 0.15) 70%,
+    transparent 100%
+  );
+  width: 22%;
+  animation: logo-shimmer 7s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
+}
+
+/* ── Entrance + ambient animations ── */
+@keyframes login-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes login-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes login-dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.4;
+  }
+}
+
+.login-card {
+  animation: login-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.login-quickfill {
+  animation: login-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.login-brand-dot {
+  animation: login-dot-pulse 2.8s ease-in-out infinite;
 }
