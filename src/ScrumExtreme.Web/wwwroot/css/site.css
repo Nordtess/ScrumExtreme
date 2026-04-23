@@ -132,16 +132,16 @@ body {
 
 .navbar-right a:hover,
 .navbar-links a:hover {
-  color: #1a1612;
-  background: #f7e6ca;
-  border-bottom-color: #1a1612;
+  color: #999;
+  background: none;
+  border-bottom-color: #f7e6ca;
 }
 
 .navbar-right a.active,
 .navbar-links a.active {
-  color: #1a1612;
-  background: #f7e6ca;
-  border-bottom-color: #1a1612;
+  color: #f7e6ca;
+  background: none;
+  border-bottom-color: #f7e6ca;
   font-weight: 700;
 }
 
