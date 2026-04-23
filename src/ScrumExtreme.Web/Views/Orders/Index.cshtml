@@ -99,6 +99,13 @@
                         string countryCode = hasUser ? u!.CountryCode : "";
                         string flagEmoji = string.IsNullOrEmpty(countryCode) ? "" :
                             string.Concat(countryCode.ToUpper().Select(ch => char.ConvertFromUtf32(0x1F1A5 + (int)ch)));
+                        var hatParts = (order.Items ?? new List<OrderItem>())
+                            .Select(i => {
+                                var label = i.SpecialHats != null ? (i.SpecialHats.Name ?? "Special") : i.Name;
+                                var sizeStr = string.IsNullOrEmpty(i.Size) ? "" : $" {i.Size}";
+                                return i.Quantity > 1 ? $"{label}{sizeStr} ×{i.Quantity}" : $"{label}{sizeStr}";
+                            });
+                        string hatSummary = string.Join(", ", hatParts);
                         string statusKey = order.Status.ToString().ToLower();
                         string statusLabel = order.Status switch
                         {
@@ -115,9 +122,11 @@
                                 @order.OrderNumber
                             </a>
                             <span class="@orderTypClass">@orderTypLabel</span>
-                            <span class="order-col-name">@firstName</span>
-                            <span class="order-col-name">@lastName</span>
-                            <span class="order-col-email">@email</span>
+                            <div class="order-col-person">
+                                <span class="order-col-name">@firstName @lastName</span>
+                                <span class="order-col-email">@email</span>
+                            </div>
+                            <span class="order-col-hats" title="@hatSummary">@hatSummary</span>
                             <span class="order-col-country">@flagEmoji @country</span>
                             <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
                             <span class="order-col-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
