@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (autoCode) {
             var match = countries.find(function (c) { return (c.iso || '').toUpperCase() === autoCode; });
             if (match) {
-                searchInput.value = match.name;
+                if (searchInput) searchInput.value = match.name;
                 applyLabels(match.lang || 'en');
                 return;
             }
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('slCountrySearch');
     const dropdown    = document.getElementById('slCountryDropdown');
 
-    searchInput.addEventListener('input', function () {
+    if (searchInput) searchInput.addEventListener('input', function () {
         const q = this.value.trim().toLowerCase();
         if (!q) { closeDropdown(); return; }
 
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderDropdown(starts.concat(contains).slice(0, 8));
     });
 
-    searchInput.addEventListener('keydown', function (e) {
+    if (searchInput) searchInput.addEventListener('keydown', function (e) {
         if (dropdown.classList.contains('country-dropdown--hidden')) return;
         if (e.key === 'ArrowDown') {
             e.preventDefault();
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    searchInput.addEventListener('blur', function () {
+    if (searchInput) searchInput.addEventListener('blur', function () {
         setTimeout(closeDropdown, 160);
     });
 
