@@ -186,13 +186,35 @@
   text-transform: uppercase;
   cursor: pointer;
   font-family: "Roboto", sans-serif;
+  position: relative;
   transition:
-    background 0.18s ease,
-    color 0.18s ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mo-print-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  right: 50%;
+  height: 1px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .mo-print-btn:hover {
-  background: #2a2218;
+  background: #f7e6ca;
+  color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.mo-print-btn:hover::after {
+  left: 2rem;
+  right: 2rem;
 }
 
 /* ── Confirm modal ── */
@@ -251,9 +273,23 @@
   letter-spacing: 0.03em;
   cursor: pointer;
   border: 1.5px solid #1a1612;
+  position: relative;
   transition:
-    background 0.18s,
-    color 0.18s;
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mo-modal-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  right: 50%;
+  height: 1px;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .mo-modal-btn--confirm {
@@ -261,8 +297,19 @@
   color: #faf8f4;
 }
 
+.mo-modal-btn--confirm::after {
+  background: #1a1612;
+}
+
 .mo-modal-btn--confirm:hover {
-  background: #2a2420;
+  background: #f7e6ca;
+  color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.mo-modal-btn--confirm:hover::after {
+  left: 1.3rem;
+  right: 1.3rem;
 }
 
 .mo-modal-btn--cancel {
@@ -270,15 +317,38 @@
   color: #1a1612;
 }
 
+.mo-modal-btn--cancel::after {
+  background: #f7e6ca;
+}
+
 .mo-modal-btn--cancel:hover {
-  background: rgba(26, 22, 18, 0.07);
+  background: #1a1612;
+  color: #f7e6ca;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.mo-modal-btn--cancel:hover::after {
+  left: 1.3rem;
+  right: 1.3rem;
 }
 
 /* ── Print media ── */
 @media print {
   .mo-print-btn,
-  .mo-modal-overlay {
+  .mo-modal-overlay,
+  .site-header,
+  .site-footer,
+  nav {
     display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .site-main {
+    padding: 0 !important;
+    max-width: none !important;
   }
 
   .mo-page {
@@ -292,16 +362,5 @@
     border-radius: 0;
     max-width: 100%;
     padding: 1.5rem 2rem;
-  }
-
-  body,
-  .site-header,
-  .site-footer,
-  nav {
-    display: none !important;
-  }
-
-  .mo-page {
-    display: block !important;
   }
 }

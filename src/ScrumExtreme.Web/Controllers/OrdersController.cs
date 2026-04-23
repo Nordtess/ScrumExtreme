@@ -12,17 +12,20 @@ public class OrdersController : Controller
     private readonly IUserService _userService;
     private readonly IHatService _hatService;
     private readonly IItemService _itemService;
+    private readonly ICompanySettingsService _companySettingsService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
         IHatService hatService,
-        IItemService itemService)
+        IItemService itemService,
+        ICompanySettingsService companySettingsService)
     {
         _orderService = orderService;
         _userService = userService;
         _hatService = hatService;
         _itemService = itemService;
+        _companySettingsService = companySettingsService;
     }
 
     [HttpGet("")]
@@ -145,6 +148,9 @@ public class OrdersController : Controller
         };
 
         await _orderService.CreateOrderAsync(order);
+
+        // Add order revenue to company capital
+        await _companySettingsService.AddCapitalAsync((decimal)order.TotalAmount);
 
         // Decrement hat stock
         foreach (var item in order.Items)

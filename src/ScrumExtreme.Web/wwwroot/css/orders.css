@@ -149,11 +149,11 @@
   color: #1a1612;
 }
 
-/* Secondary gold button for "Lägg till hatt" */
+/* Secondary button – warehouse style */
 .admin-btn-secondary {
-  background: transparent;
-  border: 1px solid #c9a84c;
-  color: #c9a84c;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
+  color: #1a1612;
   border-radius: 7px;
   padding: 0.45rem 0.9rem;
   font-size: 0.82rem;
@@ -161,6 +161,8 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
   transition:
     background 0.2s ease,
     color 0.2s ease;
@@ -168,7 +170,8 @@
 }
 
 .admin-btn-secondary:hover {
-  background: rgba(201, 168, 76, 0.1);
+  background: #1a1612;
+  color: #f7e6ca;
 }
 
 /* Hat list in the right panel */

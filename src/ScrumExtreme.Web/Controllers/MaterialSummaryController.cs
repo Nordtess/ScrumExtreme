@@ -11,17 +11,20 @@ namespace ScrumExtreme.Web.Controllers
         private readonly IHatService _hatService;
         private readonly IMaterialService _materialService;
         private readonly IItemService _itemService;
+        private readonly ICompanySettingsService _companySettingsService;
 
         public MaterialSummaryController(
             IOrderService orderService,
             IHatService hatService,
             IMaterialService materialService,
-            IItemService itemService)
+            IItemService itemService,
+            ICompanySettingsService companySettingsService)
         {
             _orderService = orderService;
             _hatService = hatService;
             _materialService = materialService;
             _itemService = itemService;
+            _companySettingsService = companySettingsService;
         }
 
         private async Task<MaterialSummaryPageViewModel> BuildSummaryAsync()
@@ -70,6 +73,8 @@ namespace ScrumExtreme.Web.Controllers
                 }
             }
 
+            var capitalSEK = await _companySettingsService.GetCapitalAsync();
+
             return new MaterialSummaryPageViewModel
             {
                 Materials = materialSummary.Select(x => new MaterialSummaryViewModel
@@ -84,7 +89,9 @@ namespace ScrumExtreme.Web.Controllers
                     ItemName = x.Key,
                     TotalQuantity = x.Value.qty,
                     PricePerUnit = x.Value.price
-                }).ToList()
+                }).ToList(),
+
+                CapitalSEK = capitalSEK
             };
         }
 
@@ -145,10 +152,12 @@ namespace ScrumExtreme.Web.Controllers
             }
 
             // Restock materials
+            decimal totalCost = 0m;
             foreach (var (name, qty) in materialQty)
             {
                 if (materialMap.TryGetValue(name, out var mat))
                 {
+                    totalCost += mat.Price * qty;
                     mat.Stock += qty;
                     await _materialService.UpdateMaterialAsync(mat);
                 }
@@ -159,10 +168,14 @@ namespace ScrumExtreme.Web.Controllers
             {
                 if (itemLookup.TryGetValue(id, out var item))
                 {
+                    totalCost += (decimal)item.Price * qty;
                     item.Stock += qty;
                     await _itemService.UpdateItemAsync(item);
                 }
             }
+
+            // Deduct material order cost from company capital
+            await _companySettingsService.DeductCapitalAsync(totalCost);
 
             TempData["Success"] = "Materialbeställning bekräftad. Lagersaldo har uppdaterats.";
             return RedirectToAction("PrintMaterialSummary");

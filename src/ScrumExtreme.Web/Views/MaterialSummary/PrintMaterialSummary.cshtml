@@ -142,13 +142,34 @@
 
 				<p class="admin-field-hint">
 					Skriv ut en materialbeställning för att sammanställa allt material och tillbehör
-					som behöver beställas. När du bekräftar beställningen uppdateras lagersaldot automatiskt.
+					som behöver beställas.
 				</p>
 
-				<a href="@Url.Action("PrintOrder", "MaterialSummary")" class="admin-btn-primary"
-					   style="display:block; text-align:center; text-decoration:none;">
+				<a href="@Url.Action("PrintOrder", "MaterialSummary")" class="ms-print-btn">
 					Skriv ut materialbeställning
 				</a>
+
+				@{
+					var totalOrderCost = (Model?.Materials?.Sum(m => m.TotalPrice) ?? 0m)
+									   + (Model?.Items?.Sum(i => i.TotalPrice) ?? 0m);
+					var capitalAfter = (Model?.CapitalSEK ?? 0m) - totalOrderCost;
+				}
+
+				<div class="ms-capital-strip">
+					<div class="ms-capital-row">
+						<span class="ms-capital-label">Beställningens kostnad</span>
+						<span class="ms-capital-value">@totalOrderCost.ToString("0.00") kr</span>
+					</div>
+					<div class="ms-capital-row">
+						<span class="ms-capital-label">Nuvarande kapital</span>
+						<span class="ms-capital-value">@(Model?.CapitalSEK.ToString("0.00") ?? "0.00") kr</span>
+					</div>
+					<div class="ms-capital-divider"></div>
+					<div class="ms-capital-row ms-capital-row--total">
+						<span class="ms-capital-label">Kapital efter beställning</span>
+						<span class="ms-capital-value ms-capital-value--after">@capitalAfter.ToString("0.00") kr</span>
+					</div>
+				</div>
 
 			</div>
 
