@@ -1,5 +1,13 @@
+@model ScrumExtreme.Web.Models.ShippingLabelViewModel
+
 @{
-    ViewData["Title"] = "Fraktsedel Test";
+    ViewData["Title"] = Model.HasOrder ? "Fraktsedel – " + Model.OrderNumber : "Fraktsedel";
+
+    // Build barcode reference from real data or placeholder
+    var barcodeRef = Model.HasOrder
+        ? $"{Model.CountryCode}-{Model.PostalCode}-{string.Concat(Model.FullName.Split(' ').Select(p => p.Length > 0 ?
+p[0].ToString().ToUpper() : ""))}-{DateTime.UtcNow.Year}"
+        : "SE-71231-MK-2026";
 }
 
 @section Styles {
@@ -8,7 +16,7 @@
 
 <div class="sl-page">
 
-    <!-- Language picker -->
+    <!-- Language picker (hidden when printing) -->
     <div class="sl-picker-wrap">
         <label class="sl-picker-label" for="slCountrySearch">Välj land för att testa etikettspråk</label>
         <div class="country-picker">
@@ -31,27 +39,27 @@
 
         <div class="sl-row">
             <span class="sl-label" id="lbl-name">Namn</span>
-            <span class="sl-value">Malik King</span>
+            <span class="sl-value" id="val-name">@(Model.HasOrder? Model.FullName: "Malik King")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-address">Adress</span>
-            <span class="sl-value">Piratestreet 24</span>
+            <span class="sl-value" id="val-address">@(Model.HasOrder? Model.Address: "Piratestreet 24")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-postalCode">Postnummer</span>
-            <span class="sl-value">71231</span>
+            <span class="sl-value" id="val-postalCode">@(Model.HasOrder? Model.PostalCode: "71231")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-city">Stad</span>
-            <span class="sl-value">Mogadishu</span>
+            <span class="sl-value" id="val-city">@(Model.HasOrder? Model.City: "Mogadishu")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-country">Land</span>
-            <span class="sl-value">Somalia</span>
+            <span class="sl-value" id="val-country">@(Model.HasOrder? Model.Country: "Somalia")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-phone">Telefon</span>
-            <span class="sl-value">+46 712 312 100</span>
+            <span class="sl-value" id="val-phone">@(Model.HasOrder? Model.Phone: "+46 712 312 100")</span>
         </div>
 
         <div class="sl-divider"></div>
@@ -61,14 +69,18 @@
         <div class="sl-divider"></div>
 
         <div class="sl-barcode">||||| |||| ||||| |||| |||||</div>
-        <div class="sl-barcode-num">SE-71231-MK-2026</div>
+        <div class="sl-barcode-num">@barcodeRef</div>
     </div>
 
-    <!-- Print button -->
+    <!-- Print button (hidden when printing) -->
     <button class="sl-print-btn" id="printBtn">Skriv ut fraktsedel</button>
 
 </div>
 
 @section Scripts {
+    <script>
+        // Pass server-side country code to JS for auto language selection
+        window.slCountryCode = "@Model.CountryCode";
+    </script>
     <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
 }

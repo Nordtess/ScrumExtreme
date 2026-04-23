@@ -33,7 +33,18 @@ document.addEventListener('DOMContentLoaded', function () {
     ]).then(function (results) {
         countries = results[0];
         labels    = results[1];
-        // Show Swedish labels by default
+
+        // Auto-select language from server-provided country code (e.g. "SE", "US")
+        var autoCode = (window.slCountryCode || '').toUpperCase();
+        if (autoCode) {
+            var match = countries.find(function (c) { return (c.iso || '').toUpperCase() === autoCode; });
+            if (match) {
+                searchInput.value = match.name;
+                applyLabels(match.lang || 'en');
+                return;
+            }
+        }
+        // Fallback to Swedish labels
         applyLabels('sv');
     }).catch(function (e) {
         console.warn('[shippinglabel] Failed to load JSON files', e);
