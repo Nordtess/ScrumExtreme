@@ -76,18 +76,38 @@
 }
 
 /* ── Skapa ny order button override ── */
-.home-orders-header .admin-panel-btn,
-.home-orders-body ~ .admin-panel-header .admin-panel-btn,
 .home-col .admin-panel-header .admin-panel-btn {
   font-size: 0.82rem;
   padding: 0.5rem 1.1rem;
   border: 1.5px solid #1a1612;
+  background: #f7e6ca;
+  color: #1a1612;
+  position: relative;
+}
+
+.home-col .admin-panel-header .admin-panel-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .home-col .admin-panel-header .admin-panel-btn:hover {
-  background: #f7e6ca;
+  background: #1a1612;
+  color: #f7e6ca;
   border-color: #1a1612;
-  color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.home-col .admin-panel-header .admin-panel-btn:hover::after {
+  left: 1.1rem;
+  right: 1.1rem;
 }
 
 /* ── Filter bar scoped to home page right column ── */
