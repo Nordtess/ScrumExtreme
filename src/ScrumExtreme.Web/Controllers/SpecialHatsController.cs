@@ -118,6 +118,7 @@ namespace ScrumExtreme.Web.Controllers
                         Name = "Specialbeställd hatt",
                         Quantity = 1,
                         UnitPrice = model.Price,
+                        Size = model.Size,
 
                         SpecialHats = new SpecialHats
                         {
