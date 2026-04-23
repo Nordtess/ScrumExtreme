@@ -277,17 +277,26 @@
   align-items: center;
   gap: 0.35rem;
   background: #f5f2ec;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
   padding: 0.35rem 0.65rem;
   font-size: 0.82rem;
   color: #1a1612;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .size-checkbox-label:hover {
-  border-color: #c9a84c;
+  background: #f7e6ca;
+  border-color: #1a1612;
+}
+
+.size-checkbox-label:has(input:checked) {
+  background: #f7e6ca;
+  border-color: #1a1612;
+  font-weight: 700;
 }
 
 .size-checkbox-label input[type="checkbox"],

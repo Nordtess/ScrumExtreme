@@ -65,12 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
         input.addEventListener('blur', function () {
             input.dataset.touched = '1';
             validateTextField(id);
-            updateSubmitBtn();
         });
         input.addEventListener('input', function () {
             if (input.dataset.touched) {
                 validateTextField(id);
-                updateSubmitBtn();
             }
         });
         input.addEventListener('focus', function () {
@@ -81,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.querySelectorAll('input[name="Sizes"]').forEach(function (cb) {
         cb.addEventListener('change', function () {
             validateSizes();
-            updateSubmitBtn();
         });
     });
 
@@ -95,9 +92,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return textOk && sizesOk;
     }
 
-    function updateSubmitBtn() {
-        submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
-        submitBtn.classList.add(isFormValid() ? 'btn-hover-valid' : 'btn-hover-invalid');
+    // Only update classes when hovered — same pattern as login/addcustomer
+    if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', function () {
+            submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
+            submitBtn.classList.add(isFormValid() ? 'btn-hover-valid' : 'btn-hover-invalid');
+        });
+        submitBtn.addEventListener('mouseleave', function () {
+            submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
+        });
     }
 
     // ── Form submit ───────────────────────────────────────────────────────
@@ -108,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         const textValid  = Object.keys(fieldRules).map(validateTextField).every(Boolean);
         const sizesValid = validateSizes();
-        updateSubmitBtn();
         if (!textValid || !sizesValid) {
             e.preventDefault();
             submitError.textContent = 'Rätta felen ovan innan du skickar.';

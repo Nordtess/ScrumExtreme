@@ -73,8 +73,9 @@
 
 .order-type-pill.active {
   border-color: #1a1612;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.08);
+  color: #1a1612;
+  background: #f7e6ca;
+  font-weight: 700;
 }
 
 /* ── Status badges ── */

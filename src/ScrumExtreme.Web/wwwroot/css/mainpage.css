@@ -85,8 +85,9 @@
 }
 
 .home-col .admin-panel-header .admin-panel-btn:hover {
-  background: rgba(201, 168, 76, 0.1);
+  background: #f7e6ca;
   border-color: #1a1612;
+  color: #1a1612;
 }
 
 /* ── Responsive: stack columns on narrow screens ── */
