@@ -21,7 +21,6 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<AuthFilter>();
 });
 
-// Register MongoDB
 var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
     ?? throw new InvalidOperationException("MongoDB connection string not found.");
 var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"]
@@ -31,10 +30,8 @@ builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionStrin
 builder.Services.AddScoped(sp =>
     sp.GetRequiredService<IMongoClient>().GetDatabase(mongoDatabaseName));
 
-// Register generic repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-// Register application services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IHatService, HatsService>();
@@ -42,6 +39,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
 builder.Services.AddScoped<ICalendarEventService, CalendarService>();
+builder.Services.AddScoped<ICompanySettingsService, CompanySettingsService>();
 
 var app = builder.Build();
 
@@ -61,7 +59,6 @@ app.MapControllerRoute(
     pattern: "{controller=Login}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Ping MongoDB on startup to confirm connection
 try
 {
     var client = app.Services.GetRequiredService<IMongoClient>();
@@ -69,7 +66,6 @@ try
     await database.RunCommandAsync<BsonDocument>(new BsonDocument("ping", 1));
     Console.WriteLine("✅ MongoDB connection successful!");
 
-    // Ensure Items collection exists with JSON schema validation
     var collectionNames = await (await database.ListCollectionNamesAsync()).ToListAsync();
     if (!collectionNames.Contains("Items"))
     {

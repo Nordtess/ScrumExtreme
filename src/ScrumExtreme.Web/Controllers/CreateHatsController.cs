@@ -32,7 +32,9 @@ namespace ScrumExtreme.Web.Controllers
             if (model.Sizes == null || !model.Sizes.Any())
                 ModelState.AddModelError(nameof(model.Sizes), "Minst en storlek måste väljas.");
 
-            // Remove server-side Required on MaterialList — it is now optional (hat may have no material)
+            if (model.SelectedMaterials == null || !model.SelectedMaterials.Any())
+                ModelState.AddModelError(nameof(model.SelectedMaterials), "Minst ett material måste väljas.");
+
             ModelState.Remove(nameof(model.AvailableMaterials));
 
             if (!ModelState.IsValid)
@@ -42,7 +44,6 @@ namespace ScrumExtreme.Web.Controllers
                 return View("Index", model);
             }
 
-            // Duplicate name check
             var existing = await _hatService.GetAllHatsAsync();
             if (existing.Any(h => h.Name.Equals(model.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
             {
@@ -67,6 +68,5 @@ namespace ScrumExtreme.Web.Controllers
         }
 
     }
-
 
 }

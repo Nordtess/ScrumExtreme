@@ -61,7 +61,6 @@ namespace ScrumExtreme.Web.Controllers
             if (customer == null)
                 return BadRequest("Kund hittades inte");
 
-            // Deduct materials stock by 1 per selected material
             if (model.SelectedMaterials?.Any() == true)
             {
                 var allMaterials = await _materialService.GetMaterialsAsync();
@@ -77,7 +76,6 @@ namespace ScrumExtreme.Web.Controllers
                 }
             }
 
-            // Deduct items stock by 1 per selected item
             if (model.SelectedItems?.Any() == true)
             {
                 var allItems = await _itemService.GetAllItemsAsync();
@@ -118,6 +116,7 @@ namespace ScrumExtreme.Web.Controllers
                         Name = "Specialbeställd hatt",
                         Quantity = 1,
                         UnitPrice = model.Price,
+                        Size = model.Size,
 
                         SpecialHats = new SpecialHats
                         {
@@ -138,7 +137,4 @@ namespace ScrumExtreme.Web.Controllers
         }
     }
 }
-
-
-
 

@@ -15,7 +15,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-/* ── Navbar ── */
 .site-header {
   position: fixed;
   top: 0;
@@ -34,7 +33,6 @@ body {
   gap: 0;
 }
 
-/* ── Hamburger button ── */
 .nav-hamburger {
   background: none;
   border: none;
@@ -62,12 +60,12 @@ body {
 }
 
 .nav-hamburger:hover .ham-bar {
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
 .nav-hamburger.open .ham-bar:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
 .nav-hamburger.open .ham-bar:nth-child(2) {
@@ -77,10 +75,9 @@ body {
 
 .nav-hamburger.open .ham-bar:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
-  background-color: #c9a84c;
+  background-color: #f7e6ca;
 }
 
-/* ── Sliding links ── */
 .navbar-links-wrapper {
   overflow: hidden;
   max-width: 0;
@@ -124,19 +121,42 @@ body {
   text-transform: uppercase;
   display: inline-block;
   padding-bottom: 3px;
-  border-bottom: 1px solid transparent;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.navbar-right a::after,
+.navbar-links a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  height: 1px;
+  background-color: #f7e6ca;
   transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
-.navbar-right a:hover,
-.navbar-links a:hover {
-  color: #c9a84c;
-  border-bottom-color: rgba(201, 168, 76, 0.5);
+.navbar-right a:hover::after,
+.navbar-links a:hover::after {
+  left: 0;
+  right: 0;
 }
 
-/* ── Main content ── */
+.navbar-right a.active,
+.navbar-links a.active {
+  color: #f7e6ca;
+  font-weight: 700;
+}
+
+.navbar-right a.active::after,
+.navbar-links a.active::after {
+  left: 0;
+  right: 0;
+}
+
 .site-main {
   flex: 1;
   padding: 2rem;
@@ -150,7 +170,6 @@ body {
   text-align: center;
 }
 
-/* ── Footer ── */
 .site-footer {
   background-color: #111;
   text-align: center;
@@ -166,7 +185,6 @@ body {
   }
 }
 
-/* ── Login / CreateAccount ── */
 .login-wrapper {
   display: flex;
   justify-content: center;
@@ -275,7 +293,6 @@ body {
   border-bottom-color: #1a1612;
 }
 
-/* ── Country picker ── */
 .country-picker {
   position: relative;
 }

@@ -1,0 +1,157 @@
+@model ScrumExtreme.Web.Models.MaterialSummaryPageViewModel
+
+@{
+    ViewData["Title"] = "Materialbeställning";
+    Layout = "_Layout";
+    var orderRef = $"MB-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmm}";
+    var totalMaterial = Model?.Materials?.Sum(m => m.TotalPrice) ?? 0m;
+    var totalItems = Model?.Items?.Sum(i => i.TotalPrice) ?? 0m;
+    var grandTotal = totalMaterial + totalItems;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/materialorder.css" asp-append-version="true" />
+}
+
+<div class="mo-page">
+
+    <div class="mo-card">
+
+        
+        <div class="mo-card-header">
+            <img src="~/images/ottoshattshop2.png" class="mo-card-banner" alt="Ottos Hattshop" />
+            <span class="mo-card-type">Materialbeställning</span>
+        </div>
+
+        <div class="mo-divider"></div>
+
+        
+        <div class="mo-meta-row">
+            <span class="mo-meta-label">Referens</span>
+            <span class="mo-meta-value">@orderRef</span>
+        </div>
+        <div class="mo-meta-row">
+            <span class="mo-meta-label">Datum</span>
+            <span class="mo-meta-value">@DateTime.Now.ToString("dd MMMM yyyy", new
+                                System.Globalization.CultureInfo("sv-SE"))</span>
+            </div>
+
+            <div class="mo-divider"></div>
+
+            
+            <div class="mo-section-title">Material</div>
+
+            @if (Model?.Materials == null || !Model.Materials.Any())
+            {
+                <p class="mo-empty">Inga material att beställa.</p>
+            }
+            else
+            {
+                <div class="mo-table-header">
+                    <span class="mo-col-name">Namn</span>
+                    <span class="mo-col-qty">Antal</span>
+                    <span class="mo-col-price">Á-pris</span>
+                    <span class="mo-col-total">Totalt</span>
+                </div>
+                @foreach (var mat in Model.Materials)
+                {
+                    <div class="mo-table-row">
+                        <span class="mo-col-name">@mat.MaterialName</span>
+                        <span class="mo-col-qty">@mat.TotalQuantity</span>
+                        <span class="mo-col-price">@mat.PricePerUnit.ToString("0.00") kr</span>
+                        <span class="mo-col-total">@mat.TotalPrice.ToString("0.00") kr</span>
+                    </div>
+                }
+                <div class="mo-subtotal">
+                    <span>Delsumma material</span>
+                    <span>@totalMaterial.ToString("0.00") kr</span>
+                </div>
+            }
+
+            
+            @if (Model?.Items != null && Model.Items.Any())
+            {
+                <div class="mo-divider"></div>
+
+                <div class="mo-section-title">Tillbehör</div>
+
+                <div class="mo-table-header">
+                    <span class="mo-col-name">Namn</span>
+                    <span class="mo-col-qty">Antal</span>
+                    <span class="mo-col-price">Á-pris</span>
+                    <span class="mo-col-total">Totalt</span>
+                </div>
+                @foreach (var item in Model.Items)
+                {
+                    <div class="mo-table-row">
+                        <span class="mo-col-name">@item.ItemName</span>
+                        <span class="mo-col-qty">@item.TotalQuantity</span>
+                        <span class="mo-col-price">@item.PricePerUnit.ToString("0.00") kr</span>
+                        <span class="mo-col-total">@item.TotalPrice.ToString("0.00") kr</span>
+                    </div>
+                }
+                <div class="mo-subtotal">
+                    <span>Delsumma tillbehör</span>
+                    <span>@totalItems.ToString("0.00") kr</span>
+                </div>
+            }
+
+            <div class="mo-divider"></div>
+
+            
+            <div class="mo-grand-total">
+                <span>Totalt att beställa</span>
+                <span>@grandTotal.ToString("0.00") kr</span>
+            </div>
+
+        </div>
+
+        
+        <button class="mo-print-btn" id="printBtn">Skriv ut materialbeställning</button>
+
+    </div>
+
+    
+    <div class="mo-modal-overlay" id="orderModal">
+        <div class="mo-modal">
+            <p class="mo-modal-title">Materialbeställning klar</p>
+            <p class="mo-modal-msg">
+                Vill du bekräfta beställningen? Lagersaldot uppdateras och materiallistan rensas.
+            </p>
+            <div class="mo-modal-actions">
+                <form method="post" asp-action="ConfirmOrder" asp-controller="MaterialSummary">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="mo-modal-btn mo-modal-btn--confirm">Beställ material</button>
+                </form>
+                <button type="button" class="mo-modal-btn mo-modal-btn--cancel" id="modalCancelBtn">Avbryt</button>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            (function () {
+                var printBtn = document.getElementById('printBtn');
+                var modal = document.getElementById('orderModal');
+                var cancelBtn = document.getElementById('modalCancelBtn');
+
+                if (printBtn) {
+                    printBtn.addEventListener('click', function () {
+                        window.print();
+                    });
+                }
+
+                if (modal) {
+                    window.addEventListener('afterprint', function () {
+                        modal.classList.add('mo-modal-overlay--visible');
+                    });
+                }
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function () {
+                        window.location.href = '/MaterialSummary/PrintMaterialSummary';
+                    });
+                }
+            })();
+        </script>
+    }

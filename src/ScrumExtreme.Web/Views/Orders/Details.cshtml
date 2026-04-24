@@ -103,8 +103,9 @@
         </div>
     </div>
 
-    <div style="margin-top: 20px;">
+    <div class="order-details-actions" style="margin-top: 20px;">
         <a asp-action="Index" class="admin-panel-btn" style="text-decoration: none;">← Tillbaka till orderlistan</a>
         <button onclick="window.print()" class="admin-panel-btn" style="margin-left: 10px;">🖨️ Skriv ut order</button>
+        <a href="/ShippingLabel?orderId=@Model.Order.Id" class="admin-panel-btn" style="margin-left: 10px; text-decoration: none;">🚚 Skriv ut fraktsedel</a>
     </div>
 </div>

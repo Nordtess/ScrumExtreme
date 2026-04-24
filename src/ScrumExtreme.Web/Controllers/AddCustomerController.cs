@@ -61,7 +61,6 @@ public class AddCustomerController : Controller
         return RedirectToAction(nameof(AllCustomers));
     }
 
-    // Ny kod
     [HttpGet("Details/{id}")]
     public async Task<IActionResult> Details(string id)
     {
