@@ -26,6 +26,15 @@
         <div class="home-col">
             <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
 
+            <button id="addEventBtn">Lägg till event</button>
+            <div id="eventForm" style="display:none;">
+                <select id="userId"></select>
+                <select id="orderId"></select>
+                <input id="start" type="datetime-local" />
+                <input id="end" type="datetime-local" />
+                <button id="saveEvent">Spara</button>
+            </div>
+
             <div id="calendar"></div>
         </div>
 

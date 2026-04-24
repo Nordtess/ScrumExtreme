@@ -14,11 +14,11 @@ namespace ScrumExtreme.Domain.Entities
     {
         [BsonElement("employeeId")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [BsonElement("orderId")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string OrderId { get; set; }
+        public string OrderId { get; set; } = string.Empty;
 
 
         [BsonElement("start")]
