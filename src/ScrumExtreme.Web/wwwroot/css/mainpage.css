@@ -55,9 +55,13 @@
 }
 
 .home-orders-body {
-  height: calc(9 * 46px);
-  overflow-y: scroll;
   padding: 0;
+}
+
+#homeOrderList {
+  height: calc(9 * 46px) !important;
+  overflow-y: scroll !important;
+  flex: none !important;
 }
 
 .home-orders-body .admin-customer-row {
