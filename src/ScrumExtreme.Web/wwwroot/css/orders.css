@@ -398,7 +398,7 @@
 }
 
 .orders-list-scroll {
-  max-height: calc(9 * 56px);
+  height: calc(9 * 56px);
   overflow-y: scroll !important;
   flex: none !important;
 }

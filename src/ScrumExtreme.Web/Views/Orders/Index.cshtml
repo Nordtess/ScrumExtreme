@@ -143,12 +143,57 @@
 </div>
 
 @section Scripts {
-    <script>     const sortSelect = document.getElementById('orderSortFilter');     const statusSelect = document.getElementById('orderStatusFilter');     const list = document.querySelector('.admin-customer-list');
-         // ── Type pills toggle ──     document.querySelectorAll('.order-type-pill').forEach(pill => {         pill.addEventListener('click', function () {             this.classList.toggle('active');             applyFilters();         });     });
-         // ── Combined filter + sort ──     function applyFilters() {         const rows = Array.from(list.querySelectorAll('.admin-customer-row'));         const activePills = new Set(             Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)         );         const statusVal = statusSelect.value;         const newest = sortSelect.value === 'newest';
-             // Sort         rows.sort((a, b) => {             const da = BigInt(a.dataset.date);             const db = BigInt(b.dataset.date);             return newest ? (db > da ? 1 : db < da ? -1 : 0)                 : (da > db ? 1 : da < db ? -1 : 0);         });         rows.forEach(r => list.appendChild(r));
-             // Show/hide         rows.forEach(row => {             const typeMatch = activePills.has(row.dataset.type);             const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;             row.style.display = (typeMatch && statusMatch) ? '' : 'none';         });     }
-         sortSelect.addEventListener('change', applyFilters);     statusSelect.addEventListener('change', applyFilters);
-         // ── Ta bort order ──     document.querySelectorAll('.order-delete-btn').forEach(btn => {         btn.addEventListener('click', async function () {             const id = this.dataset.id;             if (!confirm('Är du säker på att du vill ta bort denna order?')) return;             const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });             if (res.ok) {                 this.closest('.admin-customer-row').remove();                 const countEl = document.querySelector('.admin-customer-count');                 if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;             } else {                 alert('Något gick fel. Försök igen.');             }         });     });
+    <script>
+        const sortSelect = document.getElementById('orderSortFilter');
+        const statusSelect = document.getElementById('orderStatusFilter');
+        const list = document.querySelector('.admin-customer-list');
+
+        document.querySelectorAll('.order-type-pill').forEach(pill => {
+            pill.addEventListener('click', function () {
+                this.classList.toggle('active');
+                applyFilters();
+            });
+        });
+
+        function applyFilters() {
+            const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
+            const activePills = new Set(
+                Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
+            );
+            const statusVal = statusSelect.value;
+            const newest = sortSelect.value === 'newest';
+
+            rows.sort((a, b) => {
+                const da = BigInt(a.dataset.date);
+                const db = BigInt(b.dataset.date);
+                return newest ? (db > da ? 1 : db < da ? -1 : 0)
+                    : (da > db ? 1 : da < db ? -1 : 0);
+            });
+            rows.forEach(r => list.appendChild(r));
+
+            rows.forEach(row => {
+                const typeMatch = activePills.has(row.dataset.type);
+                const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
+                row.style.display = (typeMatch && statusMatch) ? '' : 'none';
+            });
+        }
+
+        sortSelect.addEventListener('change', applyFilters);
+        statusSelect.addEventListener('change', applyFilters);
+
+        document.querySelectorAll('.order-delete-btn').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = this.dataset.id;
+                if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
+                const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
+                if (res.ok) {
+                    this.closest('.admin-customer-row').remove();
+                    const countEl = document.querySelector('.admin-customer-count');
+                    if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+                } else {
+                    alert('Något gick fel. Försök igen.');
+                }
+            });
+        });
     </script>
 }

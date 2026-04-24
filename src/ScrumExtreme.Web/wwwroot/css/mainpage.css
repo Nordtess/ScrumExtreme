@@ -55,7 +55,7 @@
 }
 
 .home-orders-body {
-  max-height: calc(9 * 46px);
+  height: calc(9 * 46px);
   overflow-y: scroll;
   padding: 0;
 }
