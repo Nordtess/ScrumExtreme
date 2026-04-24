@@ -42,6 +42,12 @@
   align-items: stretch;
 }
 
+.admin-panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
 .admin-panel {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -138,20 +144,78 @@
 
 .admin-customer-name {
   font-size: 0.9rem;
+  font-weight: 700;
   color: #1a1612;
   letter-spacing: 0.02em;
 }
 
-.admin-customer-count {
-  font-size: 0.72rem;
+.material-summary-header {
+  display: grid;
+  grid-template-columns: 1fr 80px 120px 120px;
+  gap: 1rem;
+  padding: 0.4rem 0 0.55rem;
+  border-bottom: 1.5px solid #1a1612;
+  margin-bottom: 0.25rem;
+}
+
+.material-summary-header span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.material-summary-header span:not(:first-child) {
+  text-align: right;
+}
+
+.admin-customer-list .admin-customer-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 120px 120px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.material-col-qty {
+  justify-self: end;
+}
+
+.admin-customer-count.material-col-qty {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  padding: 0 0.35rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+}
+
+.material-col-price {
+  font-size: 0.85rem;
+  color: #555;
+  text-align: right;
+}
+
+.material-col-total {
+  font-size: 0.85rem;
   font-weight: 700;
   color: #c9a84c;
-  background: rgba(201, 168, 76, 0.08);
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  text-align: right;
+}
+
+.admin-customer-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
-  padding: 0.15rem 0.6rem;
+  padding: 0.12rem 0.55rem;
   letter-spacing: 0.04em;
   font-family: "Roboto", sans-serif;
+  line-height: 1;
 }
 
 .admin-list-placeholder {
@@ -194,6 +258,95 @@
   opacity: 0.35;
   cursor: not-allowed;
   border-color: #aaa;
+}
+
+.ms-print-btn {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 1.5rem;
+  background: #f7e6ca;
+  color: #1a1612;
+  border: 1.5px solid #1a1612;
+  border-radius: 8px;
+  padding: 0.72rem 1.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ms-print-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.ms-print-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.ms-print-btn:hover::after {
+  left: 1.6rem;
+  right: 1.6rem;
+}
+
+.ms-capital-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 0 0;
+}
+
+.ms-capital-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ms-capital-label {
+  font-size: 0.76rem;
+  color: #555;
+  letter-spacing: 0.03em;
+}
+
+.ms-capital-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a1612;
+}
+
+.ms-capital-divider {
+  border-top: 1px solid #2a2a2a;
+  margin: 0.3rem 0;
+}
+
+.ms-capital-row--total .ms-capital-label {
+  font-weight: 700;
+  color: #1a1612;
+  font-size: 0.8rem;
+}
+
+.ms-capital-value--after {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #c9a84c;
 }
 
 .admin-submit-area {

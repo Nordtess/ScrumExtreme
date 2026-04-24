@@ -1,9 +1,5 @@
-/* ───────────────────────────────────────────────────────────
-   mainpage.css — Home page layout
-   Two-column: calendar card (left) + order summary (right)
-─────────────────────────────────────────────────────────── */
 
-/* ── Two-column grid ── */
+
 .home-grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -11,13 +7,11 @@
   align-items: start;
 }
 
-/* ── Each column ── */
 .home-col {
   display: flex;
   flex-direction: column;
 }
 
-/* ── Calendar title ── */
 .home-calendar-title {
   font-size: 0.9rem;
   font-weight: 800;
@@ -27,7 +21,6 @@
   margin: 0 0 0.55rem 0;
 }
 
-/* ── Calendar card ── */
 .home-calendar-card {
   border: 2px solid #000;
   border-radius: 12px;
@@ -41,28 +34,25 @@
   object-fit: cover;
 }
 
-/* ── Order panel body scroll ── */
 .home-orders-body {
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   padding: 0;
 }
 
-/* ── Compact row layout for home panel ── */
 .home-orders-body .admin-customer-row {
   display: grid;
-  grid-template-columns: minmax(100px, 1.2fr) minmax(80px, auto) minmax(
-      90px,
-      1fr
-    ) 80px 110px 90px 30px;
+  grid-template-columns:
+    minmax(100px, 1.2fr) minmax(80px, auto) minmax(90px, 1fr)
+    100px 110px 90px 30px;
   align-items: center;
   gap: 0.6rem;
 }
 
-/* ── Date / total helper classes ── */
 .home-order-date {
   font-size: 0.78rem;
-  color: #666;
+  font-weight: 600;
+  color: #444;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -75,7 +65,92 @@
   white-space: nowrap;
 }
 
-/* ── Responsive: stack columns on narrow screens ── */
+.home-col .admin-panel-header .admin-panel-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid #1a1612;
+  background: #f7e6ca;
+  color: #1a1612;
+  position: relative;
+}
+
+.home-col .admin-panel-header .admin-panel-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.home-col .admin-panel-header .admin-panel-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.home-col .admin-panel-header .admin-panel-btn:hover::after {
+  left: 1.1rem;
+  right: 1.1rem;
+}
+
+.home-col .order-filter-bar {
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-col .order-filter-group {
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.home-col .order-filter-label {
+  font-size: 0.68rem;
+}
+
+.home-col .order-filter-select {
+  min-width: 120px;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.home-col .order-type-pill {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  background: #f5f2ec;
+  color: #aaa;
+  border-color: #ccc;
+}
+
+.home-col .order-type-pill[data-type="standard"].active {
+  background: rgba(0, 0, 0, 0.09);
+  color: #222;
+  border-color: #1a1612;
+  font-weight: 700;
+}
+
+.home-col .order-type-pill[data-type="modifierad"].active {
+  background: rgba(201, 168, 76, 0.22);
+  color: #a8820a;
+  border-color: #1a1612;
+  font-weight: 700;
+}
+
+.home-col .order-type-pill[data-type="special"].active {
+  background: rgba(155, 80, 255, 0.18);
+  color: #9032e6;
+  border-color: #1a1612;
+  font-weight: 700;
+}
+
 @media (max-width: 900px) {
   .home-grid {
     grid-template-columns: 1fr;

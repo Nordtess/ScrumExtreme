@@ -22,8 +22,6 @@ public class OrderService : IOrderService
     public async Task<Order?> GetByIdAsync(string id) =>
         await _repository.GetByIdAsync(id);
 
-    // �ndrat namn fr�n GetByCustomerIdAsync till GetByUserIdAsync 
-    // f�r att matcha IOrderService exakt!
     public async Task<IEnumerable<Order>> GetByUserIdAsync(string userId)
     {
         var all = await _repository.GetAllAsync();

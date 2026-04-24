@@ -23,3 +23,4 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
     });
 });
+

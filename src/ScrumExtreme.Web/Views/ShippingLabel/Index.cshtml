@@ -1,5 +1,13 @@
+@model ScrumExtreme.Web.Models.ShippingLabelViewModel
+
 @{
-    ViewData["Title"] = "Fraktsedel Test";
+    ViewData["Title"] = Model.HasOrder ? "Fraktsedel – " + Model.OrderNumber : "Fraktsedel";
+
+    // Build barcode reference from real data or placeholder
+    var barcodeRef = Model.HasOrder
+        ? $"{Model.CountryCode}-{Model.PostalCode}-{string.Concat(Model.FullName.Split(' ').Select(p => p.Length > 0 ?
+p[0].ToString().ToUpper() : ""))}-{DateTime.UtcNow.Year}"
+        : "SE-71231-MK-2026";
 }
 
 @section Styles {
@@ -8,20 +16,10 @@
 
 <div class="sl-page">
 
-    <!-- Language picker -->
-    <div class="sl-picker-wrap">
-        <label class="sl-picker-label" for="slCountrySearch">Välj land för att testa etikettspråk</label>
-        <div class="country-picker">
-            <input type="text" id="slCountrySearch" placeholder="Sök land, t.ex. Sverige…" autocomplete="off" />
-            <ul id="slCountryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
-        </div>
-        <p class="sl-lang-hint">Etiketter visas nu på: <strong id="slLangDisplay">Svenska</strong></p>
-    </div>
-
-    <!-- Shipping label card -->
+    
     <div class="sl-card">
         <div class="sl-card-header">
-            <span class="sl-card-logo">Hattmakaren AB</span>
+            <img src="~/images/ottoshattshop2.png" class="sl-card-banner" alt="Ottos Hattshop" />
             <span class="sl-card-type" id="lbl-type">Fraktsedel</span>
         </div>
 
@@ -31,27 +29,27 @@
 
         <div class="sl-row">
             <span class="sl-label" id="lbl-name">Namn</span>
-            <span class="sl-value">Malik King</span>
+            <span class="sl-value" id="val-name">@(Model.HasOrder? Model.FullName: "Malik King")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-address">Adress</span>
-            <span class="sl-value">Piratestreet 24</span>
+            <span class="sl-value" id="val-address">@(Model.HasOrder? Model.Address: "Piratestreet 24")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-postalCode">Postnummer</span>
-            <span class="sl-value">71231</span>
+            <span class="sl-value" id="val-postalCode">@(Model.HasOrder? Model.PostalCode: "71231")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-city">Stad</span>
-            <span class="sl-value">Mogadishu</span>
+            <span class="sl-value" id="val-city">@(Model.HasOrder? Model.City: "Mogadishu")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-country">Land</span>
-            <span class="sl-value">Somalia</span>
+            <span class="sl-value" id="val-country">@(Model.HasOrder? Model.Country: "Somalia")</span>
         </div>
         <div class="sl-row">
             <span class="sl-label" id="lbl-phone">Telefon</span>
-            <span class="sl-value">+46 712 312 100</span>
+            <span class="sl-value" id="val-phone">@(Model.HasOrder? Model.Phone: "+46 712 312 100")</span>
         </div>
 
         <div class="sl-divider"></div>
@@ -61,14 +59,56 @@
         <div class="sl-divider"></div>
 
         <div class="sl-barcode">||||| |||| ||||| |||| |||||</div>
-        <div class="sl-barcode-num">SE-71231-MK-2026</div>
+        <div class="sl-barcode-num">@barcodeRef</div>
     </div>
 
-    <!-- Print button -->
+    
     <button class="sl-print-btn" id="printBtn">Skriv ut fraktsedel</button>
 
 </div>
 
-@section Scripts {
-    <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
-}
+@if (Model.HasOrder)
+{
+    
+    <div class="sl-modal-overlay" id="shippedModal">
+        <div class="sl-modal">
+            <p class="sl-modal-title">Fraktsedeln är utskriven</p>
+            <p class="sl-modal-msg">Vill du markera ordern <strong>#@Model.OrderNumber</strong> som
+                <strong>Skickad</strong>?</p>
+                <div class="sl-modal-actions">
+                    <form method="post" asp-action="MarkAsShipped" asp-controller="ShippingLabel">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="orderId" value="@Model.OrderId" />
+                        <button type="submit" class="sl-modal-btn sl-modal-btn--confirm">Ja, markera som Skickad</button>
+                    </form>
+                    <button type="button" class="sl-modal-btn sl-modal-btn--cancel" id="modalCancelBtn">Avbryt</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @section Scripts {
+        <script>
+            // Pass server-side country code to JS for auto language selection
+            window.slCountryCode = "@Model.CountryCode";
+        </script>
+        <script src="~/js/shippinglabel.js" asp-append-version="true"></script>
+        <script>
+            (function () {
+                var modal = document.getElementById('shippedModal');
+                var cancelBtn = document.getElementById('modalCancelBtn');
+
+                if (modal) {
+                    window.addEventListener('afterprint', function () {
+                        modal.classList.add('sl-modal-overlay--visible');
+                    });
+                }
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function () {
+                        modal.classList.remove('sl-modal-overlay--visible');
+                    });
+                }
+            })();
+        </script>
+    }

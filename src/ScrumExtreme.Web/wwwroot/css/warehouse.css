@@ -1,4 +1,4 @@
-/* ── Warehouse page ── */
+
 .site-main:has(.warehouse-wrapper) {
   align-items: stretch;
   text-align: left;
@@ -13,7 +13,6 @@
   width: 100%;
 }
 
-/* ── Hat card grid ── */
 .warehouse-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -34,7 +33,6 @@
   border-color: #1a1612;
 }
 
-/* ── Card header ── */
 .warehouse-card-header {
   display: flex;
   align-items: baseline;
@@ -52,13 +50,16 @@
 }
 
 .warehouse-card-price {
-  font-size: 0.75rem;
-  color: #c9a84c;
-  font-weight: 500;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1px solid #1a1612;
+  border-radius: 10px;
+  padding: 0.1rem 0.5rem;
   flex-shrink: 0;
 }
 
-/* ── Card body ── */
 .warehouse-card-body {
   padding: 1rem 1.3rem;
   flex: 1;
@@ -74,7 +75,6 @@
   margin: 0;
 }
 
-/* ── Stock grid (size blocks) ── */
 .warehouse-stock-grid {
   display: flex;
   flex-wrap: wrap;
@@ -98,12 +98,13 @@
 
 .warehouse-size-input {
   width: 54px;
-  background: #0a0a0a;
-  border: 1px solid #2a2a2a;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 7px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.45rem 0.4rem;
   font-size: 0.88rem;
+  font-weight: 600;
   font-family: "Roboto", sans-serif;
   text-align: center;
   outline: none;
@@ -117,13 +118,12 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
 }
 
-/* low stock indicator */
 .warehouse-size-input.--low {
-  border-color: #7a3a2a;
-  color: #e07050;
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.12);
+  color: #c0392b;
 }
 
-/* ── Card footer ── */
 .warehouse-card-footer {
   display: flex;
   align-items: center;
@@ -138,22 +138,50 @@
 
 .warehouse-save-btn {
   font-size: 0.72rem;
-  font-weight: 600;
-  color: #0a0a0a;
-  background: #c9a84c;
-  border: none;
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
   padding: 0.45rem 1rem;
   cursor: pointer;
   font-family: "Roboto", sans-serif;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  transition: background 0.18s ease;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
   flex-shrink: 0;
+  position: relative;
+}
+
+.warehouse-save-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .warehouse-save-btn:hover {
-  background: #d4b96a;
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+}
+
+.warehouse-save-btn:hover::after {
+  left: 1rem;
+  right: 1rem;
+}
+
+.warehouse-save-btn.--small:hover::after {
+  left: 0.65rem;
+  right: 0.65rem;
 }
 
 .warehouse-save-btn:disabled {
@@ -171,7 +199,6 @@
   color: #ff453a;
 }
 
-/* ── Empty state ── */
 .warehouse-empty {
   color: #aaa;
   font-size: 0.85rem;
@@ -180,7 +207,6 @@
   padding: 3rem 0;
 }
 
-/* ── Remove browser spinner arrows from number inputs ── */
 .warehouse-size-input::-webkit-outer-spin-button,
 .warehouse-size-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -192,7 +218,6 @@
   appearance: textfield;
 }
 
-/* ── Material usage hint ── */
 .warehouse-material-hint {
   font-size: 0.7rem;
   color: #8a7a50;
@@ -202,7 +227,6 @@
   text-align: right;
 }
 
-/* ── Filter bar ── */
 .warehouse-filter-bar {
   display: flex;
   align-items: center;
@@ -238,7 +262,6 @@
   border-color: #c9a84c;
 }
 
-/* ── Section ── */
 .warehouse-section {
   display: flex;
   flex-direction: column;
@@ -252,34 +275,37 @@
 }
 
 .warehouse-section-title {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: #c9a84c;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
+  border-radius: 20px;
+  padding: 0.2rem 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 0;
 }
 
 .warehouse-section-count {
-  font-size: 0.7rem;
-  color: #777;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1a1612;
 }
 
 .warehouse-section-note {
   font-size: 0.72rem;
-  color: #777;
-  font-style: italic;
+  font-weight: 500;
+  color: #555;
   margin: 0;
 }
 
-/* ── Section divider ── */
 .warehouse-divider {
   border: none;
   border-top: 1px solid #d0ccc8;
   margin: 0.25rem 0;
 }
 
-/* ── List (material & tillbehör) ── */
 .warehouse-list {
   display: flex;
   flex-direction: column;
@@ -297,7 +323,6 @@
   padding: 0.65rem 1.1rem;
 }
 
-/* tillbehör and material rows have an extra delete column */
 #tillbehor-list .warehouse-list-header,
 #tillbehor-list .warehouse-list-row,
 #material-list .warehouse-list-header,
@@ -336,20 +361,22 @@
 }
 
 .warehouse-list-total {
-  font-size: 0.88rem;
-  color: #c9a84c;
+  font-size: 0.85rem;
   font-weight: 600;
+  color: #1a1612;
   text-align: right;
+  justify-self: end;
 }
 
 .warehouse-price-input {
   width: 80px;
-  background: #ffffff;
-  border: 1px solid #2a2a2a;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
   color: #1a1612;
   padding: 0.35rem 0.45rem;
   font-size: 0.85rem;
+  font-weight: 600;
   font-family: "Roboto", sans-serif;
   text-align: center;
   outline: none;
@@ -380,7 +407,6 @@
   border-top: 1px solid #2a2a2a;
 }
 
-/* ── Add-item row ───────────────────────────────────── */
 .warehouse-add-row {
   display: flex;
   align-items: center;
@@ -410,7 +436,6 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
 }
 
-/* ── Delete button ───────────────────────────────────────── */
 .warehouse-delete-btn,
 .warehouse-delete-material-btn,
 .warehouse-delete-hat-btn {
@@ -420,9 +445,9 @@
   width: 26px;
   height: 26px;
   background: transparent;
-  border: 1px solid #3a1a1a;
+  border: 1.5px solid #1a1612;
   border-radius: 5px;
-  color: #7a3a2a;
+  color: #1a1612;
   font-size: 0.75rem;
   line-height: 1;
   cursor: pointer;
@@ -438,9 +463,9 @@
 .warehouse-delete-btn:hover,
 .warehouse-delete-material-btn:hover,
 .warehouse-delete-hat-btn:hover {
-  background: #3a1a1a;
-  color: #ff6b55;
-  border-color: #5a2a2a;
+  background: rgba(220, 38, 38, 0.14);
+  color: #dc2626;
+  border-color: #dc2626;
 }
 
 .warehouse-footer-label {
@@ -452,14 +477,13 @@
 }
 
 .warehouse-footer-total {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #c9a84c;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1612;
   min-width: 90px;
   text-align: right;
 }
 
-/* ── Simple grid (material & tillbehör) ── */
 .warehouse-simple-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -497,12 +521,13 @@
 
 .warehouse-simple-input {
   width: 60px;
-  background: #0a0a0a;
-  border: 1px solid #2a2a2a;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
-  color: #e8e0d4;
+  color: #1a1612;
   padding: 0.35rem 0.4rem;
   font-size: 0.85rem;
+  font-weight: 600;
   font-family: "Roboto", sans-serif;
   text-align: center;
   outline: none;
@@ -523,15 +548,61 @@
   appearance: textfield;
 }
 
-/* ── Small save button variant ── */
 .warehouse-save-btn.--small {
   font-size: 0.65rem;
   padding: 0.3rem 0.65rem;
 }
 
 .warehouse-save-btn.--small[disabled] {
-  opacity: 0.3;
+  opacity: 0.35;
   cursor: not-allowed;
-  background: #555;
-  color: #999;
+  background: #e8e0d4;
+  color: #888;
+  border-color: #aaa;
+}
+
+.warehouse-hat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.8rem 1.1rem;
+  background: #f5f2ec;
+  border: 1px solid #2a2a2a;
+  border-radius: 0 0 10px 10px;
+  border-top: none;
+  margin-top: -2px;
+}
+
+.warehouse-summary-strip {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.4rem;
+  background: #1a1612;
+  border-radius: 10px;
+  border: 1.5px solid #1a1612;
+  margin-top: 0.5rem;
+}
+
+.warehouse-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.warehouse-summary-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #c9a84c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.warehouse-summary-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f7e6ca;
 }

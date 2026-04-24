@@ -1,4 +1,4 @@
-/* ── Admin page ── */
+
 .site-main:has(.admin-wrapper) {
   align-items: stretch;
   text-align: left;
@@ -51,7 +51,6 @@
   margin: 0 auto;
 }
 
-/* ── Panels ── */
 .admin-panel {
   background: #ffffff;
   border: 1px solid #2a2a2a;
@@ -119,6 +118,40 @@
   border-color: #c9a84c;
 }
 
+.admin-panel-header .admin-panel-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid #1a1612;
+  background: #f7e6ca;
+  color: #1a1612;
+  position: relative;
+}
+
+.admin-panel-header .admin-panel-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.admin-panel-header .admin-panel-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.admin-panel-header .admin-panel-btn:hover::after {
+  left: 1.1rem;
+  right: 1.1rem;
+}
+
 .admin-panel-body {
   padding: 1.3rem;
   flex: 1;
@@ -131,7 +164,6 @@
   margin: 0;
 }
 
-/* ── Form sections ── */
 .admin-section-label {
   font-size: 0.65rem;
   font-weight: 600;
@@ -174,7 +206,6 @@
   cursor: not-allowed;
 }
 
-/* ── Fields ── */
 .admin-field {
   display: flex;
   flex-direction: column;
@@ -218,7 +249,6 @@
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
 }
 
-/* ── Hide number input spinners ── */
 .admin-field input[type="number"]::-webkit-outer-spin-button,
 .admin-field input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -251,7 +281,6 @@
   margin: 0.25rem 0 0;
 }
 
-/* ── Size checkboxes ── */
 .size-checkbox-group {
   display: flex;
   flex-wrap: wrap;
@@ -264,17 +293,26 @@
   align-items: center;
   gap: 0.35rem;
   background: #f5f2ec;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
   padding: 0.35rem 0.65rem;
   font-size: 0.82rem;
   color: #1a1612;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .size-checkbox-label:hover {
-  border-color: #c9a84c;
+  background: #f7e6ca;
+  border-color: #1a1612;
+}
+
+.size-checkbox-label:has(input:checked) {
+  background: #f7e6ca;
+  border-color: #1a1612;
+  font-weight: 700;
 }
 
 .size-checkbox-label input[type="checkbox"],
@@ -287,13 +325,12 @@
   cursor: pointer;
 }
 
-/* ── Buttons ── */
 .admin-btn-primary {
-  width: 100%;
-  padding: 0.7rem 1rem;
+  width: auto;
+  padding: 0.7rem 2.8rem;
   background: transparent;
   color: #c9a84c;
-  border: 1px solid rgba(201, 168, 76, 0.45);
+  border: 1.5px solid #1a1612;
   border-radius: 7px;
   font-size: 0.78rem;
   font-family: "Roboto", sans-serif;
@@ -308,30 +345,56 @@
 }
 
 .admin-btn-primary:hover {
-  background: rgba(201, 168, 76, 0.08);
-  border-color: #c9a84c;
 }
 
 .admin-btn-primary.btn-hover-valid {
   background: transparent;
   color: #30d158;
-  border: 1px solid #30d158;
+  border: 1.5px solid #30d158;
   box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);
 }
 
 .admin-btn-primary.btn-hover-invalid {
   background: transparent;
   color: #ff453a;
-  border: 1px solid #ff453a;
+  border: 1.5px solid #ff453a;
   box-shadow: 0 0 10px rgba(255, 69, 58, 0.15);
 }
 
 .admin-btn-primary.admin-btn-auto {
   width: auto;
   padding: 0.7rem 2.5rem;
+  background: #f7e6ca;
+  color: #1a1612;
+  border-color: #1a1612;
+  position: relative;
 }
 
-/* ── Customer sort bar ── */
+.admin-btn-primary.admin-btn-auto::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.admin-btn-primary.admin-btn-auto:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.admin-btn-primary.admin-btn-auto:hover::after {
+  left: 2.5rem;
+  right: 2.5rem;
+}
+
 .customer-sort-bar {
   display: flex;
   align-items: center;
@@ -352,7 +415,7 @@
 
 .customer-sort-pill {
   background: #f5f2ec;
-  border: 1px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
   color: #555;
   padding: 0.28rem 0.75rem;
@@ -369,12 +432,12 @@
 }
 
 .customer-sort-pill.active {
-  border-color: #c9a84c;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.08);
+  border-color: #1a1612;
+  color: #1a1612;
+  background: #f7e6ca;
+  font-weight: 700;
 }
 
-/* ── Customer list ── */
 .admin-customer-list {
   display: flex;
   flex-direction: column;
@@ -405,12 +468,12 @@
 
 .admin-customer-count {
   font-size: 0.68rem;
-  font-weight: 600;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.09);
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  font-weight: 700;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 20px;
-  padding: 0.12rem 0.48rem;
+  padding: 0.12rem 0.55rem;
   letter-spacing: 0.04em;
   font-family: "Roboto", sans-serif;
   line-height: 1;
@@ -451,6 +514,7 @@
 
 .admin-customer-name {
   font-size: 0.88rem;
+  font-weight: 600;
   color: #1a1612;
 }
 
@@ -469,6 +533,7 @@
 .admin-customer-country {
   font-size: 0.75rem;
   color: #555;
+  font-weight: 600;
   letter-spacing: 0.04em;
 }
 
@@ -503,11 +568,10 @@
 
 .customer-delete-btn:hover {
   color: #ff453a;
-  border-color: rgba(255, 69, 58, 0.35);
-  background: rgba(255, 69, 58, 0.07);
+  border-color: rgba(255, 69, 58, 0.55);
+  background: rgba(255, 69, 58, 0.14);
 }
 
-/* ── Customer details page ── */
 .detail-back-link {
   display: inline-flex;
   align-items: center;
@@ -652,10 +716,10 @@
   border-color: rgba(255, 69, 58, 0.25);
 }
 
-/* ── Submit area ── */
 .admin-submit-area {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 1.2rem;
 }
@@ -667,7 +731,6 @@
   min-height: 1rem;
 }
 
-/* ── Toast ── */
 .admin-toast {
   background: rgba(48, 209, 88, 0.07);
   border: 1px solid rgba(48, 209, 88, 0.2);

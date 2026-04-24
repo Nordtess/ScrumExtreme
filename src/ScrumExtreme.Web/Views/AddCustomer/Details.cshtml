@@ -17,12 +17,12 @@
         <a asp-controller="AddCustomer" asp-action="Index" class="detail-back-link">← Alla kunder</a>
         <h1 class="admin-page-title">@Model.FirstName @Model.LastName</h1>
         <p class="admin-page-subtitle">Kundprofil · Registrerad @Model.CreatedAt.ToString("d MMMM yyyy", new
-                        System.Globalization.CultureInfo("sv-SE"))</p>
+                                    System.Globalization.CultureInfo("sv-SE"))</p>
         </div>
 
         <div class="detail-layout">
 
-            <!-- Left: contact info -->
+            
             <div class="admin-panel">
                 <div class="admin-panel-header">
                     <h2 class="admin-panel-title">
@@ -44,7 +44,7 @@
                     <div class="detail-field-group">
                         <span class="detail-label">Telefonnummer</span>
                         <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" :
-                                                    Model.PhoneNumber)</span>
+                                                                                Model.PhoneNumber)</span>
                         </div>
 
                         <div class="detail-field-group">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
 
-                <!-- Right: orders -->
+                
                 <div class="admin-panel">
                     <div class="admin-panel-header">
                         <h2 class="admin-panel-title">
@@ -100,8 +100,6 @@
                                         OrderStatus.Processing => "Påbörjad",
                                         OrderStatus.Printed => "Utskriven",
                                         OrderStatus.Shipped => "Skickad",
-                                        OrderStatus.Delivered => "Levererad",
-                                        OrderStatus.Cancelled => "Avbruten",
                                         _ => order.Status.ToString()
                                     };
 
@@ -109,11 +107,11 @@
                                         <div class="detail-order-info">
                                             <span class="detail-order-number">#@order.OrderNumber</span>
                                             <span class="detail-order-date">@order.OrderDate.ToString("d MMM yyyy", new
-                                                                                System.Globalization.CultureInfo("sv-SE"))</span>
+                                                                                                                                System.Globalization.CultureInfo("sv-SE"))</span>
                                             </div>
                                             <div class="detail-order-right">
                                                 <span class="detail-order-amount">@order.TotalAmount.ToString("C", new
-                                                                                    System.Globalization.CultureInfo("sv-SE"))</span>
+                                                                                                                                        System.Globalization.CultureInfo("sv-SE"))</span>
                                                     <span class="detail-status-badge @statusClass">@statusLabel</span>
                                                 </div>
                                             </a>
