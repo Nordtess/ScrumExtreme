@@ -25,12 +25,26 @@
         
         <div class="home-col">
             <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
-            <div class="home-calendar-card">
-                <img src="~/images/fredriksfinakalender.png" alt="Fredriks Fina Kalender" class="home-calendar-img" />
+
+            <button id="addEventBtn">Lägg till event</button>
+            <div id="eventForm" style="display:none;">
+                <select id="userId"></select>
+                <select id="orderId"></select>
+                <input id="start" type="datetime-local" />
+                <input id="end" type="datetime-local" />
+                <button id="saveEvent">Spara</button>
             </div>
+
+            <div id="calendar"></div>
         </div>
 
-        
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+        <script src="~/js/calendar.js"></script>
+
+        <!-- ── Right: Order summary ── -->
         <div class="home-col">
 
             
