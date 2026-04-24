@@ -107,5 +107,20 @@
         <a asp-action="Index" class="admin-panel-btn" style="text-decoration: none;">← Tillbaka till orderlistan</a>
         <button onclick="window.print()" class="admin-panel-btn" style="margin-left: 10px;">🖨️ Skriv ut order</button>
         <a href="/ShippingLabel?orderId=@Model.Order.Id" class="admin-panel-btn" style="margin-left: 10px; text-decoration: none;">🚚 Skriv ut fraktsedel</a>
+        <button id="deleteOrderBtn" class="admin-panel-btn" style="margin-left: 10px;">🗑️ Radera order</button>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('deleteOrderBtn').addEventListener('click', async function () {
+            if (!confirm('Är du säker på att du vill radera order @Model.Order.OrderNumber? Detta kan inte ångras.')) return;
+            var res = await fetch('/Orders/Delete/@Model.Order.Id', { method: 'POST' });
+            if (res.ok) {
+                window.location.href = '@Url.Action("Index", "Orders")';
+            } else {
+                alert('Något gick fel. Försök igen.');
+            }
+        });
+    </script>
+}

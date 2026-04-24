@@ -8,6 +8,7 @@
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+        height: '100%',
 
         events: '/Calendar/GetEvents',
 
