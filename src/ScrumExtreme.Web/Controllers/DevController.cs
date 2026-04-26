@@ -1,0 +1,114 @@
+using Microsoft.AspNetCore.Mvc;
+using ScrumExtreme.Application.Interfaces;
+using ScrumExtreme.Domain.Entities;
+
+namespace ScrumExtreme.Web.Controllers;
+
+public class DevController : Controller
+{
+    private readonly IOrderService _orderService;
+    private readonly IPurchaseRecordService _purchaseRecordService;
+    private readonly IUserService _userService;
+
+    public DevController(
+        IOrderService orderService,
+        IPurchaseRecordService purchaseRecordService,
+        IUserService userService)
+    {
+        _orderService = orderService;
+        _purchaseRecordService = purchaseRecordService;
+        _userService = userService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Seed()
+    {
+        var rng = new Random(42);
+
+        var users = (await _userService.GetAllUsersAsync()).ToList();
+        var userId = users.FirstOrDefault()?.Id ?? "000000000000000000000000";
+
+        var hatNames = new[] { "Fedora", "Trilby", "Pork Pie", "Newsboy", "Bowler", "Panama" };
+        var materialNames = new[] { "Ull", "Filt", "Bomull", "Siden", "Läder" };
+        var itemNames = new[] { "Brodyr", "Bård", "Spänne", "Band", "Fjäder" };
+
+        var now = DateTime.UtcNow;
+        int ordersSeeded = 0;
+        int purchasesSeeded = 0;
+
+        for (int daysBack = 730; daysBack >= 1; daysBack--)
+        {
+            var date = now.AddDays(-daysBack);
+
+            var isWeekend = date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+            var seasonBoost = (date.Month >= 10 || date.Month <= 1) ? 0.25 : 0.0;
+            var orderChance = (isWeekend ? 0.30 : 0.60) + seasonBoost;
+            if (rng.NextDouble() > orderChance) continue;
+
+            int ordersThisDay = rng.Next(1, 5);
+            for (int i = 0; i < ordersThisDay; i++)
+            {
+                var isSpecial = rng.NextDouble() < 0.15;
+                var isModified = !isSpecial && rng.NextDouble() < 0.30;
+                var qty = rng.Next(1, 4);
+                var yearFactor = 1.0 + (date.Year - 2024) * 0.08;
+                var unitPrice = (int)(rng.Next(800, 3500) * yearFactor);
+
+                var orderItem = new OrderItem
+                {
+                    ProductId = "seed",
+                    Name = hatNames[rng.Next(hatNames.Length)],
+                    Quantity = qty,
+                    UnitPrice = unitPrice,
+                    Size = new[] { "S", "M", "L", "XL" }[rng.Next(4)],
+                    IsModified = isModified,
+                    ModificationDescription = isModified ? "Seedat tillägg" : string.Empty,
+                    SpecialHats = isSpecial ? new SpecialHats { Description = "Seedat special" } : null
+                };
+
+                var order = new Order
+                {
+                    OrderNumber = $"SEED-{date:yyyyMMdd}-{i}",
+                    OrderDate = date,
+                    UserId = userId,
+                    Status = OrderStatus.Shipped,
+                    TotalAmount = qty * unitPrice,
+                    ShippingAddress = new ShippingAddress
+                    {
+                        Address = "Seedgatan 1",
+                        City = "Stockholm",
+                        PostalCode = "11122",
+                        Country = "Sverige"
+                    },
+                    Items = new List<OrderItem> { orderItem }
+                };
+
+                await _orderService.CreateOrderAsync(order);
+                ordersSeeded++;
+            }
+
+            if (rng.NextDouble() < 0.45)
+            {
+                var name = materialNames[rng.Next(materialNames.Length)];
+                var useItem = rng.NextDouble() < 0.4;
+                if (useItem) name = itemNames[rng.Next(itemNames.Length)];
+                var qty = rng.Next(5, 30);
+                var unitCost = (decimal)rng.Next(50, 400);
+
+                await _purchaseRecordService.CreateAsync(new PurchaseRecord
+                {
+                    Type = useItem ? "Item" : "Material",
+                    ReferenceId = "seed",
+                    Name = name,
+                    Quantity = qty,
+                    UnitCost = unitCost,
+                    TotalCost = unitCost * qty,
+                    PurchasedAt = date
+                });
+                purchasesSeeded++;
+            }
+        }
+
+        return Content($"Seeded {ordersSeeded} orders and {purchasesSeeded} purchase records. You can delete this endpoint when done.");
+    }
+}
