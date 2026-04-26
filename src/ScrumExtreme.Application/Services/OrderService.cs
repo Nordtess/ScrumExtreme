@@ -7,7 +7,6 @@ namespace ScrumExtreme.Application.Services;
 public class OrderService : IOrderService
 {
     private readonly IRepository<Order> _repository;
-    private readonly ISalesStatisticsService _salesStatisticsService;
 
     public OrderService(IRepository<Order> repository)
     {
@@ -20,18 +19,6 @@ public class OrderService : IOrderService
     public async Task CreateOrderAsync(Order order)
     {
         await _repository.AddAsync(order);
-
-        try
-        {
-            await _salesStatisticsService.UpdateStatisticsAsync(
-                Convert.ToDecimal(order.TotalAmount),
-                DateTime.UtcNow   // ? 
-            );
-        }
-        catch
-        {
-            // påverkar inte resten
-        }
     }
     public async Task<Order?> GetByIdAsync(string id) =>
         await _repository.GetByIdAsync(id);
@@ -51,16 +38,8 @@ public class OrderService : IOrderService
         return all.Where(o => o.Status == OrderStatus.Pending);
     }
 
-    public OrderService(
-    IRepository<Order> repository,
-    ISalesStatisticsService salesStatisticsService)
-    {
-        _repository = repository;
-        _salesStatisticsService = salesStatisticsService;
-    }
     public async Task UpdateAsync(Order order)
     {
         await _repository.UpdateAsync(order.Id, order);
-
     }
 }

@@ -58,6 +58,8 @@
                                                            class="@(ctrl == "Orders" && act == "Index" ? "active" : "")">Alla Ordrar</a></li>
                                                     <li><a asp-area="" asp-controller="Warehouse" asp-action="Index"
                                                                class="@(ctrl == "Warehouse" && act == "Index" ? "active" : "")">Lagerstatus</a></li>
+                                                    <li><a asp-area="" asp-controller="Statistics" asp-action="Index"
+                                                               class="@(ctrl == "Statistics" ? "active" : "")">Statistik</a></li>
                                                         @if (userRole == "admin")
                                                         {
                                                             <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index"

@@ -8,6 +8,7 @@
     "/^python3 -c \"import os; p='/Users/nordtess/\\\\u00d6rebro Universitet/VT26/Systemutvecklingsprojekt med Scrum och Extreme Programming/ScrumExtreme/src'; print\\(os\\.path\\.exists\\(p\\)\\); print\\(os\\.listdir\\(p\\)\\)\"$/": {
       "approve": true,
       "matchCommandLine": true
-    }
+    },
+    "dotnet build": true
   }
 }
