@@ -12,19 +12,22 @@ namespace ScrumExtreme.Web.Controllers
         private readonly IMaterialService _materialService;
         private readonly IItemService _itemService;
         private readonly ICompanySettingsService _companySettingsService;
+        private readonly IPurchaseRecordService _purchaseRecordService;
 
         public MaterialSummaryController(
             IOrderService orderService,
             IHatService hatService,
             IMaterialService materialService,
             IItemService itemService,
-            ICompanySettingsService companySettingsService)
+            ICompanySettingsService companySettingsService,
+            IPurchaseRecordService purchaseRecordService)
         {
             _orderService = orderService;
             _hatService = hatService;
             _materialService = materialService;
             _itemService = itemService;
             _companySettingsService = companySettingsService;
+            _purchaseRecordService = purchaseRecordService;
         }
 
         private async Task<MaterialSummaryPageViewModel> BuildSummaryAsync()
@@ -150,13 +153,26 @@ namespace ScrumExtreme.Web.Controllers
             }
 
             decimal totalCost = 0m;
+            var purchasedAt = DateTime.UtcNow;
+
             foreach (var (name, qty) in materialQty)
             {
                 if (materialMap.TryGetValue(name, out var mat))
                 {
-                    totalCost += mat.Price * qty;
+                    var lineCost = mat.Price * qty;
+                    totalCost += lineCost;
                     mat.Stock += qty;
                     await _materialService.UpdateMaterialAsync(mat);
+                    await _purchaseRecordService.CreateAsync(new ScrumExtreme.Domain.Entities.PurchaseRecord
+                    {
+                        Type = "Material",
+                        ReferenceId = mat.Id ?? string.Empty,
+                        Name = mat.Name,
+                        Quantity = qty,
+                        UnitCost = mat.Price,
+                        TotalCost = lineCost,
+                        PurchasedAt = purchasedAt
+                    });
                 }
             }
 
@@ -164,9 +180,20 @@ namespace ScrumExtreme.Web.Controllers
             {
                 if (itemLookup.TryGetValue(id, out var item))
                 {
-                    totalCost += (decimal)item.Price * qty;
+                    var lineCost = (decimal)item.Price * qty;
+                    totalCost += lineCost;
                     item.Stock += qty;
                     await _itemService.UpdateItemAsync(item);
+                    await _purchaseRecordService.CreateAsync(new ScrumExtreme.Domain.Entities.PurchaseRecord
+                    {
+                        Type = "Item",
+                        ReferenceId = item.Id ?? string.Empty,
+                        Name = item.Name,
+                        Quantity = qty,
+                        UnitCost = (decimal)item.Price,
+                        TotalCost = lineCost,
+                        PurchasedAt = purchasedAt
+                    });
                 }
             }
 
