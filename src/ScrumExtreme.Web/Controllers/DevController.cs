@@ -75,10 +75,13 @@ public class DevController : Controller
                     TotalAmount = qty * unitPrice,
                     ShippingAddress = new ShippingAddress
                     {
+                        FullName = "Seed Kund",
                         Address = "Seedgatan 1",
                         City = "Stockholm",
                         PostalCode = "11122",
-                        Country = "Sverige"
+                        Country = "Sverige",
+                        CountryCode = "SE",
+                        Phone = "0700000000"
                     },
                     Items = new List<OrderItem> { orderItem }
                 };

@@ -116,11 +116,11 @@
         chart: { type: "donut", height: 360, fontFamily: "Roboto, sans-serif" },
         series: [standardCount, modifiedCount, specialCount],
         labels: ["Standard", "Modifierad", "Special"],
-        colors: ["#1a1612", "#c9a84c", "#7c5cbf"],
-        dataLabels: { style: { fontFamily: "Roboto, sans-serif", fontSize: "14px", fontWeight: "600" }, dropShadow: { enabled: false } },
-        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#1a1612" } },
+        colors: ["#f7e6ca", "#c9a84c", "#7c5cbf"],
+        dataLabels: { style: { fontFamily: "Roboto, sans-serif", fontSize: "14px", fontWeight: "600", colors: ["#1a1612", "#1a1612", "#ffffff"] }, dropShadow: { enabled: false } },
+        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#f7e6ca" } },
         tooltip: { y: { formatter: function (v) { return v + " ordrar"; } } },
-        plotOptions: { pie: { donut: { size: "50%" }, expandOnClick: false } }
+        plotOptions: { pie: { donut: { size: "35%" }, expandOnClick: false } }
         });
 
         revenueChart.render();
