@@ -12,17 +12,20 @@ public class OrdersController : Controller
     private readonly IUserService _userService;
     private readonly IHatService _hatService;
     private readonly IItemService _itemService;
+    private readonly ICompanySettingsService _companySettingsService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
         IHatService hatService,
-        IItemService itemService)
+        IItemService itemService,
+        ICompanySettingsService companySettingsService)
     {
         _orderService = orderService;
         _userService = userService;
         _hatService = hatService;
         _itemService = itemService;
+        _companySettingsService = companySettingsService;
     }
 
     [HttpGet("")]
@@ -80,7 +83,6 @@ public class OrdersController : Controller
         if (customer == null)
             return BadRequest(new { error = "Kunden hittades inte." });
 
-        // Validate hat stock before creating the order
         foreach (var item in model.Items)
         {
             if (item.Quantity < 1)
@@ -97,7 +99,6 @@ public class OrdersController : Controller
             }
         }
 
-        // Validate accessory (item) stock
         foreach (var hatItem in model.Items.Where(i => i.IsModified && i.ItemIds.Any()))
         {
             foreach (var accessoryId in hatItem.ItemIds)
@@ -146,7 +147,8 @@ public class OrdersController : Controller
 
         await _orderService.CreateOrderAsync(order);
 
-        // Decrement hat stock
+        await _companySettingsService.AddCapitalAsync((decimal)order.TotalAmount);
+
         foreach (var item in order.Items)
         {
             var hat = await _hatService.GetByIdAsync(item.ProductId);
@@ -158,7 +160,6 @@ public class OrdersController : Controller
             }
         }
 
-        // Decrement accessory (item) stock
         foreach (var hatItem in order.Items.Where(i => i.IsModified && i.ItemIds.Any()))
         {
             foreach (var accessoryId in hatItem.ItemIds)

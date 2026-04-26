@@ -9,7 +9,6 @@ public class AuthFilter : IActionFilter
     {
         var controllerName = context.RouteData.Values["controller"]?.ToString();
 
-        // Allow the login page through without authentication
         if (string.Equals(controllerName, "Login", StringComparison.OrdinalIgnoreCase))
             return;
 

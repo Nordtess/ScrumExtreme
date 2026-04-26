@@ -11,12 +11,14 @@ public class WarehouseController : Controller
     private readonly IHatService _hatService;
     private readonly IItemService _itemService;
     private readonly IMaterialService _materialService;
+    private readonly ICompanySettingsService _companySettingsService;
 
-    public WarehouseController(IHatService hatService, IItemService itemService, IMaterialService materialService)
+    public WarehouseController(IHatService hatService, IItemService itemService, IMaterialService materialService, ICompanySettingsService companySettingsService)
     {
         _hatService = hatService;
         _itemService = itemService;
         _materialService = materialService;
+        _companySettingsService = companySettingsService;
     }
 
     [HttpGet("")]
@@ -25,11 +27,13 @@ public class WarehouseController : Controller
         var hats = await _hatService.GetAllHatsAsync();
         var items = await _itemService.GetAllItemsAsync();
         var materials = await _materialService.GetMaterialsAsync();
+        var capital = await _companySettingsService.GetCapitalAsync();
         return View(new WarehouseViewModel
         {
             Hats = hats,
             Items = items.OrderBy(i => i.Name),
-            Materials = materials.OrderBy(m => m.Name)
+            Materials = materials.OrderBy(m => m.Name),
+            CapitalSEK = capital
         });
     }
 

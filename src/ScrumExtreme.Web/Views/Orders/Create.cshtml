@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Skapa Order";
     var customers = ViewBag.Customers as IEnumerable<ScrumExtreme.Domain.Entities.User>;
     var hats = ViewBag.Hats as IEnumerable<ScrumExtreme.Domain.Entities.Hats>;
@@ -24,7 +24,7 @@
 
     <div class="admin-layout">
 
-        <!-- Left: Create order -->
+        
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
 
-                    <!-- Modifierad hatt -->
+                    
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label class="order-toggle-wrap" for="isModifiedInput">
@@ -179,7 +179,7 @@
             </div>
         </div>
 
-        <!-- Right: Order info -->
+        
         <div class="admin-panel">
             <div class="admin-panel-header">
                 <h2 class="admin-panel-title">
@@ -413,7 +413,6 @@
                     const selectedItems = getSelectedItems();
                     const itemCost = selectedItems.reduce((sum, i) => sum + i.price, 0);
                     const hatBasePrice = parseFloat(opt.dataset.price);
-
 
                     cart.push({
                         hatId,

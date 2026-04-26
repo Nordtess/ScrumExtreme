@@ -1,12 +1,7 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
-
-// Scroll-triggered fade-in + slide-up animation
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Carousel ──
     var track = document.querySelector('.carousel-track');
     if (track) {
         var cards = document.querySelectorAll('.carousel-card');
@@ -40,8 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('resize', updateCarousel);
         updateCarousel();
     }
-
-    // ── Scroll animations ──
 
     var elements = document.querySelectorAll('.scroll-animate');
 

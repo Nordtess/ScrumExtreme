@@ -22,18 +22,32 @@
 
     <div class="home-grid">
 
-        <!-- ── Left: Calendar ── -->
+        
         <div class="home-col">
             <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
-            <div class="home-calendar-card">
-                <img src="~/images/fredriksfinakalender.png" alt="Fredriks Fina Kalender" class="home-calendar-img" />
+
+            <button id="addEventBtn">Lägg till event</button>
+            <div id="eventForm" style="display:none;">
+                <select id="userId"></select>
+                <select id="orderId"></select>
+                <input id="start" type="datetime-local" />
+                <input id="end" type="datetime-local" />
+                <button id="saveEvent">Spara</button>
             </div>
+
+            <div id="calendar"></div>
         </div>
+
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+        <script src="~/js/calendar.js"></script>
 
         <!-- ── Right: Order summary ── -->
         <div class="home-col">
 
-            <!-- Filter bar -->
+            
             <div class="order-filter-bar" style="margin-bottom:0.75rem;">
                 <div class="order-filter-group">
                     <label class="order-filter-label" for="homeOrderSort">Sortera</label>
@@ -58,8 +72,6 @@
                         <option value="processing">Påbörjad</option>
                         <option value="printed">Utskriven</option>
                         <option value="shipped">Skickad</option>
-                        <option value="delivered">Levererad</option>
-                        <option value="cancelled">Avbruten</option>
                     </select>
                 </div>
             </div>
@@ -73,7 +85,10 @@
                             <span class="admin-customer-count">@Model.Count()</span>
                         }
                     </h2>
-                    <a asp-controller="Orders" asp-action="Create" class="admin-panel-btn">Skapa ny order →</a>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <a asp-controller="Orders" asp-action="Index" class="admin-panel-btn">Alla ordrar →</a>
+                        <a asp-controller="Orders" asp-action="Create" class="admin-panel-btn">Skapa ny order →</a>
+                    </div>
                 </div>
                 <div class="admin-panel-body home-orders-body">
                     <div class="admin-customer-list" id="homeOrderList">
@@ -111,8 +126,6 @@
                                     OrderStatus.Processing => "Påbörjad",
                                     OrderStatus.Printed => "Utskriven",
                                     OrderStatus.Shipped => "Skickad",
-                                    OrderStatus.Delivered => "Levererad",
-                                    OrderStatus.Cancelled => "Avbruten",
                                     _ => order.Status.ToString()
                                 };
                                 string typeKey = orderTypLabel.ToLower();
@@ -126,7 +139,6 @@
                                     <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
                                     <span class="home-order-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
                                     <span class="home-order-total">@order.TotalAmount.ToString("0.00") kr</span>
-                                    <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
                                 </div>
                             }
                         }
@@ -142,58 +154,43 @@
 @section Scripts {
     <script>
         (function () {
-            var sortSelect = document.getElementById('homeOrderSort');
-            var statusSelect = document.getElementById('homeOrderStatus');
-            var list = document.getElementById('homeOrderList');
-            if (!sortSelect || !statusSelect || !list) return;
+        var sortSelect = document.getElementById('homeOrderSort');
+        var statusSelect = document.getElementById('homeOrderStatus');
+        var list = document.getElementById('homeOrderList');
+        if (!sortSelect || !statusSelect || !list) return;
 
-            document.querySelectorAll('.order-type-pill').forEach(function (pill) {
-                pill.addEventListener('click', function () {
-                    this.classList.toggle('active');
-                    applyFilters();
-                });
-            });
+        document.querySelectorAll('.order-type-pill').forEach(function (pill) {
+        pill.addEventListener('click', function () {
+        this.classList.toggle('active');
+        applyFilters();
+        });
+        });
 
-            function applyFilters() {
-                var rows = Array.from(list.querySelectorAll('.home-order-row'));
-                var activePills = new Set(
-                    Array.from(document.querySelectorAll('.order-type-pill.active')).map(function (p) { return p.dataset.type; })
-                );
-                var statusVal = statusSelect.value;
-                var newest = sortSelect.value === 'newest';
+        function applyFilters() {
+        var rows = Array.from(list.querySelectorAll('.home-order-row'));
+        var activePills = new Set(
+        Array.from(document.querySelectorAll('.order-type-pill.active')).map(function (p) { return p.dataset.type; })
+        );
+        var statusVal = statusSelect.value;
+        var newest = sortSelect.value === 'newest';
 
-                rows.sort(function (a, b) {
-                    var da = BigInt(a.dataset.date);
-                    var db = BigInt(b.dataset.date);
-                    return newest ? (db > da ? 1 : db < da ? -1 : 0)
-                        : (da > db ? 1 : da < db ? -1 : 0);
-                });
-                rows.forEach(function (r) { list.appendChild(r); });
+        rows.sort(function (a, b) {
+        var da = BigInt(a.dataset.date);
+        var db = BigInt(b.dataset.date);
+        return newest ? (db > da ? 1 : db < da ? -1 : 0)
+        : (da > db ? 1 : da < db ? -1 : 0);
+        });
+        rows.forEach(function (r) { list.appendChild(r); });
 
-                rows.forEach(function (row) {
-                    var typeMatch = activePills.has(row.dataset.type);
-                    var statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
-                    row.style.display = (typeMatch && statusMatch) ? '' : 'none';
-                });
-            }
+        rows.forEach(function (row) {
+        var typeMatch = activePills.has(row.dataset.type);
+        var statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
+        row.style.display = (typeMatch && statusMatch) ? '' : 'none';
+        });
+        }
 
-            sortSelect.addEventListener('change', applyFilters);
-            statusSelect.addEventListener('change', applyFilters);
-
-            list.querySelectorAll('.order-delete-btn').forEach(function (btn) {
-                btn.addEventListener('click', async function () {
-                    var id = this.dataset.id;
-                    if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
-                    var res = await fetch('/Orders/Delete/' + id, { method: 'POST' });
-                    if (res.ok) {
-                        this.closest('.home-order-row').remove();
-                        var countEl = document.querySelector('.admin-customer-count');
-                        if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
-                    } else {
-                        alert('Något gick fel. Försök igen.');
-                    }
-                });
-            });
+        sortSelect.addEventListener('change', applyFilters);
+        statusSelect.addEventListener('change', applyFilters);
         })();
     </script>
 }

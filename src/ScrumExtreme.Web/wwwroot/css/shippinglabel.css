@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
-   Shipping Label Test Page
-   ═══════════════════════════════════════════════════════════════ */
+
 
 .sl-page {
   display: flex;
@@ -12,7 +10,6 @@
   background: #faf8f4;
 }
 
-/* Picker area */
 .sl-picker-wrap {
   display: flex;
   flex-direction: column;
@@ -43,7 +40,6 @@
   width: 100%;
 }
 
-/* Apple-style overrides for the shipping label country picker */
 .sl-picker-wrap .country-picker input[type="text"] {
   background: #ffffff;
   border: 1px solid #c7c7cc;
@@ -83,7 +79,6 @@
   background: #f0f0f5;
 }
 
-/* Label card — white paper document */
 .sl-card {
   background: #fff;
   color: #111;
@@ -99,21 +94,29 @@
   flex-direction: column;
 }
 
-/* Pushes divider + barcode to the bottom with lots of space */
 .sl-barcode-spacer {
   flex: 1;
-  min-height: 4rem;
+  min-height: 6rem;
 }
 
 .sl-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.35rem;
   margin-bottom: 0.8rem;
 }
 
+.sl-card-banner {
+  max-height: 64px;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 0.15rem;
+}
+
 .sl-card-logo {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #111;
@@ -181,29 +184,47 @@
   margin-top: 0.2rem;
 }
 
-/* Print button */
 .sl-print-btn {
   background: #1a1612;
   color: #faf8f4;
-  border: 1.5px solid #2a2a2a;
+  border: 1.5px solid #1a1612;
   border-radius: 8px;
   padding: 0.75rem 2rem;
   font-size: 0.9rem;
   font-family: "Roboto", sans-serif;
   letter-spacing: 0.04em;
   cursor: pointer;
+  position: relative;
   transition:
-    background 0.2s,
-    border-color 0.2s;
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.sl-print-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .sl-print-btn:hover {
-  background: #2a2420;
-  border-color: #4caf50;
-  color: #fff;
+  background: #f7e6ca;
+  color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
 }
 
-/* ── Print media ───────────────────────────────────────────── */
+.sl-print-btn:hover::after {
+  left: 2rem;
+  right: 2rem;
+}
+
 @media print {
   .site-header,
   .site-footer,
@@ -247,4 +268,94 @@
   .sl-barcode {
     color: #000;
   }
+
+  .sl-card-banner {
+    max-height: 64px;
+    max-width: 200px;
+    object-fit: contain;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+.sl-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.sl-modal-overlay--visible {
+  display: flex;
+}
+
+.sl-modal {
+  background: #faf8f4;
+  border-radius: 10px;
+  padding: 2rem 2.4rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+}
+
+.sl-modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1612;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.6rem;
+}
+
+.sl-modal-msg {
+  font-size: 0.88rem;
+  color: #555;
+  margin: 0 0 1.6rem;
+  line-height: 1.5;
+}
+
+.sl-modal-msg strong {
+  color: #1a1612;
+}
+
+.sl-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sl-modal-btn {
+  border-radius: 7px;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.85rem;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  border: 1.5px solid #1a1612;
+  transition:
+    background 0.18s,
+    color 0.18s;
+}
+
+.sl-modal-btn--confirm {
+  background: #1a1612;
+  color: #faf8f4;
+}
+
+.sl-modal-btn--confirm:hover {
+  background: #2a2420;
+}
+
+.sl-modal-btn--cancel {
+  background: transparent;
+  color: #1a1612;
+}
+
+.sl-modal-btn--cancel:hover {
+  background: rgba(26, 22, 18, 0.07);
 }

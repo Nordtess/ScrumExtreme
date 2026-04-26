@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const onlyLetters = /^[a-zA-ZåäöÅÄÖéèêëàâùûüîïôœæçÉÈÊËÀÂÙÛÜÎÏÔŒÆÇ,\s\-]+$/;
 
-    // ── Text field rules ─────────────────────────────────────────────────
     const fieldRules = {
         Name: {
             validate: function (v) {
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // ── Helpers ───────────────────────────────────────────────────────────
     function setError(id, msg) {
         const el = document.getElementById('error-' + id);
         if (el) el.textContent = msg || '';
@@ -58,19 +56,28 @@ document.addEventListener('DOMContentLoaded', function () {
         return checked;
     }
 
-    // ── Attach blur + input listeners ─────────────────────────────────────
+    function validateMaterials() {
+        const checked = form.querySelectorAll('input[name="SelectedMaterials"]:checked').length > 0;
+        const errorEl = document.getElementById('error-Materials');
+        if (errorEl) errorEl.textContent = checked ? '' : 'Minst ett material måste väljas.';
+        const group = document.getElementById('materialsGroup');
+        if (group) {
+            group.style.outline = checked ? '' : '1px solid #ff453a';
+            group.style.borderRadius = '6px';
+        }
+        return checked;
+    }
+
     Object.keys(fieldRules).forEach(function (id) {
         const input = document.getElementById(id);
         if (!input) return;
         input.addEventListener('blur', function () {
             input.dataset.touched = '1';
             validateTextField(id);
-            updateSubmitBtn();
         });
         input.addEventListener('input', function () {
             if (input.dataset.touched) {
                 validateTextField(id);
-                updateSubmitBtn();
             }
         });
         input.addEventListener('focus', function () {
@@ -81,35 +88,45 @@ document.addEventListener('DOMContentLoaded', function () {
     form.querySelectorAll('input[name="Sizes"]').forEach(function (cb) {
         cb.addEventListener('change', function () {
             validateSizes();
-            updateSubmitBtn();
         });
     });
 
-    // ── Submit button state ───────────────────────────────────────────────
+    form.querySelectorAll('input[name="SelectedMaterials"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            validateMaterials();
+        });
+    });
+
     function isFormValid() {
-        const textOk  = Object.keys(fieldRules).every(function (id) {
+        const textOk      = Object.keys(fieldRules).every(function (id) {
             const input = document.getElementById(id);
             return input && input.classList.contains('valid');
         });
-        const sizesOk = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
-        return textOk && sizesOk;
+        const sizesOk     = form.querySelectorAll('input[name="Sizes"]:checked').length > 0;
+        const materialsOk = form.querySelectorAll('input[name="SelectedMaterials"]:checked').length > 0;
+        return textOk && sizesOk && materialsOk;
     }
 
-    function updateSubmitBtn() {
-        submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
-        submitBtn.classList.add(isFormValid() ? 'btn-hover-valid' : 'btn-hover-invalid');
+    
+    if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', function () {
+            submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
+            submitBtn.classList.add(isFormValid() ? 'btn-hover-valid' : 'btn-hover-invalid');
+        });
+        submitBtn.addEventListener('mouseleave', function () {
+            submitBtn.classList.remove('btn-hover-valid', 'btn-hover-invalid');
+        });
     }
 
-    // ── Form submit ───────────────────────────────────────────────────────
     form.addEventListener('submit', function (e) {
         Object.keys(fieldRules).forEach(function (id) {
             const input = document.getElementById(id);
             if (input) input.dataset.touched = '1';
         });
-        const textValid  = Object.keys(fieldRules).map(validateTextField).every(Boolean);
-        const sizesValid = validateSizes();
-        updateSubmitBtn();
-        if (!textValid || !sizesValid) {
+        const textValid      = Object.keys(fieldRules).map(validateTextField).every(Boolean);
+        const sizesValid     = validateSizes();
+        const materialsValid = validateMaterials();
+        if (!textValid || !sizesValid || !materialsValid) {
             e.preventDefault();
             submitError.textContent = 'Rätta felen ovan innan du skickar.';
         } else {
