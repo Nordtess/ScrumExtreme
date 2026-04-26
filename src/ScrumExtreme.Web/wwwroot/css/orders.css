@@ -676,3 +676,17 @@
   margin-left: 0.4rem;
   opacity: 0.8;
 }
+
+/*Input för rabatt och manuellt pris vanlig/modifierad order*/
+.discount-input,
+.manual-price-input {
+    width: 60px;
+    padding: 2px 4px;
+}
+/*Linjerar text och inputfält i orderrader*/
+.order-hat-list .order-hat-sub label {
+    display: grid;
+    grid-template-columns: 130px 60px;
+    align-items: center;
+    column-gap: 6px;
+}

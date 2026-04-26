@@ -48,7 +48,8 @@
                                 {
                                     @foreach (var customer in customers)
                                     {
-                                        <option value="@customer.Id">@customer.FirstName @customer.LastName (@customer.Email)
+                                        <option value="@customer.Id">
+                                            @customer.FirstName @customer.LastName (@customer.Email)
                                         </option>
                                     }
                                 }
@@ -195,29 +196,32 @@
                 <div id="hatListBlock" style="display:none; margin-top: 1rem;">
                     <p class="info-label"
                            style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">
-                        Valda hattar</p>
-                        <ul class="order-hat-list" id="hatList"></ul>
-                        <div class="order-total">
-                            <span>Totalt</span>
-                            <span class="order-total-amount" id="totalAmount">0 kr</span>
-                        </div>
-                    </div>
-
-                    <div class="order-panel-actions">
-                        <button type="button" class="admin-btn-primary" id="createOrderBtn" style="display:none;">Skapa
-                            order</button>
-                            <span id="createOrderError" class="order-error"></span>
-                        </div>
-
+                        Valda hattar
+                    </p>
+                    <ul class="order-hat-list" id="hatList"></ul>
+                    <div class="order-total">
+                        <span>Totalt</span>
+                        <span class="order-total-amount" id="totalAmount">0 kr</span>
                     </div>
                 </div>
 
-            </div>
+                <div class="order-panel-actions">
+                    <button type="button" class="admin-btn-primary" id="createOrderBtn" style="display:none;">
+                        Skapa
+                        order
+                    </button>
+                    <span id="createOrderError" class="order-error"></span>
+                </div>
 
+            </div>
         </div>
 
-        @section Scripts {
-            <script>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
                 const customerSelect = document.getElementById('customerSelect');
                 const hatSelect = document.getElementById('hatSelect');
                 const sizeSelect = document.getElementById('sizeSelect');
@@ -451,45 +455,33 @@
                     cart.forEach(h => {
                         const unitPrice = calculateUnitPrice(h);
                         //Om manuellt pris finns använd det som total, annars räkna som vanligt:
-                        const lineTotal = (h.manualPrice !== null && !isNaN(h.manualPrice))
-                        ? h.manualPrice
-                        : unitPrice * h.quantity;
+                        let lineTotal;
+
+                        if (h.manualPrice !== null && !isNaN(h.manualPrice)) 
+                        {
+                            lineTotal = h.manualPrice;
+                        }
+                        else 
+                        {
+                            lineTotal = unitPrice * h.quantity;
+                        }
+
                         total += lineTotal;
 
                         const li = document.createElement('li');
                         li.className = 'order-hat-item --expanded';
 
-                        // Header row: hat name + remove button 
+                        // Header row: hat name + remove button
                         let html = `
                             <div class="order-hat-row order-hat-header">
-                                <span class="order-hat-title">${esc(h.name)} <span class="order-hat-size">(${esc(h.size)}) × ${h.quantity}</span>
+                                <span class="order-hat-title">${esc(h.name)} <span class="order-hat-size">(${esc(h.size)}) × ${h.quantity}</span></span>
                                 <button class="order-hat-remove" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" title="Ta bort">✕</button>
                             </div>
                             <div class="order-hat-row order-hat-sub">
                                 <span>Hatt</span>
                                 <span class="order-hat-item-price">${Math.round(unitPrice)} kr</span>
-                            </div>
-                            <div class="order-hat-row order-hat-sub">
-                                <label>
-                                    <input type="checkbox" class="rush-order-toggle" data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"${h.isRushOrder ? 'checked' : ' '} />
-                                    Snabb order (+20%)
-                                </label>
-                            </div>
-                            <div class="order-hat-row order-hat-sub">
-                                <label>
-                                    Rabatt (%):
-                                    <input type="number"class="discount-input"data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"value="${h.discountPercent}"min="0"max="100"/>
-                                </label>
-                            </div>
-                            <div class="order-hat-row order-hat-sub">
-                                <label>
-                                    Manuellt pris:
-                                    <input type="number"class="manual-price-input"data-id="${esc(h.hatId)}"data-size="${esc(h.size)}"value="${h.manualPrice ?? ''}"min="0"/>
-                                </label>
                             </div>`;
-                            
-
-                        // Each accessory
+                                                   
                         (h.items || []).forEach(acc => {
                             const accTotal = acc.price * h.quantity;
                             const accLabel = h.quantity > 1 ? `${esc(acc.name)} × ${h.quantity}` : esc(acc.name);
@@ -499,7 +491,25 @@
                                 <span class="order-hat-item-price">${Math.round(accTotal)} kr</span>
                             </div>`;
                         });
-
+                        html += `
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    Snabb order (+20%)
+                                    <input type="checkbox" class="rush-order-toggle" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" ${h.isRushOrder ? 'checked' : ''} />
+                                </label>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    Rabatt (%):
+                                    <input type="number" class="discount-input" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" value="${h.discountPercent}"min="0"max="100"/>
+                                </label>
+                            </div>
+                            <div class="order-hat-row order-hat-sub">
+                                <label>
+                                    Manuellt pris:
+                                    <input type="number" class="manual-price-input" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" value="${h.manualPrice ?? ''}"min="0"/>
+                                </label>
+                            </div>`;
 
                         // Total line for this hat
                         html += `
@@ -519,7 +529,7 @@
                             updateCreateBtn();
                         });
                     });
-                    //Uppdaterar snabborder-status och räknar om priset 
+                    //Uppdaterar snabborder-status och räknar om priset
                     hatList.querySelectorAll('.rush-order-toggle').forEach(cb => {
                         cb.addEventListener('change', () => {
                             const hat = cart.find(h => h.hatId === cb.dataset.id && h.size === cb.dataset.size);
@@ -571,12 +581,27 @@
                     try {
                         const payload = {
                             customerId: customerSelect.value,
-                            items: cart.map(h => ({ hatId: h.hatId, name: h.name, size: h.size, quantity: h.quantity, unitPrice: h.manualPrice !== null && !isNaN(h.manualPrice)
-                                ? h.manualPrice
-                                : calculateUnitPrice(h),
-                             isModified: h.isModified, modificationDescription: h.modificationDescription, itemIds: h.itemIds,
-                             addedMaterialCost: 0
-                            }))
+                            items: cart.map(h => {
+                                 let unitPrice;
+
+                                 if (h.manualPrice !== null && !isNaN(h.manualPrice)) {
+                                    unitPrice = h.manualPrice;
+                                 } else {
+                                    unitPrice = calculateUnitPrice(h);
+                                 }
+
+                                return {
+                                    hatId: h.hatId,
+                                    name: h.name,
+                                    size: h.size,
+                                    quantity: h.quantity,
+                                    unitPrice: unitPrice,
+                                    isModified: h.isModified,
+                                    modificationDescription: h.modificationDescription,
+                                    itemIds: h.itemIds,
+                                    addedMaterialCost: 0
+                                };
+                            })
                         };
                         const resp = await fetch('/Orders/Create', {
                             method: 'POST',
@@ -601,7 +626,7 @@
                 }
 
                 function calculateUnitPrice(h) {
-                    //Manuellt satt pris overridear all annan prissättning. 
+                    //Manuellt satt pris overridear all annan prissättning.
                     if (h.manualPrice !==null && !isNaN(h.manualPrice)){
                         return h.manualPrice;
                     }
@@ -618,5 +643,5 @@
 
                     return price;
                 }
-            </script>
-        }
+    </script>
+}

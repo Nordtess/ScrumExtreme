@@ -147,14 +147,14 @@
                         </div>
                     </div>
                     
-                    <div class="admin-field-row --single">
-                        <div class="admin-field">
-                            <label>
-                                <input type="checkbox" id="rushOrderInput"/>
-                                Snabb order (+20%)
-                            </label>
+                    <label class="order-toggle-wrap" for="rushOrderInput">
+                        <span class="order-toggle-label">Snabb order (+20%)</span>
+                        <div class="order-toggle">
+                            <input type="checkbox" id="rushOrderInput" />
+                            <span class="order-toggle-slider"></span>
                         </div>
-                    </div>
+                    </label>
+                    
                     
                     <div class="admin-field-row --single">
                         <div class="admin-field">
@@ -280,11 +280,13 @@
                 //Snabborder (+20%)
                 if (rushOrderInput.checked) {
                     total = total * 1.20;
+                    subRows += '<div class="order-hat-sub"><span>Snabborder</span><span class="order-hat-item-price">+20%</span></div>';
                 }
                 // Rabatt %
                 var discount = parseFloat(discountPercentInput.value) || 0;
                 if (discount >0) {
                     total = total * (1 - discount / 100);
+                    subRows += '<div class="order-hat-sub"><span>Rabatt</span><span class="order-hat-item-price">-' + discount + '%</span></div>';
                 }
 
                 specialHatBlock.innerHTML =
