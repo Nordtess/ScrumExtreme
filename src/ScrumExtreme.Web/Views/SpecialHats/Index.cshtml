@@ -90,7 +90,8 @@
                     <div class="admin-field-row --single">
                         <div class="admin-field">
                             <label asp-for="Price">Pris (SEK)</label>
-                            <input asp-for="Price" id="Price" type="number" step="0.01" min="1" />
+                            <input id="BasePrice" type="number" step="0.01" min="1" />
+                            <input asp-for="Price" id="Price" type="hidden" />
                             <span class="admin-error" asp-validation-for="Price"></span>
                         </div>
                     </div>
@@ -145,6 +146,22 @@
                             }
                         </div>
                     </div>
+                    
+                    <label class="order-toggle-wrap" for="rushOrderInput">
+                        <span class="order-toggle-label">Snabb order (+20%)</span>
+                        <div class="order-toggle">
+                            <input type="checkbox" id="rushOrderInput" />
+                            <span class="order-toggle-slider"></span>
+                        </div>
+                    </label>
+                    
+                    
+                    <div class="admin-field-row --single">
+                        <div class="admin-field">
+                            <label for="discountPercentInput">Rabatt (%)</label>
+                            <input type="number" id="discountPercentInput" min="0" max="100" value="0"/>
+                        </div>
+                    </div>
 
                     <div class="admin-field-row --single">
                         <div class="admin-field">
@@ -186,9 +203,13 @@
         (function () {
             var customersData = @Html.Raw(customersJson);
             var customerSelect = document.getElementById('CustomerId');
+            var basePriceInput = document.getElementById('BasePrice');
             var priceInput = document.getElementById('Price');
             var customerInfoBlock = document.getElementById('customerInfoBlock');
             var specialHatBlock = document.getElementById('specialHatBlock');
+
+            var rushOrderInput = document.getElementById('rushOrderInput');
+            var discountPercentInput = document.getElementById('discountPercentInput');
 
             function esc(str) {
                 var d = document.createElement('div');
@@ -212,7 +233,7 @@
             }
 
             function getPrice() {
-                return parseFloat(priceInput.value) || 0;
+                return parseFloat(basePriceInput.value) || 0;
             }
 
             function updateSummary() {
@@ -256,6 +277,17 @@
                     subRows += '<div class="order-hat-sub"><span>' + esc(i.name) + '</span>' +
                         (i.price > 0 ? '<span class="order-hat-item-price">' + i.price.toFixed(2) + ' kr</span>' : '') + '</div>';
                 });
+                //Snabborder (+20%)
+                if (rushOrderInput.checked) {
+                    total = total * 1.20;
+                    subRows += '<div class="order-hat-sub"><span>Snabborder</span><span class="order-hat-item-price">+20%</span></div>';
+                }
+                // Rabatt %
+                var discount = parseFloat(discountPercentInput.value) || 0;
+                if (discount >0) {
+                    total = total * (1 - discount / 100);
+                    subRows += '<div class="order-hat-sub"><span>Rabatt</span><span class="order-hat-item-price">-' + discount + '%</span></div>';
+                }
 
                 specialHatBlock.innerHTML =
                     '<p style="font-size:0.72rem;color:#777;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Specialhatt</p>' +
@@ -274,11 +306,12 @@
                     '</ul>' +
                     '<div class="order-total"><span>Totalt</span><span class="order-total-amount">' + total.toFixed(2) + ' kr</span></div>';
 
-                specialHatBlock.style.display = '';
+                    priceInput.value = total.toFixed(2).replace('.',',');// Uträknat pris, 2 decimaler, till fält som skickas till backend. 
+                    specialHatBlock.style.display = '';
             }
 
             customerSelect.addEventListener('change', updateSummary);
-            priceInput.addEventListener('input', updateSummary);
+            basePriceInput.addEventListener('input', updateSummary);
             document.querySelectorAll('input[name="Size"]').forEach(function (r) {
                 r.addEventListener('change', updateSummary);
             });
@@ -288,6 +321,11 @@
             document.querySelectorAll('input[name="SelectedItems"]').forEach(function (cb) {
                 cb.addEventListener('change', updateSummary);
             });
+
+            //Uppdaterar priset när snabborder ändras
+            rushOrderInput.addEventListener('change', updateSummary);
+            //Uppdaterar priset när rabatt ändras
+            discountPercentInput.addEventListener('change', updateSummary);
 
             updateSummary();
         })();
