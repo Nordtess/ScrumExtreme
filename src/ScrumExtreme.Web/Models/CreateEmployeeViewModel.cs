@@ -10,6 +10,15 @@ namespace ScrumExtreme.Web.Models;
         [Required(ErrorMessage = "Efternamn är obligatoriskt.")]
         public string LastName { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Användarnamn är obligatoriskt.")]
+        public string Username { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Lösenord är obligatoriskt.")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Behörighetsnivå är obligatoriskt.")]
+        public string Role { get; set; } = string.Empty;
+
         [EmailAddress(ErrorMessage = "Ogiltig e-postadress.")]
         public string Email { get; set; } = string.Empty;
 

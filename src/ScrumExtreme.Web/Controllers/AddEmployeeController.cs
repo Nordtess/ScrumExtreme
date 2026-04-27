@@ -25,7 +25,23 @@ public class AddEmployeeController : Controller
     public async Task<IActionResult> AllEmployees()
     {
         var users = await _userService.GetAllUsersAsync();
-        return View(users.Where(u => u.Role == "employee"));
+
+        var employeesAndAdmins = users.Where(u => u.Role == "employee" || u.Role == "admin");
+
+        return View(employeesAndAdmins);
+    }
+
+    [HttpGet("Details/{id}")]
+    public async Task<IActionResult> Details(string id)
+    {
+        var employee = await _userService.GetByIdAsync(id);
+
+        if (employee == null)
+        {
+            return NotFound();
+        }
+
+        return View(employee);
     }
 
     [HttpPost("SkapaAnstalld")]
@@ -40,11 +56,13 @@ public class AddEmployeeController : Controller
             FirstName = model.FirstName,
             LastName = model.LastName,
             Email = model.Email,
+            Username = model.Username,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
             Address = model.Address,
             City = model.City,
             PostalCode = model.PostalCode,
             PhoneNumber = model.PhoneNumber,
-            Role = "employee"
+            Role = model.Role == "admin" ? "admin" : "employee"
         };
         await _userService.CreateUserAsync(user);
         TempData["Success"] = $"Användaren {user.FirstName} {user.LastName} skapades!";

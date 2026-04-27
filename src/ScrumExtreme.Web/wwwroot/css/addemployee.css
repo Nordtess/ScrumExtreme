@@ -376,7 +376,7 @@
                 right: 2.5rem;
             }
 
-.customer-sort-bar {
+.employee-sort-bar {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -384,7 +384,7 @@
     flex-wrap: wrap;
 }
 
-.customer-sort-label {
+.employee-sort-label {
     font-size: 0.7rem;
     color: #555;
     text-transform: uppercase;
@@ -394,7 +394,7 @@
     margin-right: 0.25rem;
 }
 
-.customer-sort-pill {
+.employee-sort-pill {
     background: #f5f2ec;
     border: 1.5px solid #1a1612;
     border-radius: 20px;
@@ -409,14 +409,14 @@
     user-select: none;
 }
 
-    .customer-sort-pill.active {
+    .employee-sort-pill.active {
         border-color: #1a1612;
         color: #1a1612;
         background: #f7e6ca;
         font-weight: 700;
     }
 
-.admin-customer-list {
+.admin-employee-list {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -427,24 +427,24 @@
     scrollbar-color: #2a2a2a transparent;
 }
 
-    .admin-customer-list::-webkit-scrollbar {
+    .admin-employee-list::-webkit-scrollbar {
         width: 4px;
     }
 
-    .admin-customer-list::-webkit-scrollbar-track {
+    .admin-employee-list::-webkit-scrollbar-track {
         background: transparent;
     }
 
-    .admin-customer-list::-webkit-scrollbar-thumb {
+    .admin-employee-list::-webkit-scrollbar-thumb {
         background: #2a2a2a;
         border-radius: 4px;
     }
 
-        .admin-customer-list::-webkit-scrollbar-thumb:hover {
+        .admin-employee-list::-webkit-scrollbar-thumb:hover {
             background: #3a3a3a;
         }
 
-.admin-customer-count {
+.admin-employee-count {
     font-size: 0.68rem;
     font-weight: 700;
     color: #1a1612;
@@ -465,7 +465,7 @@
     padding: 2rem 0;
 }
 
-.admin-customer-row {
+.admin-employee-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -476,50 +476,50 @@
     transition: background 0.15s ease;
 }
 
-    .admin-customer-row:last-child {
+    .admin-employee-row:last-child {
         border-bottom: none;
     }
 
-    .admin-customer-row:hover {
+    .admin-employee-row:hover {
         background: rgba(0, 0, 0, 0.03);
     }
 
-.admin-customer-info {
+.admin-employee-info {
     display: flex;
     flex-direction: column;
     gap: 0.18rem;
 }
 
-.admin-customer-name {
+.admin-employee-name {
     font-size: 0.88rem;
     font-weight: 600;
     color: #1a1612;
 }
 
-.admin-customer-email {
+.admin-employee-email {
     font-size: 0.72rem;
     color: #555;
     letter-spacing: 0.01em;
 }
 
-.admin-customer-meta {
+.admin-employee-meta {
     display: flex;
     align-items: center;
     gap: 0.6rem;
 }
 
-.admin-customer-arrow {
+.admin-employee-arrow {
     font-size: 0.65rem;
     color: #aaa;
     transition: color 0.15s ease, transform 0.15s ease;
 }
 
-.admin-customer-row:hover .admin-customer-arrow {
+.admin-employee-row:hover .admin-employee-arrow {
     color: #c9a84c;
     transform: translateX(2px);
 }
 
-.customer-delete-btn {
+.employee-delete-btn {
     background: transparent;
     border: 1px solid transparent;
     border-radius: 5px;
@@ -532,7 +532,7 @@
     flex-shrink: 0;
 }
 
-    .customer-delete-btn:hover {
+    .employee-delete-btn:hover {
         color: #ff453a;
         border-color: rgba(255, 69, 58, 0.55);
         background: rgba(255, 69, 58, 0.14);

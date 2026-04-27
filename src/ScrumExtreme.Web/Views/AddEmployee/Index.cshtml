@@ -19,10 +19,22 @@
             <h2 class="admin-panel-title">
                 <span class="admin-panel-dot"></span>Ny anställd
             </h2>
+
             <a asp-controller="AddEmployee" asp-action="AllEmployees" class="admin-panel-btn">Alla anställda →</a>
         </div>
         <div class="admin-panel-body">
             <form asp-action="SkapaAnstalld" method="post" class="admin-form" id="createAnstalldForm">
+
+                <div class="admin-field-row --single" style="max-width: 300px; margin-bottom: 25px;">
+                    <div class="admin-field">
+                        <label asp-for="Role">Behörighetsnivå</label>
+                        <select asp-for="Role" id="Role">
+                            <option value="employee">Anställd (Standard)</option>
+                            <option value="admin">Administratör</option>
+                        </select>
+                        <span id="error-Role" class="admin-error"></span>
+                    </div>
+                </div>
 
                 <div class="admin-field-row">
                     <div class="admin-field">
@@ -42,6 +54,19 @@
                         <label asp-for="Email">E-post</label>
                         <input asp-for="Email" placeholder="namn@exempel.se" autocomplete="email" type="email" />
                         <span id="error-Email" class="admin-error"></span>
+                    </div>
+                </div>
+
+                <div class="admin-field-row">
+                    <div class="admin-field">
+                        <label asp-for="Username">Användarnamn</label>
+                        <input asp-for="Username" placeholder="T.ex. fornamn.efternamn" autocomplete="username" />
+                        <span id="error-Username" class="admin-error"></span>
+                    </div>
+                    <div class="admin-field">
+                        <label asp-for="Password">Lösenord</label>
+                        <input asp-for="Password" type="password" placeholder="Minst 6 tecken" autocomplete="new-password" />
+                        <span id="error-Password" class="admin-error"></span>
                     </div>
                 </div>
 

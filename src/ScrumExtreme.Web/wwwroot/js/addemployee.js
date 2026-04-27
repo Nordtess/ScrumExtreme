@@ -51,6 +51,23 @@
             }
         },
         {
+            id: 'Username',
+            validate: function (v) {
+                const t = v.trim();
+                if (!t) return 'Användarnamn måste vara ifyllt';
+                if (t.length < 3) return 'Minst 3 tecken';
+                return null;
+            }
+        },
+        {
+            id: 'Password',
+            validate: function (v) {
+                if (!v) return 'Lösenord måste vara ifyllt';
+                if (v.length < 6) return 'Lösenordet måste vara minst 6 tecken';
+                return null;
+            }
+        },
+        {
             id: 'Address',
             normalize: toTitleCase,
             validate: function (v) {
@@ -86,7 +103,16 @@
                 if (!/^[\d\+\-\s]+$/.test(t)) return 'Ange ett giltigt telefonnummer';
                 return null;
             }
-        }
+        },
+        {
+            id: 'Role',
+            validate: function (v) {
+                if (v !== 'employee' && v !== 'admin') {
+                    return 'Ogiltig behörighetsnivå vald';
+                }
+                return null;
+            }
+        },
     ];
 
     fieldRules.forEach(function (rule) {
