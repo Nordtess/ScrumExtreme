@@ -1,5 +1,37 @@
 @{
     ViewData["Title"] = "Försäljningsstatistik";
+    var orders = ViewBag.Orders;
 }
 
-<h2>Försäljningsstatistik</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Försäljningsstatistik</h1>
+        <p class="admin-page-subtitle">Översikt av försäljningen i systemet</p>
+    </div>
+
+    <div class="admin-layout">
+
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Sammanfattning
+                </h2>
+            </div>
+
+            <div class="admin-panel-body">
+
+                <p><strong>Totalt antal ordrar:</strong> @ViewBag.TotalOrders</p>
+
+                <p><strong>Total försäljning:</strong> @ViewBag.TotalSales kr</p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+

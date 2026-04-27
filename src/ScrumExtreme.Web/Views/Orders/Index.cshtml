@@ -62,7 +62,15 @@
                     <span class="admin-customer-count">@Model.Count()</span>
                 }
             </h2>
+            <div style="display:flex; gap:12px;">
+
+                <a asp-controller="SalesStatistics"
+                   asp-action="Index"
+                   class="admin-panel-btn">
+                    Visa försäljningsstatistik →
+                </a>
             <a asp-action="Create" class="admin-panel-btn">Skapa ny order →</a>
+        </div>
         </div>
         <div class="admin-panel-body">
             <div class="admin-customer-list orders-list-scroll">
