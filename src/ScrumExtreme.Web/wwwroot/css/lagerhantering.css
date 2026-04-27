@@ -116,36 +116,47 @@
 .lager-hub-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 1.1rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   text-decoration: none;
-  color: #f7e6ca;
-  background: #1a1612;
-  border: 1px solid #1a1612;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
   border-radius: 6px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
   transition:
     background 0.18s ease,
     color 0.18s ease;
-  cursor: pointer;
+}
+
+.lager-hub-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
 }
 
 .lager-hub-btn:hover {
-  background: #2e261e;
-  color: #f7e6ca;
-}
-
-.lager-hub-btn--outline {
-  background: transparent;
-  color: #1a1612;
-}
-
-.lager-hub-btn--outline:hover {
   background: #1a1612;
   color: #f7e6ca;
+  border-color: #1a1612;
+}
+
+.lager-hub-btn:hover::after {
+  left: 1rem;
+  right: 1rem;
 }
 
 @media (max-width: 800px) {
