@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using ScrumExtreme.Application.Interfaces;
 using ScrumExtreme.Domain.Entities;
 
@@ -9,15 +11,27 @@ public class DevController : Controller
     private readonly IOrderService _orderService;
     private readonly IPurchaseRecordService _purchaseRecordService;
     private readonly IUserService _userService;
+    private readonly IMongoDatabase _db;
 
     public DevController(
         IOrderService orderService,
         IPurchaseRecordService purchaseRecordService,
-        IUserService userService)
+        IUserService userService,
+        IMongoDatabase db)
     {
         _orderService = orderService;
         _purchaseRecordService = purchaseRecordService;
         _userService = userService;
+        _db = db;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteSeedOrders()
+    {
+        var collection = _db.GetCollection<BsonDocument>("Orders");
+        var filter = Builders<BsonDocument>.Filter.Regex("orderNumber", new BsonRegularExpression("^SEED-"));
+        var result = await collection.DeleteManyAsync(filter);
+        return Content($"Deleted {result.DeletedCount} seed orders. PurchaseRecords were not touched.");
     }
 
     [HttpGet]
