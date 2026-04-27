@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ScrumExtreme.Domain.Entities.User>
+@{
+    ViewData["Title"] = "Alla anställda";
+    var list = (Model ?? Enumerable.Empty<ScrumExtreme.Domain.Entities.User>()).ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addemployee.css" asp-append-version="true" />
+}
+<div class="admin-wrapper --narrow">
+
+@if (TempData["Success"] != null)
+{
+        <p class="admin-toast">@TempData["Success"]</p>
+}
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Alla anställda</h1>
+        <p class="admin-page-subtitle">Översikt och hantering av alla anställda i systemet</p>
+    </div>
