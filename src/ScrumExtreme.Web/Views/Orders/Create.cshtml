@@ -199,6 +199,12 @@
                         Valda hattar
                     </p>
                     <ul class="order-hat-list" id="hatList"></ul>
+                    <div class="order-hat-row order-hat-sub">
+                        <label>
+                            <input type="checkbox" id="rushOrderInput"/>
+                            Snabborder (+20%) 
+                        </label>
+                    </div>
                     <div class="order-total">
                         <span>Totalt</span>
                         <span class="order-total-amount" id="totalAmount">0 kr</span>
@@ -240,9 +246,10 @@
                 const modificationDescriptionInput = document.getElementById('modificationDescriptionInput');
                 const modifiedHatFields = document.getElementById('modifiedHatFields');
                 const modifyHint = document.getElementById('modifyHint');
+                const rushOrderInput = document.getElementById('rushOrderInput');
 
                 let cart = []; // { hatId, name, unitPrice, hatBasePrice, itemCost, size, quantity, maxStock, isModified, modificationDescription, itemIds }
-
+                let isRushOrder = false;
                 // --- Hat select: populate sizes with stock ---
                 hatSelect.addEventListener('change', () => {
                     addHatError.textContent = '';
@@ -328,6 +335,11 @@
 
                 isModifiedInput.addEventListener('change', toggleModifiedHatFields);
                 quantityInput.addEventListener('input', updateModifyHint);
+
+                rushOrderInput.addEventListener('change', () => {
+                    isRushOrder = rushOrderInput.checked;
+                    renderCart();
+                });
 
                     // Kör direkt när sidan laddas
                 toggleModifiedHatFields();
@@ -428,7 +440,6 @@
                         modificationDescription: modificationDescriptionInput.value.trim(),
                         itemIds: selectedItems.map(i => i.id),
 
-                        isRushOrder: false,
                         discountPercent: 0,
                         manualPrice: null
                     });
@@ -478,7 +489,7 @@
                             </div>
                             <div class="order-hat-row order-hat-sub">
                                 <span>Hatt</span>
-                                <span class="order-hat-item-price">${Math.round(unitPrice)} kr</span>
+                                <span class="order-hat-item-price">${Math.round(h.hatBasePrice)} kr</span>
                             </div>`;
                                                    
                         (h.items || []).forEach(acc => {
@@ -491,12 +502,6 @@
                             </div>`;
                         });
                         html += `
-                            <div class="order-hat-row order-hat-sub">
-                                <label>
-                                    Snabb order (+20%)
-                                    <input type="checkbox" class="rush-order-toggle" data-id="${esc(h.hatId)}" data-size="${esc(h.size)}" ${h.isRushOrder ? 'checked' : ''} />
-                                </label>
-                            </div>
                             <div class="order-hat-row order-hat-sub">
                                 <label>
                                     Rabatt (%):
@@ -528,16 +533,7 @@
                             updateCreateBtn();
                         });
                     });
-                    //Uppdaterar snabborder-status och räknar om priset
-                    hatList.querySelectorAll('.rush-order-toggle').forEach(cb => {
-                        cb.addEventListener('change', () => {
-                            const hat = cart.find(h => h.hatId === cb.dataset.id && h.size === cb.dataset.size);
-                            if (hat) {
-                                hat.isRushOrder = cb.checked;
-                                renderCart();
-                            }
-                        });
-                    });
+
                     //Uppdaterar rabatt i % och räknar om priset
                     hatList.querySelectorAll('.discount-input').forEach(input => {
                         input.addEventListener('change', () => {
@@ -632,7 +628,7 @@
 
                     let price = h.hatBasePrice + h.itemCost;
 
-                    if (h.isRushOrder) {
+                    if (isRushOrder) {
                         price = price *1.20;
                     }
 
