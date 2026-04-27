@@ -28,7 +28,8 @@
             var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
             var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
         }
-        @if (!isLoginPage && !string.IsNullOrEmpty(userRole))
+@if (!isLoginPage && !string.IsNullOrEmpty(userRole))
+
         {
             <nav class="navbar">
                 <button class="nav-hamburger" id="navHamburger" aria-label="Öppna meny" aria-expanded="false">

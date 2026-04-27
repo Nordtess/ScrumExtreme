@@ -1,15 +1,22 @@
-
-
 .home-grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .home-col {
   display: flex;
   flex-direction: column;
+}
+
+.home-col:first-child {
+  flex: 1;
+}
+
+.home-col:first-child #calendar {
+  flex: 1;
+  min-height: 0;
 }
 
 .home-calendar-title {
@@ -34,17 +41,34 @@
   object-fit: cover;
 }
 
+.home-col:last-child {
+  min-height: 0;
+}
+
+.home-col:last-child .admin-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-col:last-child .admin-panel .admin-panel-body {
+  min-height: 0;
+}
+
 .home-orders-body {
-  max-height: calc(100vh - 260px);
-  overflow-y: auto;
   padding: 0;
+}
+
+#homeOrderList {
+  height: calc(9 * 46px) !important;
+  overflow-y: scroll !important;
+  flex: none !important;
 }
 
 .home-orders-body .admin-customer-row {
   display: grid;
   grid-template-columns:
     minmax(100px, 1.2fr) minmax(80px, auto) minmax(90px, 1fr)
-    100px 110px 90px 30px;
+    100px 110px 90px;
   align-items: center;
   gap: 0.6rem;
 }

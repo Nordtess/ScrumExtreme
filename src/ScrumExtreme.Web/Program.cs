@@ -1,7 +1,8 @@
-using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using ScrumExtreme.Application.Interfaces;
 using ScrumExtreme.Application.Services;
+using ScrumExtreme.Domain.Entities;
 using ScrumExtreme.Domain.Interfaces;
 using ScrumExtreme.Infrastructure.Repositories;
 using ScrumExtreme.Web.Filters;
@@ -38,7 +39,10 @@ builder.Services.AddScoped<IHatService, HatsService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<ICalendarEventService, CalendarService>();
 builder.Services.AddScoped<ICompanySettingsService, CompanySettingsService>();
+builder.Services.AddScoped<ISalesStatisticsService, SalesStatisticsService>();
+
 
 var app = builder.Build();
 
