@@ -105,24 +105,12 @@
 .stats-donut-panel {
   display: flex;
   flex-direction: column;
-  background: #1a1612 !important;
-  border-color: #1a1612 !important;
-}
-
-.stats-donut-panel .admin-panel-header {
-  border-bottom-color: rgba(247, 230, 202, 0.15);
-}
-
-.stats-donut-panel .admin-panel-title {
-  color: #f7e6ca;
-}
-
-.stats-donut-panel .admin-panel-dot {
-  background: #c9a84c;
 }
 
 .stats-donut-panel .admin-panel-body {
   flex: 1 !important;
+  height: auto !important;
+}
   height: auto !important;
 }
 

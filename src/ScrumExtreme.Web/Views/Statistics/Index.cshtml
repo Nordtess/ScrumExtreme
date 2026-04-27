@@ -117,8 +117,9 @@
         series: [standardCount, modifiedCount, specialCount],
         labels: ["Standard", "Modifierad", "Special"],
         colors: ["#f7e6ca", "#c9a84c", "#7c5cbf"],
-        dataLabels: { style: { fontFamily: "Roboto, sans-serif", fontSize: "14px", fontWeight: "600", colors: ["#1a1612", "#1a1612", "#ffffff"] }, dropShadow: { enabled: false } },
-        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#f7e6ca" } },
+        stroke: { colors: ["#1a1612"], width: 2 },
+        dataLabels: { style: { fontFamily: "Roboto, sans-serif", fontSize: "14px", fontWeight: "600", colors: ["#1a1612", "#1a1612", "#1a1612"] }, dropShadow: { enabled: false } },
+        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#1a1612" } },
         tooltip: { y: { formatter: function (v) { return v + " ordrar"; } } },
         plotOptions: { pie: { donut: { size: "35%" }, expandOnClick: false } }
         });
