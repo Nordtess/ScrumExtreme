@@ -13,19 +13,22 @@ public class OrdersController : Controller
     private readonly IHatService _hatService;
     private readonly IItemService _itemService;
     private readonly ICompanySettingsService _companySettingsService;
+    private readonly ICalendarEventService _calendarEventService;
 
     public OrdersController(
         IOrderService orderService,
         IUserService userService,
         IHatService hatService,
         IItemService itemService,
-        ICompanySettingsService companySettingsService)
+        ICompanySettingsService companySettingsService,
+        ICalendarEventService calendarEventService)
     {
         _orderService = orderService;
         _userService = userService;
         _hatService = hatService;
         _itemService = itemService;
         _companySettingsService = companySettingsService;
+        _calendarEventService = calendarEventService;
     }
 
     [HttpGet("")]
@@ -198,15 +201,101 @@ public class OrdersController : Controller
         var user = await _userService.GetByIdAsync(order.UserId);
 
         var allItems = await _itemService.GetAllItemsAsync();
-
         var materialDict = allItems.ToDictionary(i => i.Id, i => i.Name);
+
+        string? assignedWorkerName = null;
+        if (!string.IsNullOrEmpty(order.AssignedWorkerId))
+        {
+            var worker = await _userService.GetByIdAsync(order.AssignedWorkerId);
+            if (worker != null)
+                assignedWorkerName = $"{worker.FirstName} {worker.LastName}";
+        }
+
+        ViewBag.UserRole = HttpContext.Session.GetString("UserRole") ?? "";
+        ViewBag.UserId = HttpContext.Session.GetString("UserId") ?? "";
 
         var viewModel = new OrderDetailsViewModel
         {
             Order = order,
             CustomerEmail = user?.Email ?? "Okänd kund",
-            MaterialNames = materialDict
+            MaterialNames = materialDict,
+            AssignedWorkerName = assignedWorkerName
         };
         return View(viewModel);
     }
+
+    [HttpPost("StartOrder/{id}")]
+    public async Task<IActionResult> StartOrder(string id, [FromBody] StartOrderRequest request)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+        if (order.Status != OrderStatus.Pending)
+            return BadRequest(new { error = "Ordern är inte i status Väntar." });
+
+        var workerId = HttpContext.Session.GetString("UserId");
+        if (string.IsNullOrEmpty(workerId))
+            return Unauthorized();
+
+        order.Status = OrderStatus.Processing;
+        order.AssignedWorkerId = workerId;
+        await _orderService.UpdateAsync(order);
+
+        var calEvent = new CalendarEvent
+        {
+            UserId = workerId,
+            OrderId = order.Id,
+            Start = DateTime.UtcNow,
+            End = request.EstimatedEnd.ToUniversalTime()
+        };
+        await _calendarEventService.CreateEventAsync(calEvent);
+
+        return Ok(new { success = true });
+    }
+
+    [HttpPost("CompleteOrder/{id}")]
+    public async Task<IActionResult> CompleteOrder(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+        if (order.Status != OrderStatus.Processing)
+            return BadRequest(new { error = "Ordern är inte i status Påbörjad." });
+
+        var userId = HttpContext.Session.GetString("UserId");
+        var userRole = HttpContext.Session.GetString("UserRole");
+        if (userRole != "admin" && order.AssignedWorkerId != userId)
+            return Forbid();
+
+        order.Status = OrderStatus.Printed;
+        await _orderService.UpdateAsync(order);
+        return Ok(new { success = true });
+    }
+
+    [HttpPost("ShipOrder/{id}")]
+    public async Task<IActionResult> ShipOrder(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+        if (order.Status != OrderStatus.Printed)
+            return BadRequest(new { error = "Ordern är inte i status Utskriven." });
+
+        var userId = HttpContext.Session.GetString("UserId");
+        var userRole = HttpContext.Session.GetString("UserRole");
+        if (userRole != "admin" && order.AssignedWorkerId != userId)
+            return Forbid();
+
+        if (!string.IsNullOrEmpty(order.AssignedWorkerId))
+        {
+            var workerEvents = await _calendarEventService.GetByUserIdAsync(order.AssignedWorkerId);
+            var orderEvent = workerEvents.FirstOrDefault(e => e.OrderId == order.Id);
+            if (orderEvent != null)
+                await _calendarEventService.DeleteCalendarEventAsync(orderEvent.Id);
+        }
+
+        order.Status = OrderStatus.Shipped;
+        order.AssignedWorkerId = null;
+        await _orderService.UpdateAsync(order);
+        return Ok(new { success = true });
+    }
 }
+
+public record StartOrderRequest(DateTime EstimatedEnd);

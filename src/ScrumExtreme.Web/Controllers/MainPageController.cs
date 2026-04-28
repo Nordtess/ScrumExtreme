@@ -22,6 +22,7 @@ public class MainPageController : Controller
         var orders = allOrders.Where(o => o.OrderDate.Year == DateTime.UtcNow.Year);
         var users = await _userService.GetAllUsersAsync();
         ViewBag.UserLookup = users.ToDictionary(u => u.Id, u => u);
+        ViewBag.UserRole = HttpContext.Session.GetString("UserRole");
         return View(orders);
     }
 }

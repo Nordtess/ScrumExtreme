@@ -184,3 +184,177 @@
     max-height: 60vh;
   }
 }
+
+.calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 0.55rem;
+}
+
+.calendar-add-btn {
+  font-size: 0.78rem;
+  padding: 0.45rem 1rem;
+  border: 1.5px solid #1a1612;
+  background: #f7e6ca;
+  color: #1a1612;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  text-decoration: none;
+  transition:
+    background 0.18s,
+    color 0.18s;
+}
+.calendar-add-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+}
+
+.calendar-event-form {
+  background: #fff;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.calendar-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+#orderFields,
+#dateFields,
+#editDateFields,
+#editOrderFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.calendar-form-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #555;
+}
+
+.calendar-form-select,
+.calendar-form-input {
+  background: #fff;
+  border: 1px solid #2a2a2a;
+  border-radius: 7px;
+  color: #1a1612;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.calendar-form-select:focus,
+.calendar-form-input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+.fc .fc-button {
+  background: #f7e6ca !important;
+  border: 1.5px solid #1a1612 !important;
+  color: #1a1612 !important;
+  border-radius: 6px !important;
+  font-family: "Roboto", sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 0.35rem 0.75rem !important;
+  box-shadow: none !important;
+  transition:
+    background 0.18s,
+    color 0.18s !important;
+}
+.fc .fc-button:hover,
+.fc .fc-button:focus {
+  background: #1a1612 !important;
+  color: #f7e6ca !important;
+  border-color: #1a1612 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background: #1a1612 !important;
+  color: #f7e6ca !important;
+  border-color: #1a1612 !important;
+}
+.fc .fc-today-button:disabled {
+  opacity: 0.45 !important;
+  cursor: default !important;
+}
+.fc .fc-toolbar-title {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1612;
+  letter-spacing: 0.03em;
+}
+.fc th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #555;
+}
+.fc .fc-day-today {
+  background: rgba(201, 168, 76, 0.08) !important;
+}
+.fc .fc-event {
+  color: #fff !important;
+  font-size: 0.72rem !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+}
+.fc .fc-event:hover {
+  filter: brightness(1.15);
+  color: #fff !important;
+}
+
+/* Modal overlay for add-event form */
+.cal-event-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.cal-event-modal {
+  background: #fff;
+  border: 1.5px solid #1a1612;
+  border-top: 3px solid #c9a84c;
+  border-radius: 12px;
+  padding: 2rem 2.25rem;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+.cal-event-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1612;
+  margin: 0;
+}
+.cal-event-modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: flex-end;
+}

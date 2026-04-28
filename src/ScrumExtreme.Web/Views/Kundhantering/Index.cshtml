@@ -1,0 +1,131 @@
+@model ScrumExtreme.Web.Models.KundhanteringViewModel
+
+@{
+    ViewData["Title"] = "Kundhantering";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/lagerhantering.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Kundhantering</h1>
+        <p class="admin-page-subtitle">Översikt av kunder och kundregistrering</p>
+    </div>
+
+    <div class="lager-hub-grid">
+
+        <!-- Lägg till kund -->
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Lägg till kund
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Snitt ordrar / kund</span>
+                        @{
+                            var avg = Model.TotalCustomers > 0
+                                ? (double)Model.TotalOrders / Model.TotalCustomers
+                                : 0;
+                        }
+                        <span class="lager-hub-stat__value">@avg.ToString("F1")</span>
+                        <span class="lager-hub-stat__sub">ordrar per registrerad kund</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <p style="font-size:0.78rem;color:#555;margin:0;">
+                    Registrera en ny kund i systemet med kontaktuppgifter och leveransadress. Kunden kan sedan kopplas
+                    till ordrar.
+                </p>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="AddCustomer" asp-action="Index" class="lager-hub-btn">
+                    Lägg till kund
+                </a>
+            </div>
+        </div>
+
+        <!-- Kundöversikt -->
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Kundöversikt
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Registrerade kunder</span>
+                        <span class="lager-hub-stat__value">@Model.TotalCustomers</span>
+                        <span class="lager-hub-stat__sub">totalt i systemet</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Nya denna månad</span>
+                        <span class="lager-hub-stat__value">@Model.CustomersThisMonth</span>
+                        <span class="lager-hub-stat__sub">under innevarande månad</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Totala ordrar</span>
+                        <span class="lager-hub-stat__value">@Model.TotalOrders</span>
+                        <span class="lager-hub-stat__sub">lagda av kunder</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="AddCustomer" asp-action="AllCustomers" class="lager-hub-btn">
+                    Gå till Alla kunder
+                </a>
+            </div>
+        </div>
+
+        <!-- Senaste kunder -->
+        <div class="lager-hub-card lager-hub-card--wide">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Senaste kunder
+                </h2>
+            </div>
+            <div class="lager-hub-card__body" style="padding:0;">
+                @if (!Model.RecentCustomers.Any())
+                {
+                    <p style="padding:1.3rem;font-size:0.8rem;color:#888;">Inga kunder registrerade ännu.</p>
+                }
+                else
+                {
+                    <div class="lager-hub-recent-list">
+                        <div class="lager-hub-recent-header">
+                            <span>Namn</span>
+                            <span>E-post</span>
+                            <span>Stad</span>
+                            <span>Land</span>
+                        </div>
+                        @foreach (var row in Model.RecentCustomers)
+                        {
+                            <div class="lager-hub-recent-row lager-hub-recent-row--no-link">
+                                <span>@row.FullName</span>
+                                <span style="color:#555;">@row.Email</span>
+                                <span style="color:#888;">@row.City</span>
+                                <span style="color:#888;">@row.Country</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

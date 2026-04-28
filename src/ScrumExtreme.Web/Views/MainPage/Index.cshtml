@@ -24,15 +24,12 @@
 
         
         <div class="home-col">
-            <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
-
-            <button id="addEventBtn">Lägg till event</button>
-            <div id="eventForm" style="display:none;">
-                <select id="userId"></select>
-                <select id="orderId"></select>
-                <input id="start" type="datetime-local" />
-                <input id="end" type="datetime-local" />
-                <button id="saveEvent">Spara</button>
+            <div class="calendar-toolbar">
+                @if ((ViewBag.UserRole as string) == "admin")
+                {
+                    <button id="addEventBtn" class="admin-panel-btn calendar-add-btn">Lägg till event</button>
+                    <button id="editEventBtn" class="admin-panel-btn calendar-add-btn" style="margin-left:0.5rem;">Redigera event</button>
+                }
             </div>
 
             <div id="calendar"></div>
@@ -42,7 +39,139 @@
 
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
+        <script>
+            window.calendarUserRole = '@(ViewBag.UserRole as string ?? "")';
+        </script>
         <script src="~/js/calendar.js"></script>
+
+        <!-- Add event modal (admin only) -->
+        <div id="calendarEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Lägg till event</p>
+
+                <!-- Employee (always visible) — shown first -->
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Anställd</label>
+                    <select id="userId" class="calendar-form-select"></select>
+                </div>
+
+                <!-- Event type -->
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Typ</label>
+                    <select id="eventType" class="calendar-form-select">
+                        <option value="order">Order</option>
+                        <option value="ledighet">Ledighet</option>
+                        <option value="sjukfrånvaro">Sjukfrånvaro</option>
+                        <option value="annat">Annat</option>
+                    </select>
+                </div>
+
+                <!-- Order-specific fields -->
+                <div id="orderFields">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Order</label>
+                        <select id="orderId" class="calendar-form-select"></select>
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Beräknat klart</label>
+                        <input id="orderEstimatedDate" type="date" class="calendar-form-input" />
+                    </div>
+                </div>
+
+                <!-- Date fields (non-order types) -->
+                <div id="dateFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Startdatum</label>
+                        <input id="start" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Slutdatum</label>
+                        <input id="end" type="date" class="calendar-form-input" />
+                    </div>
+                </div>
+
+                <div class="cal-event-modal-actions">
+                    <button id="cancelEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="saveEvent" class="admin-panel-btn"
+                            style="background:#1a1612;color:#f7e6ca;">Spara</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit event modal (admin only) -->
+        <div id="editEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Redigera event</p>
+
+                <!-- Step 1: Type filter -->
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Typ av event</label>
+                    <select id="editTypeFilter" class="calendar-form-select">
+                        <option value="order">Order</option>
+                        <option value="ledighet">Ledighet</option>
+                        <option value="sjukfrånvaro">Sjukfrånvaro</option>
+                        <option value="annat">Annat</option>
+                    </select>
+                </div>
+
+                <!-- Step 2: Event picker (filtered by type) -->
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Välj event</label>
+                    <select id="editEventId" class="calendar-form-select"></select>
+                </div>
+
+                <!-- Non-order date fields -->
+                <div id="editDateFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Startdatum</label>
+                        <input id="editStart" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Slutdatum</label>
+                        <input id="editEnd" type="date" class="calendar-form-input" />
+                    </div>
+                </div>
+
+                <!-- Order fields -->
+                <div id="editOrderFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Beräknat klart</label>
+                        <input id="editOrderDate" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Ändra status</label>
+                        <select id="editOrderStatus" class="calendar-form-select">
+                            <option value="">— ingen ändring —</option>
+                            <option value="Pending">Väntar</option>
+                            <option value="Processing">Påbörjad</option>
+                            <option value="Printed">Utskriven</option>
+                            <option value="Shipped">Skickad</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cal-event-modal-actions">
+                    <button id="cancelEditEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="deleteEditEvent" class="admin-panel-btn"
+                            style="background:#c73e1d;color:#fff;">Ta bort</button>
+                    <button id="saveEditEvent" class="admin-panel-btn"
+                            style="background:#1a1612;color:#f7e6ca;">Spara</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete event modal (admin only) -->
+        <div id="deleteEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Ta bort event</p>
+                <p id="deleteEventDescription" style="margin:0.5rem 0 1.25rem; color:#555; font-size:0.95rem;"></p>
+                <div class="cal-event-modal-actions">
+                    <button id="cancelDeleteEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="confirmDeleteEvent" class="admin-panel-btn"
+                            style="background:#c73e1d;color:#fff;">Ta bort</button>
+                </div>
+            </div>
+        </div>
 
         <!-- ── Right: Order summary ── -->
         <div class="home-col">

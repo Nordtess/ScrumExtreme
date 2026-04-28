@@ -18,16 +18,20 @@ namespace ScrumExtreme.Domain.Entities
 
         [BsonElement("orderId")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string OrderId { get; set; } = string.Empty;
+        [BsonIgnoreIfNull]
+        public string? OrderId { get; set; }
 
+        [BsonElement("eventType")]
+        [BsonIgnoreIfNull]
+        public string? EventType { get; set; }
 
         [BsonElement("start")]
-        public DateTime Start {  get; set; }
+        public DateTime Start { get; set; }
 
 
         [BsonElement("end")]
         public DateTime End { get; set; }
 
-     
+
     }
 }

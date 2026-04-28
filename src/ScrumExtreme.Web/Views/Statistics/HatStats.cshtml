@@ -1,0 +1,85 @@
+@model List<ScrumExtreme.Web.Models.HatStatRow>
+
+@{
+    ViewData["Title"] = "Hattstatistik";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/statistics.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <a href="/Statistics" class="back-btn">&#8592; Tillbaka till statistik</a>
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Hattstatistik</h1>
+        <p class="admin-page-subtitle">Försäljning per hattmodell</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p style="color:#555;margin-top:1rem;">Inga försäljningsdata att visa.</p>
+    }
+    else
+    {
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title"><span class="admin-panel-dot"></span>Alla hattmodeller</h2>
+            </div>
+            <div class="admin-panel-body" style="padding:0;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #eee;background:#fafafa;">
+                            <th style="padding:12px 16px;text-align:left;">#</th>
+                            <th style="padding:12px 16px;text-align:left;">Hattmodell</th>
+                            <th style="padding:12px 16px;text-align:left;">Antal sålda</th>
+                            <th style="padding:12px 16px;text-align:left;">Förekommer i ordrar</th>
+                            <th style="padding:12px 16px;text-align:left;">Total intäkt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rank = 1;
+                        }
+                        @foreach (var hat in Model)
+                        {
+                            bool isTop = rank <= 3;
+                            <tr style="border-bottom:1px solid #f0f0f0;@(isTop ? "background:#fffdf5;" : "")">
+                                <td
+                                    style="padding:10px 16px;font-weight:700;color:@(rank == 1 ? "#c9a84c" : rank == 2 ? "#aaa" : rank == 3 ? "#b87333" : "#ccc");">
+                                    @rank</td>
+                                    <td style="padding:10px 16px;font-weight:600;">@hat.HatName</td>
+                                    <td style="padding:10px 16px;">@hat.TotalUnits st</td>
+                                    <td style="padding:10px 16px;color:#555;">@hat.TotalOrders</td>
+                                    <td style="padding:10px 16px;color:#c9a84c;font-weight:600;">@hat.TotalRevenue.ToString("N0") kr
+                                    </td>
+                                </tr>
+                                rank++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="stats-summary-row" style="margin-top:1.5rem;">
+                <div class="stats-card">
+                    <span class="stats-card-label">Modeller</span>
+                    <span class="stats-card-value">@Model.Count</span>
+                </div>
+                <div class="stats-card">
+                    <span class="stats-card-label">Sålda hattar totalt</span>
+                    <span class="stats-card-value">@Model.Sum(h => h.TotalUnits) st</span>
+                </div>
+                <div class="stats-card stats-card--positive">
+                    <span class="stats-card-label">Total intäkt</span>
+                    <span class="stats-card-value">@Model.Sum(h => h.TotalRevenue).ToString("N0") kr</span>
+                </div>
+                <div class="stats-card">
+                    <span class="stats-card-label">Populäraste</span>
+                    <span class="stats-card-value" style="font-size:1rem;">@Model.First().HatName</span>
+                </div>
+            </div>
+        }
+    </div>

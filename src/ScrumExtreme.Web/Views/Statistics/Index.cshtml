@@ -11,16 +11,25 @@
 
 <div class="admin-wrapper">
 
+    <a asp-controller="Lagerhantering" asp-action="Index" class="back-btn">&#8592; Tillbaka</a>
+
     <div class="admin-page-header">
-        <h1 class="admin-page-title">Statistik</h1>
         <p class="admin-page-subtitle">Nyckeltal och trender</p>
     </div>
 
     <div class="stats-period-bar">
-        <a href="?period=week" class="stats-period-btn @(Model.Period == "week" ? "active" : "")">Vecka</a>
-        <a href="?period=month" class="stats-period-btn @(Model.Period == "month" ? "active" : "")">Månad</a>
-        <a href="?period=quarter" class="stats-period-btn @(Model.Period == "quarter" ? "active" : "")">Kvartal</a>
-        <a href="?period=year" class="stats-period-btn @(Model.Period == "year" ? "active" : "")">År</a>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <a href="?period=week" class="stats-period-btn @(Model.Period == "week" ? "active" : "")">Vecka</a>
+            <a href="?period=month" class="stats-period-btn @(Model.Period == "month" ? "active" : "")">Månad</a>
+            <a href="?period=quarter" class="stats-period-btn @(Model.Period == "quarter" ? "active" : "")">Kvartal</a>
+            <a href="?period=year" class="stats-period-btn @(Model.Period == "year" ? "active" : "")">År</a>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto;">
+            <a href="/Statistics/CustomerStats" class="stats-period-btn"
+               style="border-color:#c9a84c;color:#7a5c10;">Kundstatistik</a>
+            <a href="/Statistics/HatStats" class="stats-period-btn"
+               style="border-color:#c9a84c;color:#7a5c10;">Hattstatistik</a>
+        </div>
     </div>
 
     <div class="stats-summary-row">

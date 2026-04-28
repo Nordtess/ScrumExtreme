@@ -20,6 +20,8 @@
 
 <div class="admin-wrapper">
 
+    <a asp-controller="Orderhantering" asp-action="Index" class="back-btn">&#8592; Tillbaka</a>
+
     @if (TempData["Success"] != null)
     {
         <p class="admin-toast">@TempData["Success"]</p>
@@ -139,6 +141,14 @@
                             _ => order.Status.ToString()
                         };
                         string typeKey = orderTypLabel.ToLower();
+                        string? workerName = null;
+                        if (!string.IsNullOrEmpty(order.AssignedWorkerId)
+                            && order.Status is ScrumExtreme.Domain.Entities.OrderStatus.Processing or
+                ScrumExtreme.Domain.Entities.OrderStatus.Printed
+                            && userLookup.TryGetValue(order.AssignedWorkerId, out var worker))
+                        {
+                            workerName = worker.FirstName;
+                        }
                         <div class="admin-customer-row" data-date="@order.OrderDate.ToUniversalTime().Ticks"
                              data-type="@typeKey" data-status="@statusKey" data-year="@order.OrderDate.Year">
                             <a asp-action="Details" asp-route-id="@order.Id" class="admin-customer-name">
@@ -152,80 +162,84 @@
                             <span class="order-col-hats" title="@hatSummary">@hatSummary</span>
                             <span class="order-col-country">@flagEmoji @country</span>
                             <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
-                            <span class="order-col-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
-                            <span class="order-col-amount">@order.TotalAmount.ToString("0.00") kr</span>
-                            <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
-                        </div>
+                            <span
+                                class="order-worker-badge @(string.IsNullOrEmpty(workerName) ? "order-worker-badge--empty" : "")"
+                                title="@(!string.IsNullOrEmpty(workerName) ? "Hanteras av " + workerName : "")">@(workerName ??
+                                               "")</span>
+                                <span class="order-col-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
+                                <span class="order-col-amount">@order.TotalAmount.ToString("0.00") kr</span>
+                                <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>
+                            </div>
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
+
     </div>
 
-</div>
+    @section Scripts {
+        <script>
+            const sortSelect = document.getElementById('orderSortFilter');
+            const statusSelect = document.getElementById('orderStatusFilter');
+            const yearSelect = document.getElementById('orderYearFilter');
+            const list = document.querySelector('.admin-customer-list');
 
-@section Scripts {
-    <script>
-        const sortSelect = document.getElementById('orderSortFilter');
-        const statusSelect = document.getElementById('orderStatusFilter');
-        const yearSelect = document.getElementById('orderYearFilter');
-        const list = document.querySelector('.admin-customer-list');
-
-        document.querySelectorAll('.order-type-pill').forEach(pill => {
-            pill.addEventListener('click', function () {
-                this.classList.toggle('active');
-                applyFilters();
+            document.querySelectorAll('.order-type-pill').forEach(pill => {
+                pill.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    applyFilters();
+                });
             });
-        });
 
-        function applyFilters() {
-            const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
-            const activePills = new Set(
-                Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
-            );
-            const statusVal = statusSelect.value;
-            const yearVal = yearSelect.value;
-            const newest = sortSelect.value === 'newest';
+            function applyFilters() {
+                const rows = Array.from(list.querySelectorAll('.admin-customer-row'));
+                const activePills = new Set(
+                    Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
+                );
+                const statusVal = statusSelect.value;
+                const yearVal = yearSelect.value;
+                const newest = sortSelect.value === 'newest';
 
-            rows.sort((a, b) => {
-                const da = BigInt(a.dataset.date);
-                const db = BigInt(b.dataset.date);
-                return newest ? (db > da ? 1 : db < da ? -1 : 0)
-                    : (da > db ? 1 : da < db ? -1 : 0);
+                rows.sort((a, b) => {
+                    const da = BigInt(a.dataset.date);
+                    const db = BigInt(b.dataset.date);
+                    return newest ? (db > da ? 1 : db < da ? -1 : 0)
+                        : (da > db ? 1 : da < db ? -1 : 0);
+                });
+                rows.forEach(r => list.appendChild(r));
+
+                let visible = 0;
+                rows.forEach(row => {
+                    const typeMatch = activePills.has(row.dataset.type);
+                    const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
+                    const yearMatch = row.dataset.year === yearVal;
+                    const show = typeMatch && statusMatch && yearMatch;
+                    row.style.display = show ? '' : 'none';
+                    if (show) visible++;
+                });
+                const countEl = document.querySelector('.admin-customer-count');
+                if (countEl) countEl.textContent = visible;
+            }
+
+            sortSelect.addEventListener('change', applyFilters);
+            statusSelect.addEventListener('change', applyFilters);
+            yearSelect.addEventListener('change', applyFilters);
+            applyFilters();
+
+            document.querySelectorAll('.order-delete-btn').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const id = this.dataset.id;
+                    if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
+                    const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
+                    if (res.ok) {
+                        this.closest('.admin-customer-row').remove();
+                        const countEl = document.querySelector('.admin-customer-count');
+                        if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+                    } else {
+                        alert('Något gick fel. Försök igen.');
+                    }
+                });
             });
-            rows.forEach(r => list.appendChild(r));
-
-            let visible = 0;
-            rows.forEach(row => {
-                const typeMatch = activePills.has(row.dataset.type);
-                const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
-                const yearMatch = row.dataset.year === yearVal;
-                const show = typeMatch && statusMatch && yearMatch;
-                row.style.display = show ? '' : 'none';
-                if (show) visible++;
-            });
-            const countEl = document.querySelector('.admin-customer-count');
-            if (countEl) countEl.textContent = visible;
-        }
-
-        sortSelect.addEventListener('change', applyFilters);
-        statusSelect.addEventListener('change', applyFilters);
-        yearSelect.addEventListener('change', applyFilters);
-        applyFilters();
-
-        document.querySelectorAll('.order-delete-btn').forEach(btn => {
-            btn.addEventListener('click', async function () {
-                const id = this.dataset.id;
-                if (!confirm('Är du säker på att du vill ta bort denna order?')) return;
-                const res = await fetch(`/Orders/Delete/${id}`, { method: 'POST' });
-                if (res.ok) {
-                    this.closest('.admin-customer-row').remove();
-                    const countEl = document.querySelector('.admin-customer-count');
-                    if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
-                } else {
-                    alert('Något gick fel. Försök igen.');
-                }
-            });
-        });
-    </script>
-}
+        </script>
+    }

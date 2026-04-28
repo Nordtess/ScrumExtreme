@@ -384,7 +384,7 @@
   display: grid;
   grid-template-columns:
     150px 110px minmax(150px, 1fr) minmax(120px, 1.2fr)
-    115px 105px 140px 82px 28px;
+    115px 105px minmax(0, 130px) 120px 82px 28px;
   align-items: center;
   gap: 0.65rem;
 }
@@ -476,6 +476,105 @@
 .order-customer-info p {
   margin: 0;
   line-height: 1.5;
+}
+
+.order-details-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.order-assigned-worker {
+  font-size: 0.78rem;
+  color: #555;
+  margin-left: 0.5rem;
+}
+
+.order-assigned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: 0.75rem;
+  padding: 0.2rem 0.65rem;
+  background: #fff8e8;
+  border: 1px solid #c9a84c;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: #7a5c10;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.order-worker-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1a1612;
+  background: #f0ebe3;
+  border: 1px solid #c0bab2;
+  border-radius: 20px;
+  padding: 0.18rem 0.55rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+  width: fit-content;
+}
+
+.order-worker-badge--empty {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+  pointer-events: none;
+}
+
+.start-order-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.start-order-modal {
+  background: #fff;
+  border: 1.5px solid #1a1612;
+  border-radius: 12px;
+  padding: 2rem 2.25rem;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+
+.start-order-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1612;
+  margin: 0;
+}
+
+.start-order-modal-subtitle {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.start-order-modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .order-customer-info .info-label {
@@ -784,13 +883,13 @@
 /*Input för rabatt och manuellt pris vanlig/modifierad order*/
 .discount-input,
 .manual-price-input {
-    width: 60px;
-    padding: 2px 4px;
+  width: 60px;
+  padding: 2px 4px;
 }
 /*Linjerar text och inputfält i orderrader*/
 .order-hat-list .order-hat-sub label {
-    display: grid;
-    grid-template-columns: 130px 60px;
-    align-items: center;
-    column-gap: 6px;
+  display: grid;
+  grid-template-columns: 130px 60px;
+  align-items: center;
+  column-gap: 6px;
 }
