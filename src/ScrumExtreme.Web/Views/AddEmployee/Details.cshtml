@@ -1,0 +1,68 @@
+﻿@model ScrumExtreme.Domain.Entities.User
+@{
+    ViewData["Title"] = "Anställd-detaljer";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addemployee.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper --narrow">
+
+    <a asp-action="AllEmployees" class="detail-back-link">← Tillbaka till listan</a>
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">@Model.FirstName @Model.LastName</h1>
+        <p class="admin-page-subtitle">ID: @Model.Id</p>
+    </div>
+
+    <div class="admin-layout --single">
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">
+                    <span class="admin-panel-dot"></span>Person- och kontouppgifter
+                </h2>
+                <span class="detail-status-badge @(Model.Role == "admin" ? "shipped" : "processing")">
+                    @(Model.Role == "admin" ? "Administratör" : "Anställd")
+                </span>
+            </div>
+
+            <div class="admin-panel-body">
+                <div class="detail-layout">
+                    <div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">E-post</span>
+                            <span class="detail-value">@Model.Email</span>
+                        </div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">Telefon</span>
+                            <span class="detail-value">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Ej angivet" : Model.PhoneNumber)</span>
+                        </div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">Adress</span>
+                            <span class="detail-value">
+                                @Model.Address<br />
+                                @Model.PostalCode @Model.City
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">Användarnamn</span>
+                            <span class="detail-value"><strong>@Model.Username</strong></span>
+                        </div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">Registrerad</span>
+                            <span class="detail-value">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                        <div class="detail-field-group">
+                            <span class="detail-label">Behörighet</span>
+                            <span class="detail-value">@Model.Role</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

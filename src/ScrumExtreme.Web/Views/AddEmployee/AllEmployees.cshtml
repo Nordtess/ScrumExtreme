@@ -1,0 +1,139 @@
+﻿@model IEnumerable<ScrumExtreme.Domain.Entities.User>
+@{
+    ViewData["Title"] = "Alla anställda";
+    var list = (Model ?? Enumerable.Empty<ScrumExtreme.Domain.Entities.User>()).ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addemployee.css" asp-append-version="true" />
+}
+<div class="admin-wrapper --narrow">
+
+@if (TempData["Success"] != null)
+{
+        <p class="admin-toast">@TempData["Success"]</p>
+}
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Alla anställda</h1>
+        <p class="admin-page-subtitle">Översikt och hantering av alla anställda i systemet</p>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">
+                <span class="admin-panel-dot"></span>Anställdlista
+                <span class="admin-employee-count">@list.Count</span>
+            </h2>
+            <a asp-controller="AddEmployee" asp-action="Index" class="admin-panel-btn">Lägg till anställd →</a>
+        </div>
+        <div class="admin-panel-body">
+            <div class="employee-sort-bar">
+                <span class="employee-sort-label">Sortera:</span>
+                <button class="employee-sort-pill active" data-sort="newest">Senast skapad</button>
+                <button class="employee-sort-pill" data-sort="oldest">Tidigast skapad</button>
+                <button class="employee-sort-pill" data-sort="name-asc">Namn A–Ö</button>
+                <button class="employee-sort-pill" data-sort="name-desc">Namn Ö–A</button>
+            </div>
+            <div class="admin-employee-list">
+                @if (list.Count == 0)
+                {
+                    <span class="admin-list-placeholder">Inga anställda hittades.</span>
+                }
+                else
+                {
+                    foreach (var e in list)
+                    {
+                        <a asp-controller="AddEmployee" asp-action="Details" asp-route-id="@e.Id" class="admin-employee-row"
+                           data-created="@e.CreatedAt.ToString("o")" data-name="@e.FirstName @e.LastName">
+                            <div class="admin-employee-info">
+                                <span class="admin-employee-name">@e.FirstName @e.LastName</span>
+                                <span class="admin-employee-email">@e.Email</span>
+                            </div>
+                            <div class="admin-employee-meta">
+                                <span class="admin-employee-role">
+                                    @(e.Role == "admin" ? "Administratör" : "Anställd")
+                                </span>
+                                <span class="admin-employee-arrow">›</span>
+                                <button class="employee-delete-btn" data-employee-id="@e.Id"
+                                        data-employee-name="@e.FirstName @e.LastName"
+                                        title="Ta bort @e.FirstName @e.LastName">
+                                    ✕
+                                </button>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const pills = document.querySelectorAll('.employee-sort-pill');
+            const list = document.querySelector('.admin-employee-list');
+
+            function sortRows(mode) {
+                const rows = Array.from(list.querySelectorAll('.admin-employee-row'));
+                rows.sort((a, b) => {
+                    if (mode === 'newest') {
+                        return new Date(b.dataset.created) - new Date(a.dataset.created);
+                    } else if (mode === 'oldest') {
+                        return new Date(a.dataset.created) - new Date(b.dataset.created);
+                    } else if (mode === 'name-asc') {
+                        return a.dataset.name.localeCompare(b.dataset.name, 'sv');
+                    } else {
+                        return b.dataset.name.localeCompare(a.dataset.name, 'sv');
+                    }
+                });
+                rows.forEach(r => list.appendChild(r));
+            }
+
+            pills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    pills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    sortRows(pill.dataset.sort);
+                });
+            });
+
+            sortRows('newest');
+        })();
+    </script>
+
+    <script>
+        document.querySelector('.admin-employee-list').addEventListener('click', async function (e) {
+            const btn = e.target.closest('.employee-delete-btn');
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = btn.dataset.employeeId;
+            const name = btn.dataset.employeeName;
+
+            if (!confirm(`Ta bort den anställda "${name}"? Åtgärden kan inte ångras.`)) return;
+
+            try {
+                const res = await fetch(`/AddEmployee/DeleteEmployee/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+
+                const row = btn.closest('.admin-employee-row');
+                row.remove();
+
+                const remaining = document.querySelectorAll('.admin-employee-row').length;
+                const badge = document.querySelector('.admin-employee-count');
+                if (badge) badge.textContent = remaining;
+
+                if (remaining === 0) {
+                    document.querySelector('.admin-employee-list')
+                        .innerHTML = '<span class="admin-list-placeholder">Inga anställda hittades.</span>';
+                }
+            } catch {
+                alert('Kunde inte ta bort den anställda. Försök igen.');
+            }
+        });
+    </script>
+}
