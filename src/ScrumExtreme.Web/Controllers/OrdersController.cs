@@ -209,4 +209,17 @@ public class OrdersController : Controller
         };
         return View(viewModel);
     }
+
+    [HttpPost("UpdateStatus")]
+    public async Task<IActionResult> UpdateStatus(string id, OrderStatus status)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null)
+            return NotFound();
+
+        order.Status = status;
+
+        await _orderService.UpdateAsync(order);
+        return RedirectToAction("Details", new { id });
+    }
 }
