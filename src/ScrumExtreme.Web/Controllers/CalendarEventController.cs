@@ -175,7 +175,7 @@ namespace ScrumExtreme.Web.Controllers
                     {
                         id = e.Id,
                         title,
-                        eventType = e.EventType,
+                        eventType = isOrder ? (e.EventType ?? "order") : e.EventType,
                         userId = e.UserId,
                         orderId = e.OrderId,
                         start = e.Start.ToString("yyyy-MM-dd"),

@@ -1,0 +1,115 @@
+@model List<ScrumExtreme.Web.Models.CustomerStatRow>
+
+@{
+    ViewData["Title"] = "Kundstatistik";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/statistics.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <a href="/Statistics" class="back-btn">&#8592; Tillbaka till statistik</a>
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Kundstatistik</h1>
+        <p class="admin-page-subtitle">Orderhistorik och köpbeteende per kund</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p style="color:#555; margin-top:1rem;">Inga kunddata att visa.</p>
+    }
+    else
+    {
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title"><span class="admin-panel-dot"></span>Alla kunder</h2>
+            </div>
+            <div class="admin-panel-body" style="padding:0;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #eee;background:#fafafa;">
+                            <th style="padding:12px 16px;text-align:left;">Kund</th>
+                            <th style="padding:12px 16px;text-align:left;">E-post</th>
+                            <th style="padding:12px 16px;text-align:left;">Ordrar</th>
+                            <th style="padding:12px 16px;text-align:left;">Totalt spenderat</th>
+                            <th style="padding:12px 16px;text-align:left;">Favorithaatt</th>
+                            <th style="padding:12px 16px;width:32px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int ci = 0; }
+                        @foreach (var customer in Model)
+                        {
+                            <tr class="cust-row" style="border-bottom:1px solid #f0f0f0;cursor:pointer;" onclick="toggleCustomer(@ci)">
+                                <td style="padding:11px 16px;font-weight:600;">@customer.FullName</td>
+                                <td style="padding:11px 16px;color:#777;font-size:0.83rem;">@customer.Email</td>
+                                <td style="padding:11px 16px;">@customer.OrderCount</td>
+                                <td style="padding:11px 16px;color:#c9a84c;font-weight:600;">@customer.TotalSpent.ToString("N0") kr</td>
+                                <td style="padding:11px 16px;color:#555;">@customer.TopHat</td>
+                                <td style="padding:11px 16px;color:#bbb;font-size:0.75rem;" id="cust-arrow-@ci">&#9654;</td>
+                            </tr>
+                            <tr id="cust-detail-@ci" style="display:none;">
+                                <td colspan="6" style="padding:0;background:#fafafa;border-bottom:2px solid #eee;">
+                                    @if (!customer.Orders.Any())
+                                    {
+                                        <p style="padding:10px 20px;color:#999;font-size:0.82rem;">Inga ordrar.</p>
+                                    }
+                                    else
+                                    {
+                                        <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
+                                            <thead>
+                                                <tr style="border-bottom:1px solid #eee;">
+                                                    <th style="padding:8px 20px;text-align:left;font-weight:600;color:#999;">Ordernummer</th>
+                                                    <th style="padding:8px 16px;text-align:left;font-weight:600;color:#999;">Datum</th>
+                                                    <th style="padding:8px 16px;text-align:left;font-weight:600;color:#999;">Belopp</th>
+                                                    <th style="padding:8px 16px;text-align:left;font-weight:600;color:#999;">Status</th>
+                                                    <th style="padding:8px 16px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var order in customer.Orders)
+                                                {
+                                                    string statusKey = order.Status.ToLower() switch {
+                                                        "väntar"    => "pending",
+                                                        "påbörjad"  => "processing",
+                                                        "utskriven" => "printed",
+                                                        "skickad"   => "shipped",
+                                                        _           => "pending"
+                                                    };
+                                                    <tr style="border-bottom:1px solid #f4f4f4;">
+                                                        <td style="padding:8px 20px;font-weight:600;">@order.OrderNumber</td>
+                                                        <td style="padding:8px 16px;color:#777;">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                                        <td style="padding:8px 16px;color:#c9a84c;font-weight:600;">@order.Amount.ToString("N0") kr</td>
+                                                        <td style="padding:8px 16px;"><span class="order-status-badge order-status-@statusKey">@order.Status</span></td>
+                                                        <td style="padding:8px 16px;"><a href="/Orders/Details/@order.OrderId" style="color:#c9a84c;text-decoration:none;">Visa →</a></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                </td>
+                            </tr>
+                            ci++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function toggleCustomer(i) {
+            const detail = document.getElementById('cust-detail-' + i);
+            const arrow  = document.getElementById('cust-arrow-' + i);
+            const open   = detail.style.display !== 'none';
+            detail.style.display = open ? 'none' : 'table-row';
+            arrow.innerHTML      = open ? '&#9654;' : '&#9660;';
+        }
+    </script>
+}

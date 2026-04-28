@@ -260,6 +260,11 @@ public class OrdersController : Controller
         if (order.Status != OrderStatus.Processing)
             return BadRequest(new { error = "Ordern är inte i status Påbörjad." });
 
+        var userId = HttpContext.Session.GetString("UserId");
+        var userRole = HttpContext.Session.GetString("UserRole");
+        if (userRole != "admin" && order.AssignedWorkerId != userId)
+            return Forbid();
+
         order.Status = OrderStatus.Printed;
         await _orderService.UpdateAsync(order);
         return Ok(new { success = true });
@@ -272,6 +277,11 @@ public class OrdersController : Controller
         if (order == null) return NotFound();
         if (order.Status != OrderStatus.Printed)
             return BadRequest(new { error = "Ordern är inte i status Utskriven." });
+
+        var userId = HttpContext.Session.GetString("UserId");
+        var userRole = HttpContext.Session.GetString("UserRole");
+        if (userRole != "admin" && order.AssignedWorkerId != userId)
+            return Forbid();
 
         if (!string.IsNullOrEmpty(order.AssignedWorkerId))
         {

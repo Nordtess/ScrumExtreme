@@ -189,4 +189,49 @@
         const el = document.getElementById('error-' + id);
         if (el) el.textContent = msg;
     }
+
+    // ── Random password generator ─────────────────────────────────────────
+    const genPwCheck    = document.getElementById('genPwCheck');
+    const passwordInput = document.getElementById('passwordInput');
+
+    function generatePassword() {
+        const upper   = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        const lower   = 'abcdefghjkmnpqrstuvwxyz';
+        const digits  = '23456789';
+        const special = '!@#%&*';
+        const all = upper + lower + digits + special;
+        const arr = new Uint8Array(12);
+        crypto.getRandomValues(arr);
+        let pw = upper[arr[0] % upper.length]
+               + lower[arr[1] % lower.length]
+               + digits[arr[2] % digits.length]
+               + special[arr[3] % special.length];
+        for (let i = 4; i < 12; i++) pw += all[arr[i] % all.length];
+        const shuffled = new Uint8Array(12);
+        crypto.getRandomValues(shuffled);
+        return pw.split('').sort((a, b) => shuffled[pw.indexOf(a)] - shuffled[pw.indexOf(b)]).join('');
+    }
+
+    if (genPwCheck && passwordInput) {
+        genPwCheck.addEventListener('change', function () {
+            if (this.checked) {
+                const pw = generatePassword();
+                passwordInput.value    = pw;
+                passwordInput.type     = 'text';
+                passwordInput.readOnly = true;
+                passwordInput.style.background    = '#fffdf5';
+                passwordInput.style.borderColor   = '#c9a84c';
+                passwordInput.style.fontFamily    = 'monospace';
+                passwordInput.style.letterSpacing = '0.04em';
+            } else {
+                passwordInput.value    = '';
+                passwordInput.type     = 'password';
+                passwordInput.readOnly = false;
+                passwordInput.style.background    = '';
+                passwordInput.style.borderColor   = '';
+                passwordInput.style.fontFamily    = '';
+                passwordInput.style.letterSpacing = '';
+            }
+        });
+    }
 });

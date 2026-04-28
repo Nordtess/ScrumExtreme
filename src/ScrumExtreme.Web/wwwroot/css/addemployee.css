@@ -644,3 +644,95 @@
   font-size: 0.82rem;
   text-align: center;
 }
+
+/* ── Random password generator ────────────────────────────────────── */
+.gen-pw-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.gen-pw-label {
+  font-size: 0.78rem;
+  color: #555;
+}
+
+/* Toggle switch */
+.gen-pw-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.gen-pw-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.gen-pw-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gen-pw-slider::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.gen-pw-toggle input:checked + .gen-pw-slider {
+  background: #c9a84c;
+}
+
+.gen-pw-toggle input:checked + .gen-pw-slider::before {
+  transform: translateX(16px);
+}
+
+/* Generated password display */
+.gen-pw-display {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.gen-pw-value {
+  flex: 1;
+  font-family: monospace;
+  font-size: 0.92rem;
+  padding: 0.45rem 0.75rem;
+  border: 1.5px solid #c9a84c;
+  border-radius: 7px;
+  background: #fffdf5;
+  color: #1a1612;
+  letter-spacing: 0.04em;
+}
+
+.gen-pw-copy {
+  padding: 0.4rem 0.6rem;
+  border: 1.5px solid #c9a84c;
+  border-radius: 7px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #7a5c10;
+  transition: background 0.15s;
+}
+
+.gen-pw-copy:hover {
+  background: #fff8e8;
+}
