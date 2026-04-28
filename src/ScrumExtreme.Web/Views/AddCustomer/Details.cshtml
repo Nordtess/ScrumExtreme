@@ -13,11 +13,12 @@
 
 <div class="admin-wrapper">
 
+    <a href="/AddCustomer/AllCustomers" class="detail-back-btn">← Alla kunder</a>
+
     <div class="admin-page-header">
-        <a asp-controller="AddCustomer" asp-action="Index" class="detail-back-link">← Alla kunder</a>
         <h1 class="admin-page-title">@Model.FirstName @Model.LastName</h1>
         <p class="admin-page-subtitle">Kundprofil · Registrerad @Model.CreatedAt.ToString("d MMMM yyyy", new
-                                    System.Globalization.CultureInfo("sv-SE"))</p>
+                                                                                        System.Globalization.CultureInfo("sv-SE"))</p>
         </div>
 
         <div class="detail-layout">
@@ -28,7 +29,7 @@
                     <h2 class="admin-panel-title">
                         <span class="admin-panel-dot"></span>Kontaktinformation
                     </h2>
-                    <button type="button" class="admin-panel-btn" id="openEditCustomerBtn">Redigera kunduppgifter →</button>
+                    <button type="button" class="admin-panel-btn" id="openEditCustomerBtn">Redigera kunduppgifter</button>
                 </div>
                 <div class="admin-panel-body">
 
@@ -45,7 +46,7 @@
                     <div class="detail-field-group">
                         <span class="detail-label">Telefonnummer</span>
                         <span class="detail-value">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" :
-                                                                                Model.PhoneNumber)</span>
+                                                                                                                                                                                                    Model.PhoneNumber)</span>
                         </div>
 
                         <div class="detail-field-group">
@@ -108,11 +109,11 @@
                                         <div class="detail-order-info">
                                             <span class="detail-order-number">#@order.OrderNumber</span>
                                             <span class="detail-order-date">@order.OrderDate.ToString("d MMM yyyy", new
-                                                                                                                                System.Globalization.CultureInfo("sv-SE"))</span>
+                                                                                                                                                                                                                                                                                                                                    System.Globalization.CultureInfo("sv-SE"))</span>
                                             </div>
                                             <div class="detail-order-right">
                                                 <span class="detail-order-amount">@order.TotalAmount.ToString("C", new
-                                                                                                                                        System.Globalization.CultureInfo("sv-SE"))</span>
+                                                                                                                                                                                                                                                                                                                                                            System.Globalization.CultureInfo("sv-SE"))</span>
                                                     <span class="detail-status-badge @statusClass">@statusLabel</span>
                                                 </div>
                                             </a>
@@ -126,82 +127,83 @@
 
                 </div>
 
-</div>
+            </div>
 
-<div id="editCustomerOverlay" class="ec-overlay" style="display:none;">
-    <div class="ec-modal">
-        <div class="ec-modal-header">
-            <h2 class="ec-modal-title">Redigera kunduppgifter</h2>
-            <button type="button" class="ec-close-btn" id="closeEditCustomerBtn">&times;</button>
-        </div>
-        <div class="ec-modal-body">
-            <div class="admin-field-row">
-                <div class="admin-field">
-                    <label>Förnamn</label>
-                    <input id="ec-FirstName" type="text" value="@Model.FirstName" />
-                    <span class="admin-error" id="ec-error-FirstName"></span>
-                </div>
-                <div class="admin-field">
-                    <label>Efternamn</label>
-                    <input id="ec-LastName" type="text" value="@Model.LastName" />
-                    <span class="admin-error" id="ec-error-LastName"></span>
-                </div>
-            </div>
-            <div class="admin-field-row --single">
-                <div class="admin-field">
-                    <label>E-post</label>
-                    <input id="ec-Email" type="email" value="@Model.Email" />
-                    <span class="admin-error" id="ec-error-Email"></span>
-                </div>
-            </div>
-            <div class="admin-field-row --single">
-                <div class="admin-field">
-                    <label>Gatuadress</label>
-                    <input id="ec-Address" type="text" value="@Model.Address" />
-                    <span class="admin-error" id="ec-error-Address"></span>
-                </div>
-            </div>
-            <div class="admin-field-row --postal-city">
-                <div class="admin-field">
-                    <label>Postnummer</label>
-                    <input id="ec-PostalCode" type="text" value="@Model.PostalCode" />
-                    <span class="admin-error" id="ec-error-PostalCode"></span>
-                </div>
-                <div class="admin-field">
-                    <label>Stad</label>
-                    <input id="ec-City" type="text" value="@Model.City" />
-                    <span class="admin-error" id="ec-error-City"></span>
-                </div>
-            </div>
-            <div class="admin-field-row --country-phone">
-                <div class="admin-field">
-                    <label>Land</label>
-                    <div class="country-picker">
-                        <input type="text" id="ec-countrySearch" value="@Model.Country" autocomplete="off" />
-                        <ul id="ec-countryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
+            <div id="editCustomerOverlay" class="ec-overlay" style="display:none;">
+                <div class="ec-modal">
+                    <div class="ec-modal-header">
+                        <h2 class="ec-modal-title">Redigera kunduppgifter</h2>
+                        <button type="button" class="ec-close-btn" id="closeEditCustomerBtn">&times;</button>
                     </div>
-                    <input type="hidden" id="ec-Country" value="@Model.Country" />
-                    <input type="hidden" id="ec-CountryCode" value="@Model.CountryCode" />
-                    <span class="admin-error" id="ec-error-Country"></span>
+                    <div class="ec-modal-body">
+                        <div class="admin-field-row">
+                            <div class="admin-field">
+                                <label>Förnamn</label>
+                                <input id="ec-FirstName" type="text" value="@Model.FirstName" />
+                                <span class="admin-error" id="ec-error-FirstName"></span>
+                            </div>
+                            <div class="admin-field">
+                                <label>Efternamn</label>
+                                <input id="ec-LastName" type="text" value="@Model.LastName" />
+                                <span class="admin-error" id="ec-error-LastName"></span>
+                            </div>
+                        </div>
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label>E-post</label>
+                                <input id="ec-Email" type="email" value="@Model.Email" />
+                                <span class="admin-error" id="ec-error-Email"></span>
+                            </div>
+                        </div>
+                        <div class="admin-field-row --single">
+                            <div class="admin-field">
+                                <label>Gatuadress</label>
+                                <input id="ec-Address" type="text" value="@Model.Address" />
+                                <span class="admin-error" id="ec-error-Address"></span>
+                            </div>
+                        </div>
+                        <div class="admin-field-row --postal-city">
+                            <div class="admin-field">
+                                <label>Postnummer</label>
+                                <input id="ec-PostalCode" type="text" value="@Model.PostalCode" />
+                                <span class="admin-error" id="ec-error-PostalCode"></span>
+                            </div>
+                            <div class="admin-field">
+                                <label>Stad</label>
+                                <input id="ec-City" type="text" value="@Model.City" />
+                                <span class="admin-error" id="ec-error-City"></span>
+                            </div>
+                        </div>
+                        <div class="admin-field-row --country-phone">
+                            <div class="admin-field">
+                                <label>Land</label>
+                                <div class="country-picker">
+                                    <input type="text" id="ec-countrySearch" value="@Model.Country" autocomplete="off" />
+                                    <ul id="ec-countryDropdown" class="country-dropdown country-dropdown--hidden"></ul>
+                                </div>
+                                <input type="hidden" id="ec-Country" value="@Model.Country" />
+                                <input type="hidden" id="ec-CountryCode" value="@Model.CountryCode" />
+                                <span class="admin-error" id="ec-error-Country"></span>
+                            </div>
+                            <div class="admin-field">
+                                <label>Telefonnummer</label>
+                                <input id="ec-PhoneNumber" type="text" value="@Model.PhoneNumber" />
+                                <span class="admin-error" id="ec-error-PhoneNumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-modal-footer">
+                        <span class="admin-submit-error" id="ec-submitError"></span>
+                        <button type="button" class="admin-btn-primary admin-btn-auto" id="cancelEditCustomerBtn"
+                                style="background:#fff;color:#1a1612;border:1.5px solid #1a1612;">Avbryt</button>
+                        <button type="button" class="admin-btn-primary admin-btn-auto" id="confirmEditCustomerBtn">Bekräfta
+                            ändringar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="admin-field">
-                    <label>Telefonnummer</label>
-                    <input id="ec-PhoneNumber" type="text" value="@Model.PhoneNumber" />
-                    <span class="admin-error" id="ec-error-PhoneNumber"></span>
-                </div>
-            </div>
-        </div>
-        <div class="ec-modal-footer">
-            <span class="admin-submit-error" id="ec-submitError"></span>
-            <button type="button" class="admin-btn-primary admin-btn-auto" id="cancelEditCustomerBtn"
-                    style="background:#fff;color:#1a1612;border:1.5px solid #1a1612;">Avbryt</button>
-            <button type="button" class="admin-btn-primary admin-btn-auto" id="confirmEditCustomerBtn">Bekräfta ändringar</button>
-        </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script src="~/js/admin.js" asp-append-version="true"></script>
-    <script src="~/js/editcustomer.js" asp-append-version="true"></script>
-}
+                @section Scripts {
+                    <script src="~/js/admin.js" asp-append-version="true"></script>
+                    <script src="~/js/editcustomer.js" asp-append-version="true"></script>
+                }
 

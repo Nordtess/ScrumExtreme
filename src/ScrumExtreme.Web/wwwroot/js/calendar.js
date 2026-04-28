@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
         height: '100%',
         events: '/Calendar/GetEvents',
         locale: 'sv-SE',
+        titleFormat: function (date) {
+            var raw = date.date.marker.toLocaleString('sv-SE', { month: 'long', year: 'numeric' });
+            return raw.charAt(0).toUpperCase() + raw.slice(1);
+        },
         displayEventTime: false,
 
         eventClick: function (info) {
