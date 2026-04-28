@@ -31,6 +31,11 @@ public class Order : BaseEntity
     [BsonRepresentation(BsonType.String)]
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
+    [BsonElement("assignedWorkerId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonIgnoreIfNull]
+    public string? AssignedWorkerId { get; set; }
+
     [BsonElement("shippingAddress")]
     public ShippingAddress ShippingAddress { get; set; } = new();
 

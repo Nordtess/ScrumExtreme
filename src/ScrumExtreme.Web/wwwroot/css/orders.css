@@ -478,6 +478,77 @@
   line-height: 1.5;
 }
 
+.order-details-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.order-assigned-worker {
+  font-size: 0.78rem;
+  color: #555;
+  margin-left: 0.5rem;
+}
+
+.order-worker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1a1612;
+  background: #f0ebe3;
+  border: 1px solid #c0bab2;
+  border-radius: 20px;
+  padding: 0.18rem 0.6rem;
+  white-space: nowrap;
+}
+
+.start-order-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.start-order-modal {
+  background: #fff;
+  border: 1.5px solid #1a1612;
+  border-radius: 12px;
+  padding: 2rem 2.25rem;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+
+.start-order-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1612;
+  margin: 0;
+}
+
+.start-order-modal-subtitle {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.start-order-modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+}
+
 .order-customer-info .info-label {
   font-size: 0.72rem;
   color: #777;
@@ -784,13 +855,13 @@
 /*Input för rabatt och manuellt pris vanlig/modifierad order*/
 .discount-input,
 .manual-price-input {
-    width: 60px;
-    padding: 2px 4px;
+  width: 60px;
+  padding: 2px 4px;
 }
 /*Linjerar text och inputfält i orderrader*/
 .order-hat-list .order-hat-sub label {
-    display: grid;
-    grid-template-columns: 130px 60px;
-    align-items: center;
-    column-gap: 6px;
+  display: grid;
+  grid-template-columns: 130px 60px;
+  align-items: center;
+  column-gap: 6px;
 }

@@ -2,6 +2,18 @@
 
 @{
     ViewData["Title"] = "Orderdetaljer - " + Model.Order.OrderNumber;
+    string statusLabel = Model.Order.Status switch
+    {
+        ScrumExtreme.Domain.Entities.OrderStatus.Pending => "Väntar",
+        ScrumExtreme.Domain.Entities.OrderStatus.Processing => "Påbörjad",
+        ScrumExtreme.Domain.Entities.OrderStatus.Printed => "Utskriven",
+        ScrumExtreme.Domain.Entities.OrderStatus.Shipped => "Skickad",
+        _ => Model.Order.Status.ToString()
+    };
+    string statusKey = Model.Order.Status.ToString().ToLower();
+    string userRole = ViewBag.UserRole as string ?? "";
+    bool canStart = Model.Order.Status == ScrumExtreme.Domain.Entities.OrderStatus.Pending
+                    && (userRole == "employee" || userRole == "admin");
 }
 
 @section Styles {
@@ -12,7 +24,7 @@
 <div class="admin-wrapper">
     <div class="admin-page-header">
         <h1 class="admin-page-title">Order @Model.Order.OrderNumber</h1>
-        <p class="admin-page-subtitle">Placerad: @Model.Order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm") | Status: <strong>@Model.Order.Status</strong></p>
+        <p class="admin-page-subtitle">Placerad: @Model.Order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm") | Status: <span class="order-status-badge order-status-@statusKey">@statusLabel</span></p>
     </div>
 
     <div class="admin-panel" style="margin-bottom: 20px;">
@@ -108,7 +120,33 @@
         <button onclick="window.print()" class="admin-panel-btn" style="margin-left: 10px;">🖨️ Skriv ut order</button>
         <a href="/ShippingLabel?orderId=@Model.Order.Id" class="admin-panel-btn" style="margin-left: 10px; text-decoration: none;">🚚 Skriv ut fraktsedel</a>
         <button id="deleteOrderBtn" class="admin-panel-btn" style="margin-left: 10px;">🗑️ Radera order</button>
+        @if (canStart)
+        {
+            <button id="startOrderBtn" class="admin-btn-primary admin-btn-auto" style="margin-left: 10px;">▶ Starta order</button>
+        }
+        @if (!string.IsNullOrEmpty(Model.AssignedWorkerName))
+        {
+            <span class="order-assigned-worker">Hanteras av: <strong>@Model.AssignedWorkerName</strong></span>
+        }
     </div>
+
+    @if (canStart)
+    {
+        <div id="startOrderOverlay" class="start-order-overlay" style="display:none;">
+            <div class="start-order-modal">
+                <h3 class="start-order-modal-title">Starta order @Model.Order.OrderNumber</h3>
+                <p class="start-order-modal-subtitle">Ange beräknat slutdatum för ordern.</p>
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Beräknat slutdatum</label>
+                    <input id="estimatedEnd" type="datetime-local" class="calendar-form-input" />
+                </div>
+                <div class="start-order-modal-actions">
+                    <button id="confirmStartBtn" class="admin-btn-primary admin-btn-auto">Bekräfta</button>
+                    <button id="cancelStartBtn" class="admin-panel-btn">Avbryt</button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @section Scripts {
@@ -122,5 +160,44 @@
                 alert('Något gick fel. Försök igen.');
             }
         });
+
+        @if (canStart)
+        {
+            <text>
+        const startBtn = document.getElementById('startOrderBtn');
+        const overlay = document.getElementById('startOrderOverlay');
+        const confirmBtn = document.getElementById('confirmStartBtn');
+        const cancelBtn = document.getElementById('cancelStartBtn');
+
+        startBtn.addEventListener('click', function () {
+            overlay.style.display = 'flex';
+        });
+        cancelBtn.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) overlay.style.display = 'none';
+        });
+
+        confirmBtn.addEventListener('click', async function () {
+            const endVal = document.getElementById('estimatedEnd').value;
+            if (!endVal) {
+                alert('Välj ett beräknat slutdatum.');
+                return;
+            }
+            const res = await fetch('/Orders/StartOrder/@Model.Order.Id', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estimatedEnd: endVal })
+            });
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert(err.error ?? 'Något gick fel. Försök igen.');
+            }
+        });
+            </text>
+        }
     </script>
 }

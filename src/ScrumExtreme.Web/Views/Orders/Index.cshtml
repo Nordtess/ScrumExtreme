@@ -139,6 +139,13 @@
                             _ => order.Status.ToString()
                         };
                         string typeKey = orderTypLabel.ToLower();
+                        string? workerName = null;
+                        if (!string.IsNullOrEmpty(order.AssignedWorkerId)
+                            && order.Status is ScrumExtreme.Domain.Entities.OrderStatus.Processing or ScrumExtreme.Domain.Entities.OrderStatus.Printed
+                            && userLookup.TryGetValue(order.AssignedWorkerId, out var worker))
+                        {
+                            workerName = $"{worker.FirstName} {worker.LastName}";
+                        }
                         <div class="admin-customer-row" data-date="@order.OrderDate.ToUniversalTime().Ticks"
                              data-type="@typeKey" data-status="@statusKey" data-year="@order.OrderDate.Year">
                             <a asp-action="Details" asp-route-id="@order.Id" class="admin-customer-name">
@@ -152,6 +159,10 @@
                             <span class="order-col-hats" title="@hatSummary">@hatSummary</span>
                             <span class="order-col-country">@flagEmoji @country</span>
                             <span class="order-status-badge order-status-@statusKey">@statusLabel</span>
+                            @if (!string.IsNullOrEmpty(workerName))
+                            {
+                                <span class="order-worker-badge" title="Hanteras av @workerName">@workerName</span>
+                            }
                             <span class="order-col-date">@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</span>
                             <span class="order-col-amount">@order.TotalAmount.ToString("0.00") kr</span>
                             <button class="order-delete-btn" data-id="@order.Id" title="Ta bort order">✕</button>

@@ -24,15 +24,27 @@
 
         
         <div class="home-col">
-            <p class="home-calendar-title">FREDRIKS FINA KALENDER</p>
-
-            <button id="addEventBtn">Lägg till event</button>
-            <div id="eventForm" style="display:none;">
-                <select id="userId"></select>
-                <select id="orderId"></select>
-                <input id="start" type="datetime-local" />
-                <input id="end" type="datetime-local" />
-                <button id="saveEvent">Spara</button>
+            <div class="calendar-toolbar">
+                <button id="addEventBtn" class="admin-panel-btn calendar-add-btn">Lägg till event</button>
+            </div>
+            <div id="eventForm" class="calendar-event-form" style="display:none;">
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Anställd</label>
+                    <select id="userId" class="calendar-form-select"></select>
+                </div>
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Order</label>
+                    <select id="orderId" class="calendar-form-select"></select>
+                </div>
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Start</label>
+                    <input id="start" type="datetime-local" class="calendar-form-input" />
+                </div>
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Slut</label>
+                    <input id="end" type="datetime-local" class="calendar-form-input" />
+                </div>
+                <button id="saveEvent" class="admin-btn-primary admin-btn-auto">Spara</button>
             </div>
 
             <div id="calendar"></div>

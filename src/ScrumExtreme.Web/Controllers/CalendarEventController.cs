@@ -12,7 +12,7 @@ namespace ScrumExtreme.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
         private readonly ICalendarEventService _calendarEventService;
-        
+
 
         public CalendarController(IOrderService orderService, IUserService userService, ICalendarEventService calendarEventService,
             IRepository<CalendarEvent> events,
@@ -22,7 +22,7 @@ namespace ScrumExtreme.Web.Controllers
             _orderService = orderService;
             _userService = userService;
             _calendarEventService = calendarEventService;
-            
+
         }
 
         public IActionResult Index()
@@ -40,19 +40,30 @@ namespace ScrumExtreme.Web.Controllers
             var userDict = users.ToDictionary(u => u.Id);
             var orderDict = orders.ToDictionary(o => o.Id);
 
-            var result = events.Select(e => new
-            {
-                id = e.Id,
-                title = userDict[e.UserId].FirstName,
+            string[] palette = ["#c9a84c", "#2e86ab", "#a23b72", "#f18f01", "#c73e1d", "#3b7d4f"];
+            var workerIds = events
+                .Select(e => e.UserId)
+                .Distinct()
+                .ToList();
+            var workerColors = workerIds
+                .Select((id, i) => (id, color: palette[i % palette.Length]))
+                .ToDictionary(x => x.id, x => x.color);
 
-                start = e.Start,
-                end = e.End,
-
-                extendedProps = new
+            var result = events
+                .Where(e => userDict.ContainsKey(e.UserId) && orderDict.ContainsKey(e.OrderId))
+                .Select(e => new
                 {
-                    orderNumber = orderDict[e.OrderId].OrderNumber
-                }
-            });
+                    id = e.Id,
+                    title = $"{userDict[e.UserId].FirstName} \u2014 {orderDict[e.OrderId].OrderNumber}",
+                    start = e.Start,
+                    end = e.End,
+                    color = workerColors.TryGetValue(e.UserId, out var c) ? c : palette[0],
+                    extendedProps = new
+                    {
+                        orderNumber = orderDict[e.OrderId].OrderNumber,
+                        workerName = $"{userDict[e.UserId].FirstName} {userDict[e.UserId].LastName}"
+                    }
+                });
 
             return Json(result);
         }

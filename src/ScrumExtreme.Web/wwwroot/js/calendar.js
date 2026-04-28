@@ -65,8 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 : '';
 
             const orderNumber = info.event.extendedProps.orderNumber;
+            const workerName = info.event.extendedProps.workerName;
 
-            info.el.title = `${info.event.title}
+            info.el.title = `${workerName}
             Order: ${orderNumber}
             Start: ${start}
             Slut: ${end}`;
