@@ -5,6 +5,12 @@
     ViewData["Title"] = "Ordrar";
     var userLookup = ViewBag.UserLookup as Dictionary<string, ScrumExtreme.Domain.Entities.User>
                      ?? new Dictionary<string, ScrumExtreme.Domain.Entities.User>();
+    var availableYears = (Model ?? Enumerable.Empty<Order>())
+        .Select(o => o.OrderDate.Year)
+        .Distinct()
+        .OrderByDescending(y => y)
+        .ToList();
+    if (!availableYears.Any()) availableYears = new List<int> { DateTime.Now.Year };
 }
 
 @section Styles {
@@ -49,6 +55,22 @@
                 <option value="processing">Påbörjad</option>
                 <option value="printed">Utskriven</option>
                 <option value="shipped">Skickad</option>
+            </select>
+        </div>
+        <div class="order-filter-group">
+            <label class="order-filter-label" for="orderYearFilter">Årtal</label>
+            <select id="orderYearFilter" class="order-filter-select">
+                @foreach (var yr in availableYears)
+                {
+                    if (yr == DateTime.Now.Year)
+                    {
+                        <option value="@yr" selected>@yr</option>
+                    }
+                    else
+                    {
+                        <option value="@yr">@yr</option>
+                    }
+                }
             </select>
         </div>
     </div>
@@ -118,7 +140,7 @@
                         };
                         string typeKey = orderTypLabel.ToLower();
                         <div class="admin-customer-row" data-date="@order.OrderDate.ToUniversalTime().Ticks"
-                             data-type="@typeKey" data-status="@statusKey">
+                             data-type="@typeKey" data-status="@statusKey" data-year="@order.OrderDate.Year">
                             <a asp-action="Details" asp-route-id="@order.Id" class="admin-customer-name">
                                 @order.OrderNumber
                             </a>
@@ -146,6 +168,7 @@
     <script>
         const sortSelect = document.getElementById('orderSortFilter');
         const statusSelect = document.getElementById('orderStatusFilter');
+        const yearSelect = document.getElementById('orderYearFilter');
         const list = document.querySelector('.admin-customer-list');
 
         document.querySelectorAll('.order-type-pill').forEach(pill => {
@@ -161,6 +184,7 @@
                 Array.from(document.querySelectorAll('.order-type-pill.active')).map(p => p.dataset.type)
             );
             const statusVal = statusSelect.value;
+            const yearVal = yearSelect.value;
             const newest = sortSelect.value === 'newest';
 
             rows.sort((a, b) => {
@@ -171,15 +195,23 @@
             });
             rows.forEach(r => list.appendChild(r));
 
+            let visible = 0;
             rows.forEach(row => {
                 const typeMatch = activePills.has(row.dataset.type);
                 const statusMatch = statusVal === 'all' || row.dataset.status === statusVal;
-                row.style.display = (typeMatch && statusMatch) ? '' : 'none';
+                const yearMatch = row.dataset.year === yearVal;
+                const show = typeMatch && statusMatch && yearMatch;
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
+            const countEl = document.querySelector('.admin-customer-count');
+            if (countEl) countEl.textContent = visible;
         }
 
         sortSelect.addEventListener('change', applyFilters);
         statusSelect.addEventListener('change', applyFilters);
+        yearSelect.addEventListener('change', applyFilters);
+        applyFilters();
 
         document.querySelectorAll('.order-delete-btn').forEach(btn => {
             btn.addEventListener('click', async function () {

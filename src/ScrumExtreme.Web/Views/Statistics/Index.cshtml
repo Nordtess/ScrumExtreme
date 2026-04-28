@@ -1,0 +1,131 @@
+@model ScrumExtreme.Application.StatisticsResult
+
+@{
+    ViewData["Title"] = "Statistik";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/statistics.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Statistik</h1>
+        <p class="admin-page-subtitle">Nyckeltal och trender</p>
+    </div>
+
+    <div class="stats-period-bar">
+        <a href="?period=week" class="stats-period-btn @(Model.Period == "week" ? "active" : "")">Vecka</a>
+        <a href="?period=month" class="stats-period-btn @(Model.Period == "month" ? "active" : "")">Månad</a>
+        <a href="?period=quarter" class="stats-period-btn @(Model.Period == "quarter" ? "active" : "")">Kvartal</a>
+        <a href="?period=year" class="stats-period-btn @(Model.Period == "year" ? "active" : "")">År</a>
+    </div>
+
+    <div class="stats-summary-row">
+        <div class="stats-card">
+            <span class="stats-card-label">Intäkter</span>
+            <span class="stats-card-value">@Model.TotalRevenue.ToString("N0") kr</span>
+        </div>
+        <div class="stats-card">
+            <span class="stats-card-label">Kostnader</span>
+            <span class="stats-card-value">@Model.TotalCosts.ToString("N0") kr</span>
+        </div>
+        <div class="stats-card @(Model.NetProfit >= 0 ? "stats-card--positive" : "stats-card--negative")">
+            <span class="stats-card-label">Nettoresultat</span>
+            <span class="stats-card-value">@Model.NetProfit.ToString("N0") kr</span>
+        </div>
+        <div class="stats-card">
+            <span class="stats-card-label">Antal ordrar</span>
+            <span class="stats-card-value">@Model.TotalOrders</span>
+        </div>
+    </div>
+
+    <div class="admin-panel stats-chart-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title"><span class="admin-panel-dot"></span>Intäkter &amp; Kostnader</h2>
+        </div>
+        <div class="admin-panel-body stats-chart-body">
+            <div id="revenueChart"></div>
+        </div>
+    </div>
+
+    <div class="stats-bottom-row">
+        <div class="admin-panel stats-chart-panel stats-orders-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title"><span class="admin-panel-dot"></span>Ordrar per period</h2>
+            </div>
+            <div class="admin-panel-body stats-chart-body">
+                <div id="ordersChart"></div>
+            </div>
+        </div>
+        <div class="admin-panel stats-chart-panel stats-donut-panel">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title"><span class="admin-panel-dot"></span>Ordertyper</h2>
+            </div>
+            <div class="admin-panel-body stats-chart-body stats-donut-body">
+                <div id="typeChart"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        var chartLabels = @Html.Raw(Model.ChartLabels);
+        var revenueData = @Html.Raw(Model.RevenueData);
+        var costData = @Html.Raw(Model.CostData);
+        var orderCountData = @Html.Raw(Model.OrderCountData);
+        var standardCount = @Model.StandardOrders;
+        var modifiedCount = @Model.ModifiedOrders;
+        var specialCount = @Model.SpecialOrders;
+
+        var revenueChart = new ApexCharts(document.querySelector("#revenueChart"), {
+        chart: { type: "area", height: 300, toolbar: { show: false }, fontFamily: "Roboto, sans-serif" },
+        series: [
+        { name: "Intäkter (kr)", data: revenueData },
+        { name: "Kostnader (kr)", data: costData }
+        ],
+        xaxis: { categories: chartLabels, labels: { style: { colors: "#1a1612", fontFamily: "Roboto, sans-serif" } } },
+        yaxis: { labels: { formatter: function (v) { return Math.round(v).toLocaleString("sv-SE") + " kr"; }, style: { colors: "#1a1612", fontFamily: "Roboto, sans-serif" } } },
+        colors: ["#c9a84c", "#8b4343"],
+        fill: { type: "gradient", gradient: { opacityFrom: 0.4, opacityTo: 0.05 } },
+        stroke: { curve: "smooth", width: 2 },
+        dataLabels: { enabled: false },
+        tooltip: { y: { formatter: function (v) { return Math.round(v).toLocaleString("sv-SE") + " kr"; } } },
+        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#1a1612" } },
+        grid: { borderColor: "#e8e4dc" }
+        });
+
+        var ordersChart = new ApexCharts(document.querySelector("#ordersChart"), {
+        chart: { type: "bar", height: 280, toolbar: { show: false }, fontFamily: "Roboto, sans-serif" },
+        series: [{ name: "Ordrar", data: orderCountData }],
+        xaxis: { categories: chartLabels, labels: { style: { colors: "#1a1612", fontFamily: "Roboto, sans-serif" } } },
+        yaxis: { labels: { formatter: function (v) { return Math.round(v); }, style: { colors: "#1a1612", fontFamily: "Roboto, sans-serif" } } },
+        colors: ["#1a1612"],
+        dataLabels: { enabled: false },
+        plotOptions: { bar: { borderRadius: 3, columnWidth: "50%" } },
+        legend: { show: false },
+        grid: { borderColor: "#e8e4dc" }
+        });
+
+        var typeChart = new ApexCharts(document.querySelector("#typeChart"), {
+        chart: { type: "donut", height: 360, fontFamily: "Roboto, sans-serif" },
+        series: [standardCount, modifiedCount, specialCount],
+        labels: ["Standard", "Modifierad", "Special"],
+        colors: ["#f7e6ca", "#c9a84c", "#7c5cbf"],
+        stroke: { colors: ["#1a1612"], width: 2 },
+        dataLabels: { style: { fontFamily: "Roboto, sans-serif", fontSize: "14px", fontWeight: "600", colors: ["#1a1612", "#1a1612", "#1a1612"] }, dropShadow: { enabled: false } },
+        legend: { fontFamily: "Roboto, sans-serif", labels: { colors: "#1a1612" }, markers: { strokeWidth: 1.5, strokeColor: "#1a1612" } },
+        tooltip: { y: { formatter: function (v) { return v + " ordrar"; } } },
+        plotOptions: { pie: { donut: { size: "35%" }, expandOnClick: false } }
+        });
+
+        revenueChart.render();
+        ordersChart.render();
+        typeChart.render();
+    </script>
+}

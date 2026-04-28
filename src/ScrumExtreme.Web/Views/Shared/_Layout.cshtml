@@ -28,7 +28,7 @@
             var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
             var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
         }
-@if (!isLoginPage && !string.IsNullOrEmpty(userRole))
+        @if (!isLoginPage && !string.IsNullOrEmpty(userRole))
 
         {
             <nav class="navbar">
@@ -50,58 +50,57 @@
                                     </li>
                                     <li><a asp-area="" asp-controller="CreateHats" asp-action="Index"
                                                class="@(ctrl == "CreateHats" && act == "Index" ? "active" : "")">Lägg till Hatt</a></li>
-                                        <li><a asp-area="" asp-controller="MaterialSummary" asp-action="PrintMaterialSummary"
-                                                   class="@(ctrl == "MaterialSummary" ? "active" : "")">Materialstatus</a></li>
-                                            <li><a asp-area="" asp-controller="Orders" asp-action="Create"
-                                                       class="@(ctrl == "Orders" && act == "Create" ? "active" : "")">Skapa Order</a></li>
-                                                <li><a asp-area="" asp-controller="Orders" asp-action="Index"
-                                                           class="@(ctrl == "Orders" && act == "Index" ? "active" : "")">Alla Ordrar</a></li>
-                                                    <li><a asp-area="" asp-controller="Warehouse" asp-action="Index"
-                                                               class="@(ctrl == "Warehouse" && act == "Index" ? "active" : "")">Lagerstatus</a></li>
-                                                        @if (userRole == "admin")
-                                                        {
-                                                            <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index"
-                                                                       class="@(ctrl == "AddEmployee" && act == "Index" ? "active" : "")">Lägg till Anställd</a>
-                                                            </li>
-                                                        }
-                                                    }
-                                                </ul>
-                                            </div>
-                                            <ul class="navbar-right">
-                                                <li><a asp-area="" asp-controller="Login" asp-action="Logout">Logga ut</a></li>
-                                            </ul>
-                                        </nav>
-                                    }
-                                </header>
-
-                                <main class="site-main">
-                                    @RenderBody()
-                                </main>
-
-                                <footer class="site-footer">
-                                    <p>&copy; 2026 - ScrumExtreme</p>
-                                </footer>
-                                <script src="~/js/site.js" asp-append-version="true"></script>
-                                <script>
-                                        (function () {
-                                            var btn = document.getElementById('navHamburger');
-                                            var wrapper = document.getElementById('navLinksWrapper');
-                                            if (!btn || !wrapper) return;
-                                            // Restore persisted open state
-                                            if (localStorage.getItem('navOpen') === '1') {
-                                                btn.classList.add('open');
-                                                wrapper.classList.add('open');
-                                                btn.setAttribute('aria-expanded', 'true');
+                                        <li><a asp-area="" asp-controller="Orders" asp-action="Create"
+                                                   class="@(ctrl == "Orders" && act == "Create" ? "active" : "")">Skapa Order</a></li>
+                                            <li><a asp-area="" asp-controller="Orders" asp-action="Index"
+                                                       class="@(ctrl == "Orders" && act == "Index" ? "active" : "")">Alla Ordrar</a></li>
+                                                <li><a asp-area="" asp-controller="Lagerhantering" asp-action="Index"
+                                                           class="@(ctrl == "Lagerhantering" || ctrl == "Warehouse" || ctrl == "MaterialSummary" || ctrl == "Statistics" ? "active" : "")">Lagerhantering</a>
+                                                </li>
+                                                @if (userRole == "admin")
+                                                {
+                                                    <li><a asp-area="" asp-controller="AddEmployee" asp-action="Index"
+                                                               class="@(ctrl == "AddEmployee" && act == "Index" ? "active" : "")">Lägg till Anställd</a>
+                                                    </li>
+                                                }
                                             }
-                                            btn.addEventListener('click', function () {
-                                                var isOpen = btn.classList.toggle('open');
-                                                wrapper.classList.toggle('open', isOpen);
-                                                btn.setAttribute('aria-expanded', isOpen);
-                                                localStorage.setItem('navOpen', isOpen ? '1' : '0');
-                                            });
-                                        })();
-                                </script>
-                                @await RenderSectionAsync("Scripts", required: false)
-                            </body>
+                                        </ul>
+                                    </div>
+                                    <ul class="navbar-right">
+                                        <li><a asp-area="" asp-controller="Login" asp-action="Logout">Logga ut</a></li>
+                                    </ul>
+                                </nav>
+                            }
+                        </header>
 
-                        </html>
+                        <main class="site-main">
+                            @RenderBody()
+                        </main>
+
+                        <footer class="site-footer">
+                            <p>&copy; 2026 - ScrumExtreme</p>
+                        </footer>
+                        <script src="~/js/site.js" asp-append-version="true"></script>
+                        <script>
+                            (function () {
+                            var btn = document.getElementById('navHamburger');
+                            var wrapper = document.getElementById('navLinksWrapper');
+                            if (!btn || !wrapper) return;
+                            // Restore persisted open state
+                            if (localStorage.getItem('navOpen') === '1') {
+                            btn.classList.add('open');
+                            wrapper.classList.add('open');
+                            btn.setAttribute('aria-expanded', 'true');
+                            }
+                            btn.addEventListener('click', function () {
+                            var isOpen = btn.classList.toggle('open');
+                            wrapper.classList.toggle('open', isOpen);
+                            btn.setAttribute('aria-expanded', isOpen);
+                            localStorage.setItem('navOpen', isOpen ? '1' : '0');
+                            });
+                            })();
+                        </script>
+                        @await RenderSectionAsync("Scripts", required: false)
+                    </body>
+
+                </html>

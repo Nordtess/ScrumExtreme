@@ -1,0 +1,148 @@
+@model ScrumExtreme.Web.Models.LagerhanteringViewModel
+
+@{
+    ViewData["Title"] = "Lagerhantering";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/lagerhantering.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Lagerhantering</h1>
+        <p class="admin-page-subtitle">Översikt av lager, material och statistik</p>
+    </div>
+
+    <div class="lager-hub-grid">
+
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Lagerstatus
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Hattmodeller</span>
+                        <span class="lager-hub-stat__value">@Model.TotalHatTypes</span>
+                        <span class="lager-hub-stat__sub">unika typer</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Hattar i lager</span>
+                        <span class="lager-hub-stat__value">@Model.TotalHatsInStock</span>
+                        <span class="lager-hub-stat__sub">totalt antal</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Material</span>
+                        <span class="lager-hub-stat__value">@Model.TotalMaterials</span>
+                        <span class="lager-hub-stat__sub">typer registrerade</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Tillbehör</span>
+                        <span class="lager-hub-stat__value">@Model.TotalItems</span>
+                        <span class="lager-hub-stat__sub">typer registrerade</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Kapital</span>
+                        <span class="lager-hub-stat__value">@Model.CapitalSEK.ToString("N0") kr</span>
+                        <span class="lager-hub-stat__sub">tillgängligt</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Warehouse" asp-action="Index" class="lager-hub-btn">
+                    Gå till Lagerstatus
+                </a>
+            </div>
+        </div>
+
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Materialstatus
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Väntande ordrar</span>
+                        <span class="lager-hub-stat__value">@Model.PendingOrderCount</span>
+                        <span class="lager-hub-stat__sub">behöver hanteras</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Material behövs</span>
+                        <span class="lager-hub-stat__value">@Model.UniqueMaterialsNeeded</span>
+                        <span class="lager-hub-stat__sub">unika typer</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Ordervärde</span>
+                        <span class="lager-hub-stat__value">@Model.TotalMaterialCost.ToString("N0") kr</span>
+                        <span class="lager-hub-stat__sub">totalt att leverera</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="MaterialSummary" asp-action="PrintMaterialSummary" class="lager-hub-btn">
+                    Gå till Materialstatus
+                </a>
+            </div>
+        </div>
+
+        <div class="lager-hub-card lager-hub-card--wide">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Statistik — senaste månaden
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Intäkter</span>
+                        <span class="lager-hub-stat__value">@Model.TotalRevenueLast30Days.ToString("N0") kr</span>
+                        <span class="lager-hub-stat__sub">totala intäkter</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Kostnader</span>
+                        <span class="lager-hub-stat__value">@Model.TotalCostsLast30Days.ToString("N0") kr</span>
+                        <span class="lager-hub-stat__sub">totala kostnader</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Nettoresultat</span>
+                        @{
+                            var profit = Model.TotalRevenueLast30Days - Model.TotalCostsLast30Days;
+                            var profitClass = profit >= 0 ? "lager-hub-stat__value--positive" :
+   "lager-hub-stat__value--negative";
+                        }
+                        <span class="lager-hub-stat__value @profitClass">@profit.ToString("N0") kr</span>
+                        <span class="lager-hub-stat__sub">intäkter minus kostnader</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Antal ordrar</span>
+                        <span class="lager-hub-stat__value">@Model.OrdersLast30Days</span>
+                        <span class="lager-hub-stat__sub">under perioden</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Statistics" asp-action="Index" class="lager-hub-btn">
+                    Gå till Statistik
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>

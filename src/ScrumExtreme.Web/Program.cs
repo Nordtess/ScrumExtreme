@@ -42,6 +42,8 @@ builder.Services.AddScoped<IMaterialService, MaterialService>();
 builder.Services.AddScoped<ICalendarEventService, CalendarService>();
 builder.Services.AddScoped<ICompanySettingsService, CompanySettingsService>();
 builder.Services.AddScoped<ISalesStatisticsService, SalesStatisticsService>();
+builder.Services.AddScoped<IPurchaseRecordService, PurchaseRecordService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
 
 var app = builder.Build();

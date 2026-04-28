@@ -1,0 +1,170 @@
+.lager-hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.lager-hub-card {
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease;
+}
+
+.lager-hub-card:hover {
+  border-color: #1a1612;
+}
+
+.lager-hub-card--wide {
+  grid-column: 1 / -1;
+}
+
+.lager-hub-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.3rem;
+  border-bottom: 1px solid #2a2a2a;
+  gap: 0.75rem;
+}
+
+.lager-hub-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1612;
+  margin: 0;
+}
+
+.lager-hub-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c9a84c;
+  flex-shrink: 0;
+}
+
+.lager-hub-card__body {
+  padding: 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lager-hub-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.lager-hub-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lager-hub-stat__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #888;
+}
+
+.lager-hub-stat__value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1612;
+  line-height: 1.1;
+}
+
+.lager-hub-stat__value--positive {
+  color: #2a7a4b;
+}
+
+.lager-hub-stat__value--negative {
+  color: #b83232;
+}
+
+.lager-hub-stat__sub {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.lager-hub-divider {
+  height: 1px;
+  background: #e8e4dc;
+  margin: 0.25rem 0;
+}
+
+.lager-hub-card__footer {
+  padding: 0.9rem 1.3rem;
+  border-top: 1px solid #e8e4dc;
+}
+
+.lager-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1a1612;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.lager-hub-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.lager-hub-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+}
+
+.lager-hub-btn:hover::after {
+  left: 1rem;
+  right: 1rem;
+}
+
+@media (max-width: 800px) {
+  .lager-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lager-hub-card--wide {
+    grid-column: auto;
+  }
+}

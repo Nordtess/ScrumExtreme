@@ -1,0 +1,125 @@
+.stats-period-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stats-period-btn {
+  padding: 0.5rem 1.2rem;
+  border: 1.5px solid #1a1612;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1a1612;
+  font-size: 0.85rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+
+.stats-period-btn:hover {
+  background: #1a1612;
+  color: #f5f2ec;
+  text-decoration: none;
+}
+
+.stats-period-btn.active {
+  background: #1a1612;
+  color: #f5f2ec;
+  border-color: #1a1612;
+}
+
+.stats-summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stats-card {
+  background: #ffffff;
+  border: 1.5px solid #e8e4dc;
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 1px 4px rgba(26, 22, 18, 0.06);
+}
+
+.stats-card--positive {
+  border-color: #c9a84c;
+}
+
+.stats-card--negative {
+  border-color: #8b4343;
+}
+
+.stats-card-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: #888;
+}
+
+.stats-card-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1612;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stats-chart-panel {
+  margin-bottom: 1.5rem;
+}
+
+.stats-chart-body {
+  padding: 1rem 1.2rem 1.2rem;
+  overflow: visible !important;
+  flex: none !important;
+  height: auto !important;
+}
+
+.stats-bottom-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stats-donut-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 !important;
+  min-height: 0;
+}
+
+.stats-donut-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-donut-panel .admin-panel-body {
+  flex: 1 !important;
+  height: auto !important;
+}
+  height: auto !important;
+}
+
+@media (max-width: 900px) {
+  .stats-summary-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
