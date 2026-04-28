@@ -42,6 +42,7 @@ namespace ScrumExtreme.Web.Controllers
 
             string[] palette = ["#c9a84c", "#2e86ab", "#a23b72", "#f18f01", "#c73e1d", "#3b7d4f"];
             var workerIds = events
+                .Where(e => !string.IsNullOrEmpty(e.OrderId))
                 .Select(e => e.UserId)
                 .Distinct()
                 .ToList();
@@ -49,30 +50,90 @@ namespace ScrumExtreme.Web.Controllers
                 .Select((id, i) => (id, color: palette[i % palette.Length]))
                 .ToDictionary(x => x.id, x => x.color);
 
-            var result = events
-                .Where(e => userDict.ContainsKey(e.UserId) && orderDict.ContainsKey(e.OrderId))
-                .Select(e => new
+            static string TypeColor(string? t) => (t ?? "").ToLower() switch
+            {
+                "ledighet" => "#3b7d4f",
+                "sjukfr\u00e5nvaro" => "#c73e1d",
+                _ => "#888"
+            };
+
+            var result = new List<object>();
+
+            foreach (var e in events)
+            {
+                if (!userDict.ContainsKey(e.UserId)) continue;
+                var user = userDict[e.UserId];
+                var workerName = $"{user.FirstName} {user.LastName}";
+
+                bool isOrderEvent = !string.IsNullOrEmpty(e.OrderId) && orderDict.ContainsKey(e.OrderId);
+
+                if (isOrderEvent)
                 {
-                    id = e.Id,
-                    title = $"{userDict[e.UserId].FirstName} \u2014 {orderDict[e.OrderId].OrderNumber}",
-                    start = e.Start,
-                    end = e.End,
-                    color = workerColors.TryGetValue(e.UserId, out var c) ? c : palette[0],
-                    extendedProps = new
+                    result.Add(new
                     {
-                        orderId = e.OrderId,
-                        orderNumber = orderDict[e.OrderId].OrderNumber,
-                        workerName = $"{userDict[e.UserId].FirstName} {userDict[e.UserId].LastName}"
-                    }
-                });
+                        id = e.Id,
+                        title = $"{user.FirstName} \u2014 {orderDict[e.OrderId!].OrderNumber}",
+                        start = e.Start,
+                        end = e.End,
+                        color = workerColors.TryGetValue(e.UserId, out var c) ? c : palette[0],
+                        extendedProps = new
+                        {
+                            orderId = e.OrderId,
+                            orderNumber = orderDict[e.OrderId!].OrderNumber,
+                            workerName
+                        }
+                    });
+                }
+                else
+                {
+                    var label = e.EventType ?? "event";
+                    var displayLabel = char.ToUpper(label[0]) + label[1..];
+                    result.Add(new
+                    {
+                        id = e.Id,
+                        title = $"{user.FirstName} \u2014 {displayLabel}",
+                        start = e.Start,
+                        end = e.End,
+                        color = TypeColor(e.EventType),
+                        extendedProps = new
+                        {
+                            orderId = (string?)null,
+                            orderNumber = (string?)null,
+                            workerName
+                        }
+                    });
+                }
+            }
 
             return Json(result);
         }
 
         [HttpPost]
-        public async Task<JsonResult> CreateEvent([FromBody] CalendarEvent model)
+        public async Task<JsonResult> CreateEvent([FromBody] CreateCalendarEventRequest req)
         {
-            await _calendarEventService.CreateEventAsync(model);
+            if (req == null)
+                return Json(new { success = false, error = "Invalid request body" });
+
+            // Optionally update the order's status
+            if (req.EventType == "order" && !string.IsNullOrEmpty(req.OrderStatusOverride) && !string.IsNullOrEmpty(req.OrderId))
+            {
+                var order = await _orderService.GetByIdAsync(req.OrderId);
+                if (order != null && Enum.TryParse<OrderStatus>(req.OrderStatusOverride, ignoreCase: true, out var newStatus))
+                {
+                    order.Status = newStatus;
+                    await _orderService.UpdateAsync(order);
+                }
+            }
+
+            var ev = new CalendarEvent
+            {
+                UserId = req.UserId,
+                OrderId = req.EventType == "order" ? req.OrderId : null,
+                EventType = req.EventType,
+                Start = req.Start ?? DateTime.UtcNow,
+                End = req.End ?? DateTime.UtcNow.AddHours(8)
+            };
+            await _calendarEventService.CreateEventAsync(ev);
             return Json(new { success = true });
         }
 
@@ -124,3 +185,12 @@ namespace ScrumExtreme.Web.Controllers
         }
     }
 }
+
+public record CreateCalendarEventRequest(
+    string UserId,
+    string? OrderId,
+    string EventType,
+    DateTime? Start,
+    DateTime? End,
+    string? OrderStatusOverride
+);

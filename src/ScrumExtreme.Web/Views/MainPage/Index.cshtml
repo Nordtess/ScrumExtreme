@@ -47,22 +47,54 @@
         <div id="calendarEventOverlay" class="cal-event-overlay" style="display:none;">
             <div class="cal-event-modal">
                 <p class="cal-event-modal-title">Lägg till event</p>
+
+                <!-- Employee (always visible) — shown first -->
                 <div class="calendar-form-row">
                     <label class="calendar-form-label">Anställd</label>
                     <select id="userId" class="calendar-form-select"></select>
                 </div>
+
+                <!-- Event type -->
                 <div class="calendar-form-row">
-                    <label class="calendar-form-label">Order</label>
-                    <select id="orderId" class="calendar-form-select"></select>
+                    <label class="calendar-form-label">Typ</label>
+                    <select id="eventType" class="calendar-form-select">
+                        <option value="order">Order</option>
+                        <option value="ledighet">Ledighet</option>
+                        <option value="sjukfrånvaro">Sjukfrånvaro</option>
+                        <option value="annat">Annat</option>
+                    </select>
                 </div>
-                <div class="calendar-form-row">
-                    <label class="calendar-form-label">Start</label>
-                    <input id="start" type="datetime-local" class="calendar-form-input" />
+
+                <!-- Order-specific fields -->
+                <div id="orderFields">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Order</label>
+                        <select id="orderId" class="calendar-form-select"></select>
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Ändra status</label>
+                        <select id="orderStatus" class="calendar-form-select">
+                            <option value="">— ingen ändring —</option>
+                            <option value="Pending">Väntar</option>
+                            <option value="Processing">Påbörjad</option>
+                            <option value="Printed">Utskriven</option>
+                            <option value="Shipped">Skickad</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="calendar-form-row">
-                    <label class="calendar-form-label">Slut</label>
-                    <input id="end" type="datetime-local" class="calendar-form-input" />
+
+                <!-- Date fields (non-order types) -->
+                <div id="dateFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Startdatum</label>
+                        <input id="start" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Slutdatum</label>
+                        <input id="end" type="date" class="calendar-form-input" />
+                    </div>
                 </div>
+
                 <div class="cal-event-modal-actions">
                     <button id="cancelEvent" class="admin-panel-btn">Avbryt</button>
                     <button id="saveEvent" class="admin-panel-btn"

@@ -1,0 +1,150 @@
+@model ScrumExtreme.Web.Models.OrderhanteringViewModel
+
+@{
+    ViewData["Title"] = "Orderhantering";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/lagerhantering.css" asp-append-version="true" />
+}
+
+<div class="admin-wrapper">
+
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Orderhantering</h1>
+        <p class="admin-page-subtitle">Översikt av ordrar och orderflöde</p>
+    </div>
+
+    <div class="lager-hub-grid">
+
+        <!-- Orderöversikt -->
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Orderöversikt
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Totalt</span>
+                        <span class="lager-hub-stat__value">@Model.TotalOrders</span>
+                        <span class="lager-hub-stat__sub">ordrar registrerade</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Väntande</span>
+                        <span class="lager-hub-stat__value">@Model.PendingOrders</span>
+                        <span class="lager-hub-stat__sub">ej påbörjade</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Påbörjade</span>
+                        <span class="lager-hub-stat__value">@Model.ProcessingOrders</span>
+                        <span class="lager-hub-stat__sub">under produktion</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Utskrivna</span>
+                        <span class="lager-hub-stat__value">@Model.PrintedOrders</span>
+                        <span class="lager-hub-stat__sub">redo att skickas</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Skickade</span>
+                        <span class="lager-hub-stat__value">@Model.ShippedOrders</span>
+                        <span class="lager-hub-stat__sub">levererade</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Orders" asp-action="Index" class="lager-hub-btn">
+                    Gå till Alla ordrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Skapa ny order -->
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Skapa ny order
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Registrerade kunder</span>
+                        <span class="lager-hub-stat__value">@Model.TotalCustomers</span>
+                        <span class="lager-hub-stat__sub">tillgängliga att beställa</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Hattmodeller</span>
+                        <span class="lager-hub-stat__value">@Model.TotalHatModels</span>
+                        <span class="lager-hub-stat__sub">modeller i sortiment</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <p style="font-size:0.78rem;color:#555;margin:0;">
+                    Skapa en ny order åt en befintlig kund. Välj hattar, tillbehör och antal direkt i orderformuläret.
+                </p>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Orders" asp-action="Create" class="lager-hub-btn">
+                    Skapa order
+                </a>
+            </div>
+        </div>
+
+        <!-- Senaste ordrar -->
+        <div class="lager-hub-card lager-hub-card--wide">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Senaste ordrar
+                </h2>
+            </div>
+            <div class="lager-hub-card__body" style="padding:0;">
+                @if (!Model.RecentOrders.Any())
+                {
+                    <p style="padding:1.3rem;font-size:0.8rem;color:#888;">Inga ordrar registrerade ännu.</p>
+                }
+                else
+                {
+                    <div class="lager-hub-recent-list">
+                        <div class="lager-hub-recent-header">
+                            <span>Order</span>
+                            <span>Kund</span>
+                            <span>Datum</span>
+                            <span>Belopp</span>
+                            <span>Status</span>
+                        </div>
+                        @foreach (var row in Model.RecentOrders)
+                        {
+                            <a href="/Orders/Details/@row.OrderId" class="lager-hub-recent-row">
+                                <span class="lager-hub-recent-mono">@row.OrderNumber</span>
+                                <span>@row.CustomerName</span>
+                                <span style="color:#888;">@row.OrderDate.ToString("yyyy-MM-dd")</span>
+                                <span>@row.TotalAmount.ToString("N0") kr</span>
+                                <span>
+                                    <span class="lager-hub-status-pill" style="background:@row.StatusColor;">
+                                        @row.StatusLabel
+                                    </span>
+                                </span>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Orders" asp-action="Index" class="lager-hub-btn">
+                    Visa alla ordrar
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>

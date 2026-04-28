@@ -9,10 +9,12 @@ namespace ScrumExtreme.Web.Controllers;
 public class ShippingLabelController : Controller
 {
     private readonly IOrderService _orderService;
+    private readonly ICalendarEventService _calendarEventService;
 
-    public ShippingLabelController(IOrderService orderService)
+    public ShippingLabelController(IOrderService orderService, ICalendarEventService calendarEventService)
     {
         _orderService = orderService;
+        _calendarEventService = calendarEventService;
     }
 
     [HttpGet("")]
@@ -52,7 +54,17 @@ public class ShippingLabelController : Controller
             var order = await _orderService.GetByIdAsync(orderId);
             if (order != null)
             {
+                // Delete the calendar event for this order
+                if (!string.IsNullOrEmpty(order.AssignedWorkerId))
+                {
+                    var workerEvents = await _calendarEventService.GetByUserIdAsync(order.AssignedWorkerId);
+                    var orderEvent = workerEvents.FirstOrDefault(e => e.OrderId == orderId);
+                    if (orderEvent != null)
+                        await _calendarEventService.DeleteCalendarEventAsync(orderEvent.Id);
+                }
+
                 order.Status = OrderStatus.Shipped;
+                order.AssignedWorkerId = null;
                 await _orderService.UpdateAsync(order);
             }
         }

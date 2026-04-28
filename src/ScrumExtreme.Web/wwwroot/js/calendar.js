@@ -45,11 +45,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 : '';
 
+            const orderId    = info.event.extendedProps.orderId;
             const orderNumber = info.event.extendedProps.orderNumber;
             const workerName = info.event.extendedProps.workerName;
 
-            info.el.title = `${workerName}\nOrder: ${orderNumber}\nStart: ${start}\nSlut: ${end}`;
-            info.el.style.cursor = 'pointer';
+            if (orderId) {
+                info.el.title = `${workerName}\nOrder: ${orderNumber}\nStart: ${start}\nSlut: ${end}`;
+                info.el.style.cursor = 'pointer';
+            } else {
+                info.el.title = `${workerName}\nStart: ${start}\nSlut: ${end}`;
+            }
         }
     });
 
@@ -63,7 +68,29 @@ document.addEventListener('DOMContentLoaded', function () {
     if (addEventBtn && overlay) {
         loadDropdowns();
 
+        // Toggle order vs date fields based on event type
+        const eventTypeSelect = document.getElementById("eventType");
+        const orderFields = document.getElementById("orderFields");
+        const dateFields  = document.getElementById("dateFields");
+
+        function updateFieldVisibility() {
+            const isOrder = eventTypeSelect.value === "order";
+            orderFields.style.display = isOrder ? "" : "none";
+            dateFields.style.display  = isOrder ? "none" : "";
+        }
+        eventTypeSelect.addEventListener("change", updateFieldVisibility);
+
+        // When start date is picked, constrain end date to be >= start
+        document.getElementById("start").addEventListener("change", function () {
+            const endInput = document.getElementById("end");
+            endInput.min = this.value;
+            if (endInput.value && endInput.value < this.value) {
+                endInput.value = this.value;
+            }
+        });
+
         addEventBtn.addEventListener("click", function () {
+            updateFieldVisibility();
             overlay.style.display = "flex";
         });
 
@@ -78,11 +105,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.getElementById("saveEvent").addEventListener("click", async function () {
+            const eventType = eventTypeSelect.value;
+            const isOrder   = eventType === "order";
+
+            function toISODate(dateStr) {
+                return dateStr ? dateStr + "T00:00:00" : null;
+            }
+
             const eventData = {
-                userId: document.getElementById("userId").value,
-                orderId: document.getElementById("orderId").value,
-                start: document.getElementById("start").value,
-                end: document.getElementById("end").value
+                userId:              document.getElementById("userId").value,
+                orderId:             isOrder ? document.getElementById("orderId").value : null,
+                eventType:           eventType,
+                start:               isOrder ? null : toISODate(document.getElementById("start").value),
+                end:                 isOrder ? null : toISODate(document.getElementById("end").value),
+                orderStatusOverride: isOrder ? (document.getElementById("orderStatus").value || null) : null
             };
 
             try {
@@ -91,6 +127,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(eventData)
                 });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error("Server error:", response.status, text);
+                    alert(`Serverfel ${response.status}. Kontrollera konsolen för detaljer.`);
+                    return;
+                }
 
                 const result = await response.json();
 
@@ -102,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (error) {
                 console.error("Fel vid sparande:", error);
+                alert("Något gick fel vid sparande. Försök igen.");
             }
         });
     }
