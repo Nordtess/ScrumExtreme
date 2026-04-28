@@ -22,6 +22,9 @@ public class UserService : IUserService
     public async Task<User?> GetByIdAsync(string id) =>
         await _repository.GetByIdAsync(id);
 
+    public async Task UpdateUserAsync(string id, User user) =>
+        await _repository.UpdateAsync(id, user);
+
     public async Task DeleteUserAsync(string id) =>
         await _repository.DeleteAsync(id);
 
