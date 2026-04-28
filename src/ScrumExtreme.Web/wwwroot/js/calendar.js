@@ -116,9 +116,133 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ── Redigera event modal ──────────────────────────────────────────────
+    const editEventBtn    = document.getElementById("editEventBtn");
+    const editOverlay     = document.getElementById("editEventOverlay");
+    const cancelEditBtn   = document.getElementById("cancelEditEvent");
+    const deleteEditBtn   = document.getElementById("deleteEditEvent");
+    const saveEditBtn     = document.getElementById("saveEditEvent");
+    const editEventSelect = document.getElementById("editEventId");
+    const editDateFields  = document.getElementById("editDateFields");
+    const editOrderFields = document.getElementById("editOrderFields");
+    let editEventsCache   = [];
+
+    function toISODateEdit(dateStr) {
+        return dateStr ? dateStr + "T00:00:00" : null;
+    }
+
+    function populateEditFields(eventId) {
+        const ev = editEventsCache.find(e => e.id === eventId);
+        if (!ev) return;
+        const isOrder = !!ev.orderId;
+        editDateFields.style.display  = isOrder ? "none" : "";
+        editOrderFields.style.display = isOrder ? "" : "none";
+        if (isOrder) {
+            document.getElementById("editOrderDate").value   = ev.start || "";
+            document.getElementById("editOrderStatus").value = "";
+        } else {
+            document.getElementById("editStart").value = ev.start || "";
+            document.getElementById("editEnd").value   = ev.end   || "";
+        }
+    }
+
+    async function loadEditEvents() {
+        try {
+            const res = await fetch('/Calendar/GetEventsForEdit');
+            editEventsCache = await res.json();
+            editEventSelect.innerHTML = "";
+            editEventsCache.forEach(e => {
+                const opt = document.createElement("option");
+                opt.value = e.id;
+                opt.text  = e.title;
+                editEventSelect.appendChild(opt);
+            });
+            if (editEventsCache.length > 0) populateEditFields(editEventsCache[0].id);
+        } catch (err) {
+            console.error("Fel vid laddning av events:", err);
+        }
+    }
+
+    if (editEventBtn && editOverlay) {
+        editEventBtn.addEventListener("click", async function () {
+            await loadEditEvents();
+            editOverlay.style.display = "flex";
+        });
+
+        cancelEditBtn.addEventListener("click", function () {
+            editOverlay.style.display = "none";
+        });
+
+        editOverlay.addEventListener("click", function (e) {
+            if (e.target === editOverlay) editOverlay.style.display = "none";
+        });
+
+        editEventSelect.addEventListener("change", function () {
+            populateEditFields(this.value);
+        });
+
+        deleteEditBtn.addEventListener("click", async function () {
+            const eventId = editEventSelect.value;
+            if (!eventId) return;
+            if (!confirm("Är du säker på att du vill ta bort eventet?")) return;
+            try {
+                const response = await fetch('/Calendar/DeleteEvent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eventId)
+                });
+                if (response.ok) {
+                    editOverlay.style.display = "none";
+                    calendar.refetchEvents();
+                } else {
+                    alert("Något gick fel vid borttagning.");
+                }
+            } catch (err) {
+                console.error("Fel vid borttagning:", err);
+                alert("Något gick fel vid borttagning.");
+            }
+        });
+
+        saveEditBtn.addEventListener("click", async function () {
+            const eventId = editEventSelect.value;
+            const ev      = editEventsCache.find(e => e.id === eventId);
+            if (!ev) return;
+            const isOrder = !!ev.orderId;
+            const data = {
+                id:                  eventId,
+                start:               isOrder ? toISODateEdit(document.getElementById("editOrderDate").value)
+                                             : toISODateEdit(document.getElementById("editStart").value),
+                end:                 isOrder ? toISODateEdit(document.getElementById("editOrderDate").value)
+                                             : toISODateEdit(document.getElementById("editEnd").value),
+                orderStatusOverride: isOrder ? (document.getElementById("editOrderStatus").value || null) : null
+            };
+            try {
+                const response = await fetch('/Calendar/EditEvent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        editOverlay.style.display = "none";
+                        calendar.refetchEvents();
+                    } else {
+                        alert("Något gick fel vid sparande.");
+                    }
+                } else {
+                    alert("Serverfel vid sparande.");
+                }
+            } catch (err) {
+                console.error("Fel vid sparande:", err);
+                alert("Något gick fel vid sparande.");
+            }
+        });
+    }
+    // ─────────────────────────────────────────────────────────────────────
+
     // Modal open/close (admin only)
-    const addEventBtn = document.getElementById("addEventBtn");
-    const overlay = document.getElementById("calendarEventOverlay");
+    const addEventBtn = document.getElementById("addEventBtn");    const overlay = document.getElementById("calendarEventOverlay");
     const cancelBtn = document.getElementById("cancelEvent");
 
     if (addEventBtn && overlay) {

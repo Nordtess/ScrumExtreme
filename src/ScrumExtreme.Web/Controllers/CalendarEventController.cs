@@ -144,6 +144,65 @@ namespace ScrumExtreme.Web.Controllers
             return Json(new { success = true });
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetEventsForEdit()
+        {
+            var events = await _calendarEventService.GetAllCalendarEventsAsync();
+            var users = await _userService.GetAllUsersAsync();
+            var orders = await _orderService.GetAllOrdersAsync();
+
+            var userDict = users.ToDictionary(u => u.Id);
+            var orderDict = orders.ToDictionary(o => o.Id);
+
+            var result = events
+                .Where(e => userDict.ContainsKey(e.UserId))
+                .Select(e =>
+                {
+                    var user = userDict[e.UserId];
+                    var isOrder = !string.IsNullOrEmpty(e.OrderId) && orderDict.ContainsKey(e.OrderId);
+                    var label = isOrder ? orderDict[e.OrderId!].OrderNumber
+                                         : (e.EventType is { Length: > 0 } t
+                                            ? char.ToUpper(t[0]) + t[1..] : "Event");
+                    return new
+                    {
+                        id = e.Id,
+                        title = $"{user.FirstName} \u2014 {label}",
+                        eventType = e.EventType,
+                        userId = e.UserId,
+                        orderId = e.OrderId,
+                        start = e.Start.ToString("yyyy-MM-dd"),
+                        end = e.End.ToString("yyyy-MM-dd")
+                    };
+                })
+                .ToList();
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditEvent([FromBody] EditEventRequest req)
+        {
+            var ev = await _calendarEventService.GetByIdAsync(req.Id);
+            if (ev == null) return Json(new { success = false, error = "Event not found" });
+
+            if (req.Start.HasValue) ev.Start = req.Start.Value;
+            if (req.End.HasValue) ev.End = req.End.Value;
+
+            await _calendarEventService.UpdateAsync(ev);
+
+            if (!string.IsNullOrEmpty(ev.OrderId) && !string.IsNullOrEmpty(req.OrderStatusOverride))
+            {
+                var order = await _orderService.GetByIdAsync(ev.OrderId);
+                if (order != null && Enum.TryParse<OrderStatus>(req.OrderStatusOverride, ignoreCase: true, out var newStatus))
+                {
+                    order.Status = newStatus;
+                    await _orderService.UpdateAsync(order);
+                }
+            }
+
+            return Json(new { success = true });
+        }
+
         [HttpPost]
         public async Task<JsonResult> DeleteEvent([FromBody] string id)
         {
@@ -190,6 +249,13 @@ public record CreateCalendarEventRequest(
     string UserId,
     string? OrderId,
     string EventType,
+    DateTime? Start,
+    DateTime? End,
+    string? OrderStatusOverride
+);
+
+public record EditEventRequest(
+    string Id,
     DateTime? Start,
     DateTime? End,
     string? OrderStatusOverride

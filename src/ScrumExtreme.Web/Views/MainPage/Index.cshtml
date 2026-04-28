@@ -28,6 +28,7 @@
                 @if ((ViewBag.UserRole as string) == "admin")
                 {
                     <button id="addEventBtn" class="admin-panel-btn calendar-add-btn">Lägg till event</button>
+                    <button id="editEventBtn" class="admin-panel-btn calendar-add-btn" style="margin-left:0.5rem;">Redigera event</button>
                 }
             </div>
 
@@ -102,6 +103,57 @@
                 <div class="cal-event-modal-actions">
                     <button id="cancelEvent" class="admin-panel-btn">Avbryt</button>
                     <button id="saveEvent" class="admin-panel-btn"
+                            style="background:#1a1612;color:#f7e6ca;">Spara</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit event modal (admin only) -->
+        <div id="editEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Redigera event</p>
+
+                <!-- Event picker -->
+                <div class="calendar-form-row">
+                    <label class="calendar-form-label">Event</label>
+                    <select id="editEventId" class="calendar-form-select"></select>
+                </div>
+
+                <!-- Non-order date fields -->
+                <div id="editDateFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Startdatum</label>
+                        <input id="editStart" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Slutdatum</label>
+                        <input id="editEnd" type="date" class="calendar-form-input" />
+                    </div>
+                </div>
+
+                <!-- Order fields -->
+                <div id="editOrderFields" style="display:none;">
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Beräknat klart</label>
+                        <input id="editOrderDate" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
+                        <label class="calendar-form-label">Ändra status</label>
+                        <select id="editOrderStatus" class="calendar-form-select">
+                            <option value="">— ingen ändring —</option>
+                            <option value="Pending">Väntar</option>
+                            <option value="Processing">Påbörjad</option>
+                            <option value="Printed">Utskriven</option>
+                            <option value="Shipped">Skickad</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cal-event-modal-actions">
+                    <button id="cancelEditEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="deleteEditEvent" class="admin-panel-btn"
+                            style="background:#c73e1d;color:#fff;">Ta bort</button>
+                    <button id="saveEditEvent" class="admin-panel-btn"
                             style="background:#1a1612;color:#f7e6ca;">Spara</button>
                 </div>
             </div>
