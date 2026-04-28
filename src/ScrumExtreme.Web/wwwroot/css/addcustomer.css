@@ -1,4 +1,3 @@
-
 .site-main:has(.admin-wrapper) {
   align-items: stretch;
   text-align: left;
@@ -590,6 +589,31 @@
   color: #c9a84c;
 }
 
+.detail-back-btn {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.82rem;
+  color: #1a1612;
+  text-decoration: none;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
+  border-radius: 4px;
+  padding: 0.5rem 1.1rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 0.75rem;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.detail-back-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+}
+
 .detail-layout {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -739,4 +763,78 @@
   padding: 0.65rem 1.1rem;
   font-size: 0.82rem;
   text-align: center;
+}
+
+/* ── Edit Customer Modal ──────────────────────────────────────── */
+.ec-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 22, 18, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.ec-modal {
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  width: min(640px, 96vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(26, 22, 18, 0.18);
+  display: flex;
+  flex-direction: column;
+}
+
+.ec-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.ec-modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1612;
+  margin: 0;
+}
+
+.ec-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #7a6a50;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+
+.ec-close-btn:hover {
+  color: #1a1612;
+}
+
+.ec-modal-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ec-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.25rem;
+  border-top: 1px solid #2a2a2a;
+  flex-wrap: wrap;
+}
+
+.ec-modal-footer .admin-submit-error {
+  flex: 1;
+  min-width: 100%;
 }

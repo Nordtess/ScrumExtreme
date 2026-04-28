@@ -88,5 +88,41 @@ public class AddCustomerController : Controller
         await _userService.DeleteUserAsync(id);
         return Ok();
     }
+
+    [HttpPost("UpdateCustomer/{id}")]
+    public async Task<IActionResult> UpdateCustomer(string id, [FromBody] UpdateCustomerRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(id) || request == null)
+            return BadRequest();
+
+        var customer = await _userService.GetByIdAsync(id);
+        if (customer == null)
+            return NotFound();
+
+        customer.FirstName = request.FirstName?.Trim() ?? customer.FirstName;
+        customer.LastName = request.LastName?.Trim() ?? customer.LastName;
+        customer.Email = request.Email?.Trim().ToLowerInvariant() ?? customer.Email;
+        customer.Address = request.Address?.Trim() ?? customer.Address;
+        customer.PostalCode = request.PostalCode?.Trim() ?? customer.PostalCode;
+        customer.City = request.City?.Trim() ?? customer.City;
+        customer.Country = request.Country?.Trim() ?? customer.Country;
+        customer.CountryCode = request.CountryCode?.Trim() ?? customer.CountryCode;
+        customer.PhoneNumber = request.PhoneNumber?.Trim() ?? customer.PhoneNumber;
+
+        await _userService.UpdateUserAsync(id, customer);
+        return Ok();
+    }
 }
+
+public record UpdateCustomerRequest(
+    string? FirstName,
+    string? LastName,
+    string? Email,
+    string? Address,
+    string? PostalCode,
+    string? City,
+    string? Country,
+    string? CountryCode,
+    string? PhoneNumber
+);
 
