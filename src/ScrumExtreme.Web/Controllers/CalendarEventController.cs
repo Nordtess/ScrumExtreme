@@ -43,10 +43,15 @@ namespace ScrumExtreme.Web.Controllers
             var result = events.Select(e => new
             {
                 id = e.Id,
-                //title = $"{orderDict[e.OrderId].OrderNumber} - {userDict[e.UserId].FirstName}",
+                title = userDict[e.UserId].FirstName,
 
                 start = e.Start,
-                end = e.End
+                end = e.End,
+
+                extendedProps = new
+                {
+                    orderNumber = orderDict[e.OrderId].OrderNumber
+                }
             });
 
             return Json(result);
@@ -67,7 +72,7 @@ namespace ScrumExtreme.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> DeleteEvent(string id)
+        public async Task<JsonResult> DeleteEvent([FromBody] string id)
         {
             await _calendarEventService.DeleteCalendarEventAsync(id);
             return Json(new { success = true });
@@ -80,11 +85,13 @@ namespace ScrumExtreme.Web.Controllers
         {
             var users = await _userService.GetAllUsersAsync();
 
-            var result = users.Select(u => new
-            {
-                id = u.Id,
-                name = u.FirstName
-            });
+            var result = users
+                .Where(u => u.Role == "employee")
+                .Select(u => new
+                {
+                    id = u.Id,
+                    name = u.FirstName
+                });
 
             return Json(result);
         }
