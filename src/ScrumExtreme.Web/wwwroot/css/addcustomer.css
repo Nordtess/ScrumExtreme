@@ -777,9 +777,9 @@
 }
 
 .ec-modal {
-  background: #fff8e8;
-  border: 1.5px solid #c9a84c;
-  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
   width: min(640px, 96vw);
   max-height: 92vh;
   overflow-y: auto;
@@ -793,7 +793,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem 1rem;
-  border-bottom: 1.5px solid #e8d9b5;
+  border-bottom: 1px solid #2a2a2a;
 }
 
 .ec-modal-title {
@@ -830,7 +830,7 @@
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem 1.25rem;
-  border-top: 1.5px solid #e8d9b5;
+  border-top: 1px solid #2a2a2a;
   flex-wrap: wrap;
 }
 
