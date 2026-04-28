@@ -145,7 +145,7 @@
                 ScrumExtreme.Domain.Entities.OrderStatus.Printed
                             && userLookup.TryGetValue(order.AssignedWorkerId, out var worker))
                         {
-                            workerName = $"{worker.FirstName} {worker.LastName}";
+                            workerName = worker.FirstName;
                         }
                         <div class="admin-customer-row" data-date="@order.OrderDate.ToUniversalTime().Ticks"
                              data-type="@typeKey" data-status="@statusKey" data-year="@order.OrderDate.Year">

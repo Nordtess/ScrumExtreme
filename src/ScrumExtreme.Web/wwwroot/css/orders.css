@@ -494,6 +494,7 @@
 .order-worker-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.3rem;
   font-size: 0.68rem;
   font-weight: 600;
@@ -503,11 +504,12 @@
   background: #f0ebe3;
   border: 1px solid #c0bab2;
   border-radius: 20px;
-  padding: 0.18rem 0.6rem;
+  padding: 0.18rem 0.55rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 130px;
+  max-width: 80px;
+  width: fit-content;
 }
 
 .order-worker-badge--empty {
