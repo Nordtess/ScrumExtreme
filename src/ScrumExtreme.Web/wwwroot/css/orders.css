@@ -384,7 +384,7 @@
   display: grid;
   grid-template-columns:
     150px 110px minmax(150px, 1fr) minmax(120px, 1.2fr)
-    115px 105px 140px 82px 28px;
+    115px 105px minmax(0, 130px) 120px 82px 28px;
   align-items: center;
   gap: 0.65rem;
 }
@@ -505,6 +505,16 @@
   border-radius: 20px;
   padding: 0.18rem 0.6rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.order-worker-badge--empty {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+  pointer-events: none;
 }
 
 .start-order-overlay {

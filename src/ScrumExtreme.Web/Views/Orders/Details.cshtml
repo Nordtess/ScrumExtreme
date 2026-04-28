@@ -14,11 +14,16 @@
     string userRole = ViewBag.UserRole as string ?? "";
     bool canStart = Model.Order.Status == ScrumExtreme.Domain.Entities.OrderStatus.Pending
                     && (userRole == "employee" || userRole == "admin");
+    string sessionUserId = ViewBag.UserId as string ?? "";
+    bool canComplete = Model.Order.Status == ScrumExtreme.Domain.Entities.OrderStatus.Processing
+                       && (userRole == "admin" || sessionUserId == Model.Order.AssignedWorkerId);
+    bool canPrint = Model.Order.Status == ScrumExtreme.Domain.Entities.OrderStatus.Printed;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/addcustomer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/materialorder.css" asp-append-version="true" />
 }
 
 <div class="admin-wrapper">
@@ -117,12 +122,24 @@
 
     <div class="order-details-actions" style="margin-top: 20px;">
         <a asp-action="Index" class="admin-panel-btn" style="text-decoration: none;">← Tillbaka till orderlistan</a>
-        <button onclick="window.print()" class="admin-panel-btn" style="margin-left: 10px;">🖨️ Skriv ut order</button>
-        <a href="/ShippingLabel?orderId=@Model.Order.Id" class="admin-panel-btn" style="margin-left: 10px; text-decoration: none;">🚚 Skriv ut fraktsedel</a>
+        @if (canPrint)
+        {
+            <button onclick="window.print()" class="admin-panel-btn" style="margin-left: 10px;">🖨️ Skriv ut order</button>
+            <a href="/ShippingLabel?orderId=@Model.Order.Id" class="admin-panel-btn" style="margin-left: 10px; text-decoration:none;">🚚 Skriv ut fraktsedel</a>
+        }
+        else
+        {
+            <button disabled class="admin-panel-btn" style="margin-left: 10px; opacity:0.4; cursor:not-allowed;" title="Tillgänglig när ordern är Utskriven">🖨️ Skriv ut order</button>
+            <button disabled class="admin-panel-btn" style="margin-left: 10px; opacity:0.4; cursor:not-allowed;" title="Tillgänglig när ordern är Utskriven">🚚 Skriv ut fraktsedel</button>
+        }
         <button id="deleteOrderBtn" class="admin-panel-btn" style="margin-left: 10px;">🗑️ Radera order</button>
         @if (canStart)
         {
             <button id="startOrderBtn" class="admin-btn-primary admin-btn-auto" style="margin-left: 10px;">▶ Starta order</button>
+        }
+        @if (canComplete)
+        {
+            <button id="completeOrderBtn" class="admin-btn-primary admin-btn-auto" style="margin-left: 10px;">✔ Markera som klar</button>
         }
         @if (!string.IsNullOrEmpty(Model.AssignedWorkerName))
         {
@@ -147,6 +164,34 @@
             </div>
         </div>
     }
+
+    @if (canComplete)
+    {
+        <!-- Step 1: confirm mark as ready -->
+        <div class="mo-modal-overlay" id="completeConfirmOverlay">
+            <div class="mo-modal">
+                <p class="mo-modal-title">Markera ordern som klar?</p>
+                <p class="mo-modal-msg">Order @Model.Order.OrderNumber kommer att få status Utskriven.</p>
+                <div class="mo-modal-actions">
+                    <button class="mo-modal-btn mo-modal-btn--confirm" id="confirmCompleteBtn">Ja, markera som klar</button>
+                    <button class="mo-modal-btn mo-modal-btn--cancel" id="cancelCompleteBtn">Avbryt</button>
+                </div>
+            </div>
+        </div>
+        <!-- Step 2: offer to print shipping label -->
+        <div class="mo-modal-overlay" id="completeNextOverlay">
+            <div class="mo-modal">
+                <p class="mo-modal-title">Ordern är klar!</p>
+                <p class="mo-modal-msg">Vill du skriva ut fraktsedeln och skicka ordern nu?</p>
+                <div class="mo-modal-actions">
+                    <a href="/ShippingLabel?orderId=@Model.Order.Id" class="mo-modal-btn mo-modal-btn--confirm" style="text-decoration:none;">Ja, skriv ut fraktsedel</a>
+                    <button class="mo-modal-btn mo-modal-btn--cancel" id="skipShipBtn">Nej, gå tillbaka</button>
+                </div>
+            </div>
+        </div>
+    }
+
+
 </div>
 
 @section Scripts {
@@ -199,5 +244,41 @@
         });
             </text>
         }
+
+        @if (canComplete)
+        {
+            <text>
+        (function () {
+            const completeBtn    = document.getElementById('completeOrderBtn');
+            const confirmOverlay = document.getElementById('completeConfirmOverlay');
+            const nextOverlay    = document.getElementById('completeNextOverlay');
+
+            completeBtn.addEventListener('click', function () {
+                confirmOverlay.classList.add('mo-modal-overlay--visible');
+            });
+
+            document.getElementById('cancelCompleteBtn').addEventListener('click', function () {
+                confirmOverlay.classList.remove('mo-modal-overlay--visible');
+            });
+
+            document.getElementById('confirmCompleteBtn').addEventListener('click', async function () {
+                const res = await fetch('/Orders/CompleteOrder/@Model.Order.Id', { method: 'POST' });
+                if (res.ok) {
+                    confirmOverlay.classList.remove('mo-modal-overlay--visible');
+                    nextOverlay.classList.add('mo-modal-overlay--visible');
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    alert(err.error ?? 'Något gick fel. Försök igen.');
+                }
+            });
+
+            document.getElementById('skipShipBtn').addEventListener('click', function () {
+                window.location.reload();
+            });
+        })();
+            </text>
+        }
+
+
     </script>
 }

@@ -60,6 +60,7 @@ namespace ScrumExtreme.Web.Controllers
                     color = workerColors.TryGetValue(e.UserId, out var c) ? c : palette[0],
                     extendedProps = new
                     {
+                        orderId = e.OrderId,
                         orderNumber = orderDict[e.OrderId].OrderNumber,
                         workerName = $"{userDict[e.UserId].FirstName} {userDict[e.UserId].LastName}"
                     }

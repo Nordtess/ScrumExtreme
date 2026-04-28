@@ -25,9 +25,28 @@
         
         <div class="home-col">
             <div class="calendar-toolbar">
-                <button id="addEventBtn" class="admin-panel-btn calendar-add-btn">Lägg till event</button>
+                @if ((ViewBag.UserRole as string) == "admin")
+                {
+                    <button id="addEventBtn" class="admin-panel-btn calendar-add-btn">Lägg till event</button>
+                }
             </div>
-            <div id="eventForm" class="calendar-event-form" style="display:none;">
+
+            <div id="calendar"></div>
+        </div>
+
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+        <script>
+            window.calendarUserRole = '@(ViewBag.UserRole as string ?? "")';
+        </script>
+        <script src="~/js/calendar.js"></script>
+
+        <!-- Add event modal (admin only) -->
+        <div id="calendarEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Lägg till event</p>
                 <div class="calendar-form-row">
                     <label class="calendar-form-label">Anställd</label>
                     <select id="userId" class="calendar-form-select"></select>
@@ -44,17 +63,13 @@
                     <label class="calendar-form-label">Slut</label>
                     <input id="end" type="datetime-local" class="calendar-form-input" />
                 </div>
-                <button id="saveEvent" class="admin-btn-primary admin-btn-auto">Spara</button>
+                <div class="cal-event-modal-actions">
+                    <button id="cancelEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="saveEvent" class="admin-panel-btn"
+                            style="background:#1a1612;color:#f7e6ca;">Spara</button>
+                </div>
             </div>
-
-            <div id="calendar"></div>
         </div>
-
-        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-        <script src="~/js/calendar.js"></script>
 
         <!-- ── Right: Order summary ── -->
         <div class="home-col">

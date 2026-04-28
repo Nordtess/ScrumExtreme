@@ -305,14 +305,47 @@
   background: rgba(201, 168, 76, 0.08) !important;
 }
 .fc .fc-event {
-  background: #1a1612 !important;
-  border-color: #1a1612 !important;
-  color: #f7e6ca !important;
+  color: #fff !important;
   font-size: 0.72rem !important;
   border-radius: 4px !important;
+  cursor: pointer;
 }
 .fc .fc-event:hover {
-  background: #c9a84c !important;
-  border-color: #c9a84c !important;
-  color: #1a1612 !important;
+  filter: brightness(1.15);
+  color: #fff !important;
+}
+
+/* Modal overlay for add-event form */
+.cal-event-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.cal-event-modal {
+  background: #fff;
+  border: 1.5px solid #1a1612;
+  border-top: 3px solid #c9a84c;
+  border-radius: 12px;
+  padding: 2rem 2.25rem;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+.cal-event-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1612;
+  margin: 0;
+}
+.cal-event-modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: flex-end;
 }

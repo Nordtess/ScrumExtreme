@@ -212,6 +212,7 @@ public class OrdersController : Controller
         }
 
         ViewBag.UserRole = HttpContext.Session.GetString("UserRole") ?? "";
+        ViewBag.UserId = HttpContext.Session.GetString("UserId") ?? "";
 
         var viewModel = new OrderDetailsViewModel
         {
@@ -248,6 +249,41 @@ public class OrdersController : Controller
         };
         await _calendarEventService.CreateEventAsync(calEvent);
 
+        return Ok(new { success = true });
+    }
+
+    [HttpPost("CompleteOrder/{id}")]
+    public async Task<IActionResult> CompleteOrder(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+        if (order.Status != OrderStatus.Processing)
+            return BadRequest(new { error = "Ordern är inte i status Påbörjad." });
+
+        order.Status = OrderStatus.Printed;
+        await _orderService.UpdateAsync(order);
+        return Ok(new { success = true });
+    }
+
+    [HttpPost("ShipOrder/{id}")]
+    public async Task<IActionResult> ShipOrder(string id)
+    {
+        var order = await _orderService.GetByIdAsync(id);
+        if (order == null) return NotFound();
+        if (order.Status != OrderStatus.Printed)
+            return BadRequest(new { error = "Ordern är inte i status Utskriven." });
+
+        if (!string.IsNullOrEmpty(order.AssignedWorkerId))
+        {
+            var workerEvents = await _calendarEventService.GetByUserIdAsync(order.AssignedWorkerId);
+            var orderEvent = workerEvents.FirstOrDefault(e => e.OrderId == order.Id);
+            if (orderEvent != null)
+                await _calendarEventService.DeleteCalendarEventAsync(orderEvent.Id);
+        }
+
+        order.Status = OrderStatus.Shipped;
+        order.AssignedWorkerId = null;
+        await _orderService.UpdateAsync(order);
         return Ok(new { success = true });
     }
 }
