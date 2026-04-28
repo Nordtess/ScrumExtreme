@@ -16,9 +16,27 @@ document.addEventListener('DOMContentLoaded', function () {
         height: '100%',
         events: '/Calendar/GetEvents',
         locale: 'sv-SE',
+        displayEventTime: false,
 
         eventClick: function (info) {
             const orderId = info.event.extendedProps.orderId;
+
+            if (isAdmin) {
+                // Admin: show delete confirmation for non-order events;
+                // for order events navigate to order details on left-click but
+                // show delete if Ctrl/Meta is held
+                if (!orderId || info.jsEvent.ctrlKey || info.jsEvent.metaKey) {
+                    const deleteOverlay = document.getElementById("deleteEventOverlay");
+                    const deleteDesc    = document.getElementById("deleteEventDescription");
+                    if (deleteOverlay && deleteDesc) {
+                        deleteDesc.textContent = info.event.title;
+                        deleteOverlay._eventId = info.event.id;
+                        deleteOverlay.style.display = "flex";
+                    }
+                    return;
+                }
+            }
+
             if (orderId) {
                 window.location.href = '/Orders/Details/' + orderId;
             }
@@ -59,6 +77,44 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     calendar.render();
+
+    // Delete event modal
+    const deleteOverlay     = document.getElementById("deleteEventOverlay");
+    const cancelDeleteBtn   = document.getElementById("cancelDeleteEvent");
+    const confirmDeleteBtn  = document.getElementById("confirmDeleteEvent");
+
+    if (deleteOverlay) {
+        cancelDeleteBtn.addEventListener("click", function () {
+            deleteOverlay.style.display = "none";
+        });
+
+        deleteOverlay.addEventListener("click", function (e) {
+            if (e.target === deleteOverlay) deleteOverlay.style.display = "none";
+        });
+
+        confirmDeleteBtn.addEventListener("click", async function () {
+            const eventId = deleteOverlay._eventId;
+            if (!eventId) return;
+
+            try {
+                const response = await fetch('/Calendar/DeleteEvent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eventId)
+                });
+
+                if (response.ok) {
+                    deleteOverlay.style.display = "none";
+                    calendar.refetchEvents();
+                } else {
+                    alert("Något gick fel vid borttagning.");
+                }
+            } catch (err) {
+                console.error("Fel vid borttagning:", err);
+                alert("Något gick fel vid borttagning.");
+            }
+        });
+    }
 
     // Modal open/close (admin only)
     const addEventBtn = document.getElementById("addEventBtn");
@@ -112,12 +168,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return dateStr ? dateStr + "T00:00:00" : null;
             }
 
+            const estimatedDate = isOrder ? document.getElementById("orderEstimatedDate").value : null;
+
             const eventData = {
                 userId:              document.getElementById("userId").value,
                 orderId:             isOrder ? document.getElementById("orderId").value : null,
                 eventType:           eventType,
-                start:               isOrder ? null : toISODate(document.getElementById("start").value),
-                end:                 isOrder ? null : toISODate(document.getElementById("end").value),
+                start:               isOrder ? toISODate(estimatedDate) : toISODate(document.getElementById("start").value),
+                end:                 isOrder ? toISODate(estimatedDate) : toISODate(document.getElementById("end").value),
                 orderStatusOverride: isOrder ? (document.getElementById("orderStatus").value || null) : null
             };
 

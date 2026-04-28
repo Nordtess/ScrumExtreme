@@ -72,6 +72,10 @@
                         <select id="orderId" class="calendar-form-select"></select>
                     </div>
                     <div class="calendar-form-row">
+                        <label class="calendar-form-label">Beräknat klart</label>
+                        <input id="orderEstimatedDate" type="date" class="calendar-form-input" />
+                    </div>
+                    <div class="calendar-form-row">
                         <label class="calendar-form-label">Ändra status</label>
                         <select id="orderStatus" class="calendar-form-select">
                             <option value="">— ingen ändring —</option>
@@ -99,6 +103,19 @@
                     <button id="cancelEvent" class="admin-panel-btn">Avbryt</button>
                     <button id="saveEvent" class="admin-panel-btn"
                             style="background:#1a1612;color:#f7e6ca;">Spara</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete event modal (admin only) -->
+        <div id="deleteEventOverlay" class="cal-event-overlay" style="display:none;">
+            <div class="cal-event-modal">
+                <p class="cal-event-modal-title">Ta bort event</p>
+                <p id="deleteEventDescription" style="margin:0.5rem 0 1.25rem; color:#555; font-size:0.95rem;"></p>
+                <div class="cal-event-modal-actions">
+                    <button id="cancelDeleteEvent" class="admin-panel-btn">Avbryt</button>
+                    <button id="confirmDeleteEvent" class="admin-panel-btn"
+                            style="background:#c73e1d;color:#fff;">Ta bort</button>
                 </div>
             </div>
         </div>

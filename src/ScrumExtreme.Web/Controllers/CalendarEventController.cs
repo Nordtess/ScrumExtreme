@@ -130,8 +130,8 @@ namespace ScrumExtreme.Web.Controllers
                 UserId = req.UserId,
                 OrderId = req.EventType == "order" ? req.OrderId : null,
                 EventType = req.EventType,
-                Start = req.Start ?? DateTime.UtcNow,
-                End = req.End ?? DateTime.UtcNow.AddHours(8)
+                Start = req.Start ?? DateTime.UtcNow.Date,
+                End = req.End ?? DateTime.UtcNow.Date
             };
             await _calendarEventService.CreateEventAsync(ev);
             return Json(new { success = true });
