@@ -160,13 +160,21 @@ namespace ScrumExtreme.Web.Controllers
                 {
                     var user = userDict[e.UserId];
                     var isOrder = !string.IsNullOrEmpty(e.OrderId) && orderDict.ContainsKey(e.OrderId);
-                    var label = isOrder ? orderDict[e.OrderId!].OrderNumber
-                                         : (e.EventType is { Length: > 0 } t
-                                            ? char.ToUpper(t[0]) + t[1..] : "Event");
+                    string title;
+                    if (isOrder)
+                    {
+                        title = $"{user.FirstName} \u2014 {orderDict[e.OrderId!].OrderNumber}";
+                    }
+                    else
+                    {
+                        var typLabel = e.EventType is { Length: > 0 } t ? char.ToUpper(t[0]) + t[1..] : "Event";
+                        var dateStr = e.Start.ToString("yyyy-MM-dd");
+                        title = $"{user.FirstName} {user.LastName} \u2014 {typLabel} ({dateStr})";
+                    }
                     return new
                     {
                         id = e.Id,
-                        title = $"{user.FirstName} \u2014 {label}",
+                        title,
                         eventType = e.EventType,
                         userId = e.UserId,
                         orderId = e.OrderId,

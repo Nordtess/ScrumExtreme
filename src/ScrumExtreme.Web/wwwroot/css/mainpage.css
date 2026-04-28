@@ -228,6 +228,15 @@
   gap: 0.28rem;
 }
 
+#orderFields,
+#dateFields,
+#editDateFields,
+#editOrderFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
 .calendar-form-label {
   font-size: 0.65rem;
   font-weight: 600;

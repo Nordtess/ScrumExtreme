@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelEditBtn   = document.getElementById("cancelEditEvent");
     const deleteEditBtn   = document.getElementById("deleteEditEvent");
     const saveEditBtn     = document.getElementById("saveEditEvent");
+    const editTypeFilter  = document.getElementById("editTypeFilter");
     const editEventSelect = document.getElementById("editEventId");
     const editDateFields  = document.getElementById("editDateFields");
     const editOrderFields = document.getElementById("editOrderFields");
@@ -146,18 +147,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function rebuildEditEventDropdown(type) {
+        const filtered = editEventsCache.filter(e => e.eventType === type);
+        editEventSelect.innerHTML = "";
+        filtered.forEach(e => {
+            const opt = document.createElement("option");
+            opt.value = e.id;
+            opt.text  = e.title;
+            editEventSelect.appendChild(opt);
+        });
+        if (filtered.length > 0) {
+            populateEditFields(filtered[0].id);
+        } else {
+            editDateFields.style.display  = "none";
+            editOrderFields.style.display = "none";
+        }
+    }
+
     async function loadEditEvents() {
         try {
             const res = await fetch('/Calendar/GetEventsForEdit');
             editEventsCache = await res.json();
-            editEventSelect.innerHTML = "";
-            editEventsCache.forEach(e => {
-                const opt = document.createElement("option");
-                opt.value = e.id;
-                opt.text  = e.title;
-                editEventSelect.appendChild(opt);
-            });
-            if (editEventsCache.length > 0) populateEditFields(editEventsCache[0].id);
+            // Default to the first type that has events
+            editTypeFilter.value = "order";
+            rebuildEditEventDropdown("order");
         } catch (err) {
             console.error("Fel vid laddning av events:", err);
         }
@@ -175,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         editOverlay.addEventListener("click", function (e) {
             if (e.target === editOverlay) editOverlay.style.display = "none";
+        });
+
+        editTypeFilter.addEventListener("change", function () {
+            rebuildEditEventDropdown(this.value);
         });
 
         editEventSelect.addEventListener("change", function () {
@@ -300,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 eventType:           eventType,
                 start:               isOrder ? toISODate(estimatedDate) : toISODate(document.getElementById("start").value),
                 end:                 isOrder ? toISODate(estimatedDate) : toISODate(document.getElementById("end").value),
-                orderStatusOverride: isOrder ? (document.getElementById("orderStatus").value || null) : null
+                orderStatusOverride: null
             };
 
             try {
