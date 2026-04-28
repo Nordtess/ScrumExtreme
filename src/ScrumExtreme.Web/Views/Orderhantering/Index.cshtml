@@ -18,6 +18,39 @@
 
     <div class="lager-hub-grid">
 
+        <!-- Skapa ny order -->
+        <div class="lager-hub-card">
+            <div class="lager-hub-card__header">
+                <h2 class="lager-hub-card__title">
+                    <span class="lager-hub-card__dot"></span>
+                    Skapa ny order
+                </h2>
+            </div>
+            <div class="lager-hub-card__body">
+                <div class="lager-hub-stats">
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Registrerade kunder</span>
+                        <span class="lager-hub-stat__value">@Model.TotalCustomers</span>
+                        <span class="lager-hub-stat__sub">tillgängliga att beställa</span>
+                    </div>
+                    <div class="lager-hub-stat">
+                        <span class="lager-hub-stat__label">Hattmodeller</span>
+                        <span class="lager-hub-stat__value">@Model.TotalHatModels</span>
+                        <span class="lager-hub-stat__sub">modeller i sortiment</span>
+                    </div>
+                </div>
+                <div class="lager-hub-divider"></div>
+                <p style="font-size:0.78rem;color:#555;margin:0;">
+                    Skapa en ny order åt en befintlig kund. Välj hattar, tillbehör och antal direkt i orderformuläret.
+                </p>
+            </div>
+            <div class="lager-hub-card__footer">
+                <a asp-controller="Orders" asp-action="Create" class="lager-hub-btn">
+                    Skapa order
+                </a>
+            </div>
+        </div>
+
         <!-- Orderöversikt -->
         <div class="lager-hub-card">
             <div class="lager-hub-card__header">
@@ -65,39 +98,6 @@
             </div>
         </div>
 
-        <!-- Skapa ny order -->
-        <div class="lager-hub-card">
-            <div class="lager-hub-card__header">
-                <h2 class="lager-hub-card__title">
-                    <span class="lager-hub-card__dot"></span>
-                    Skapa ny order
-                </h2>
-            </div>
-            <div class="lager-hub-card__body">
-                <div class="lager-hub-stats">
-                    <div class="lager-hub-stat">
-                        <span class="lager-hub-stat__label">Registrerade kunder</span>
-                        <span class="lager-hub-stat__value">@Model.TotalCustomers</span>
-                        <span class="lager-hub-stat__sub">tillgängliga att beställa</span>
-                    </div>
-                    <div class="lager-hub-stat">
-                        <span class="lager-hub-stat__label">Hattmodeller</span>
-                        <span class="lager-hub-stat__value">@Model.TotalHatModels</span>
-                        <span class="lager-hub-stat__sub">modeller i sortiment</span>
-                    </div>
-                </div>
-                <div class="lager-hub-divider"></div>
-                <p style="font-size:0.78rem;color:#555;margin:0;">
-                    Skapa en ny order åt en befintlig kund. Välj hattar, tillbehör och antal direkt i orderformuläret.
-                </p>
-            </div>
-            <div class="lager-hub-card__footer">
-                <a asp-controller="Orders" asp-action="Create" class="lager-hub-btn">
-                    Skapa order
-                </a>
-            </div>
-        </div>
-
         <!-- Senaste ordrar -->
         <div class="lager-hub-card lager-hub-card--wide">
             <div class="lager-hub-card__header">
@@ -137,11 +137,6 @@
                         }
                     </div>
                 }
-            </div>
-            <div class="lager-hub-card__footer">
-                <a asp-controller="Orders" asp-action="Index" class="lager-hub-btn">
-                    Visa alla ordrar
-                </a>
             </div>
         </div>
 

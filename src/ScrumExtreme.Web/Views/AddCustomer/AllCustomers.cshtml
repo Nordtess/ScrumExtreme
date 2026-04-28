@@ -10,6 +10,8 @@
 
 <div class="admin-wrapper --narrow">
 
+    <a asp-controller="Kundhantering" asp-action="Index" class="back-btn">&#8592; Tillbaka</a>
+
     @if (TempData["Success"] != null)
     {
         <p class="admin-toast">@TempData["Success"]</p>
@@ -53,8 +55,8 @@
                             </div>
                             <div class="admin-customer-meta">
                                 <span class="admin-customer-country">@(string.IsNullOrEmpty(c.CountryCode) ? "" :
-                                                                string.Concat(c.CountryCode.ToUpper().Select(ch => char.ConvertFromUtf32(0x1F1A5 +
-                                                                (int)ch)))) @c.Country</span>
+                                                                                                    string.Concat(c.CountryCode.ToUpper().Select(ch => char.ConvertFromUtf32(0x1F1A5 +
+                                                                                                    (int)ch)))) @c.Country</span>
                                     <span class="admin-customer-arrow">›</span>
                                     <button class="customer-delete-btn" data-customer-id="@c.Id"
                                             data-customer-name="@c.FirstName @c.LastName"

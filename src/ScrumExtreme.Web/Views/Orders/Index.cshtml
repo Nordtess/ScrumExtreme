@@ -20,6 +20,8 @@
 
 <div class="admin-wrapper">
 
+    <a asp-controller="Orderhantering" asp-action="Index" class="back-btn">&#8592; Tillbaka</a>
+
     @if (TempData["Success"] != null)
     {
         <p class="admin-toast">@TempData["Success"]</p>

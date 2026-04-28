@@ -9,6 +9,7 @@
       "approve": true,
       "matchCommandLine": true
     },
-    "dotnet build": true
+    "dotnet build": true,
+    "mkdir": true
   }
 }

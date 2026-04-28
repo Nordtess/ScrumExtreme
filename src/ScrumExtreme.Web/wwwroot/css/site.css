@@ -337,3 +337,55 @@ body {
 .country-option--active {
   background: #f5f2ec;
 }
+
+/* ── Back button (shared across hub sub-pages) ─────────────────────── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  color: #1a1612;
+  text-decoration: none;
+  background: #f7e6ca;
+  border: 1.5px solid #1a1612;
+  border-radius: 4px;
+  padding: 0.45rem 1.05rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+  align-self: flex-start;
+  margin-bottom: 0.85rem;
+}
+
+.back-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #1a1612;
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+
+.back-btn:hover {
+  background: #1a1612;
+  color: #f7e6ca;
+  border-color: #1a1612;
+  box-shadow: 0 0 0 2px #1a1612;
+}
+
+.back-btn:hover::after {
+  left: 1.05rem;
+  right: 1.05rem;
+}

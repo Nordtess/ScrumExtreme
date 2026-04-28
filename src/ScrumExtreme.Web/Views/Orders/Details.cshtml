@@ -27,6 +27,7 @@
 }
 
 <div class="admin-wrapper">
+    <a asp-controller="Orderhantering" asp-action="Index" class="back-btn">&#8592; Tillbaka</a>
     <div class="admin-page-header">
         <h1 class="admin-page-title">Order @Model.Order.OrderNumber</h1>
         <p class="admin-page-subtitle">Placerad: @Model.Order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm") | Status: <span class="order-status-badge order-status-@statusKey">@statusLabel</span></p>
