@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎩 ScrumExtreme: Business Management System
+# 🎩 Otto's Hat Shop: Business Management System
 
 **A full-stack ASP.NET Core MVC platform for managing orders, inventory, customers, and statistics—built with Clean Architecture and MongoDB under the hood.**
 
@@ -8,7 +8,7 @@
 
 ## 💡 Description
 
-ScrumExtreme is a school project developed at Örebro University (VT26) using Scrum and Extreme Programming methodologies. It's a complete business management system for a company that manufactures and sells hats—covering everything from raw material tracking and warehouse management to order processing and sales statistics.
+Otto's Hat Shop is a school project developed at Örebro University (VT26) using Scrum and Extreme Programming methodologies. It's a complete business management system for a hat manufacturing company—covering everything from raw material tracking and warehouse management to order processing and sales statistics.
 
 The goal was to build a real-world, production-ready web application while practicing agile development workflows. The end result is a multi-layered system that handles the full business lifecycle of a product from materials to delivered orders.
 
@@ -107,8 +107,8 @@ The goal was to build a real-world, production-ready web application while pract
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/nordtess/ScrumExtreme
-cd ScrumExtreme
+git clone https://github.com/Nordtess/OttosHatShop
+cd OttosHatShop
 
 # 2. Start the database
 docker-compose up -d
@@ -125,8 +125,8 @@ dotnet run
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/nordtess/ScrumExtreme
-cd ScrumExtreme
+git clone https://github.com/Nordtess/OttosHatShop
+cd OttosHatShop
 
 # 2. Make sure MongoDB is running locally
 
