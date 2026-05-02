@@ -109,6 +109,8 @@ The goal was to build a real-world, production-ready web application while pract
 - **MongoDB** (local instance or Atlas)
 - **Docker Desktop** (optional, for the database)
 
+> **Note:** The MongoDB Atlas cluster used during development has been taken down. To run the application locally, set up your own MongoDB instance (local or Atlas) and update `ConnectionString` and `DatabaseName` in `src/ScrumExtreme.Web/appsettings.json`.
+
 ### Option 1: Docker + Local Run
 
 ```bash
